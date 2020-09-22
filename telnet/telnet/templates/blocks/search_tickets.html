@@ -19,7 +19,7 @@
         <span class="input-group-prepend">
           <span class="input-group-text"><i class="icon-calendar22"></i></span>
         </span>
-        <input id="daterange" name="date" type="text" class="form-control daterange-basic" value=" ">
+        <input id="daterange" name="date" type="text" class="form-control daterange-basic" value="{{ date }}">
       </div>
 
           <div class="form-group-feedback form-group-feedback-right" style=" margin: 0px 12px 0px 24px;">
@@ -28,7 +28,7 @@
               <i class="icon-search4 font-size-base text-muted"></i>
             </div>
           </div>
-          {% if user.request.role < 3 %}
+          {% if request.user.role < 3 %}
           <div class="form-group-feedback form-group-feedback-right" style=" margin: 12px;">
             {{ form.user|addclass:'form-control' }}
           </div>
@@ -37,8 +37,10 @@
           <div class="form-group-feedback form-group-feedback-right" style=" margin: 12px;">
             {{ form.status|addclass:'form-control' }}
           </div>
+          {% if request.user.role < 3 %}
 
           <button type="button" class="btn btn-secondary" id="export">Export</button>
+          {% endif %}
 
           <button class="btn btn-primary" type="submit" style="width: 100px; margin: 12px;"> Cerca </button>
     </form>
@@ -56,7 +58,7 @@ $('#export').click(function(){
   $.ajax({
         type: "GET",
         url: "/export-tickets",
-        data: {'daterange': daterange, 'text': text, 'status': status},
+        data: {'daterange': daterange, 'text': text, 'status': status,},
         success: function(data){
             console.log('success');
             

@@ -22,9 +22,9 @@ def dashboard(request):
 
         mvm_earning = split_ticket_mvm(tickets['mvm'])
         sielte_earning = split_ticket_sielte(tickets['sielte'])
-        print(mvm_earning)
-        print()
-        print(sielte_earning)
+        print(tickets['mvm'])
+        print(tickets['sielte'])
+
         mvm_data_bar = []
         sielte_data_bar = []
 
@@ -32,7 +32,7 @@ def dashboard(request):
         for user in mvm_earning:
             # print(user)
             price = mvm_earning[user]
-            print(price)
+            # print(price)
             # print(mvm_earning[user])
             if user in sielte_earning.keys():
                 price += sielte_earning[user]
@@ -50,7 +50,7 @@ def dashboard(request):
 
 
         total = sorted(total.items(), key=lambda x: x[1], reverse=True)
-        print(total)
+        # print(total)
         names = []
         for tot in total:
             names.append('{}\n {}'.format(tot[0], str(tot[1])))
@@ -68,20 +68,87 @@ def dashboard(request):
                 mvm_data_bar.append('')
 
         tickets = list(chain(tickets['mvm'], tickets['sielte']))
-        print(names)
-        for t in tickets:
-            print('{} {}'.format(t.assigned_to.first_name, t.assigned_to.last_name))
 
+        height = len(names)*50
+        
         return render(request, 'dashboard_manager.html', {'title':'Dashboard', 'note_form': note_form, 'date': date,
         'tot_mvm': tot_mvm, 'tot_sielte': tot_sielte,
-        'names':names, 'sielte_data_bar':sielte_data_bar, 'mvm_data_bar': mvm_data_bar, 'tickets': tickets,})
-
-
+        'names':names, 'sielte_data_bar':sielte_data_bar, 'mvm_data_bar': mvm_data_bar, 'tickets': tickets, 'height':height})
+    
+    elif request.user.role == 3:
+        mvm_tickets = MvmImport.objects.filter(assigned_to=request.user)
+        sielte_tickets = SielteImport.objects.filter(assigned_to=request.user)
+        tickets = list(chain(mvm_tickets, sielte_tickets))
+        return render(request, 'dashboard_tecnico.html', {'title':'Dashboard', 'tickets':tickets})
 
 @login_required(login_url='/accounts/login/')
 def get_dashboard_data(request):
-    return render(request, 'dashboard_manager.html', {'title':'Dashboard'})
+    if request.user.role < 3:
 
+        note_form = NoteForm(request.POST or None, request.FILES or None, initial={})
+
+        date = request.GET.get('date','')
+        start_date = datetime.datetime.strptime(date.split(' - ')[0], '%m/%d/%Y')
+        end_date = datetime.datetime.strptime(date.split(' - ')[1], '%m/%d/%Y')
+
+        tickets = get_tickets(start_date, end_date)
+        tot_mvm = str(get_guadagno_mvm(tickets['mvm'])).replace(',', '.')
+        tot_sielte = str(get_guadagno_sielte(tickets['sielte'])).replace(',', '.')
+
+
+        mvm_earning = split_ticket_mvm(tickets['mvm'])
+        sielte_earning = split_ticket_sielte(tickets['sielte'])
+        print(tickets['mvm'])
+        print(tickets['sielte'])
+
+        mvm_data_bar = []
+        sielte_data_bar = []
+
+        total = {}
+        for user in mvm_earning:
+            # print(user)
+            price = mvm_earning[user]
+            # print(price)
+            # print(mvm_earning[user])
+            if user in sielte_earning.keys():
+                price += sielte_earning[user]
+                # print(sielte_earning[user])
+            
+            total[user] = price
+            # print()
+
+        for user in sielte_earning:
+            price = sielte_earning[user]
+            if user in total.keys():
+                price += total[user]
+            else:
+                total[user] = price
+
+
+        total = sorted(total.items(), key=lambda x: x[1], reverse=True)
+        # print(total)
+        names = []
+        for tot in total:
+            names.append('{}\n {}'.format(tot[0], str(tot[1])))
+
+        # print('TOTALSS')
+        for user in total:
+            if user[0] in mvm_earning.keys():
+                mvm_data_bar.append(float(mvm_earning[user[0]]))
+                if user[0] in sielte_earning.keys():
+                    sielte_data_bar.append(float(sielte_earning[user[0]]))
+                else:
+                    sielte_data_bar.append('')
+            elif user[0] in sielte_earning.keys():
+                sielte_data_bar.append(float(sielte_earning[user[0]]))
+                mvm_data_bar.append('')
+
+        tickets = list(chain(tickets['mvm'], tickets['sielte']))
+        height = len(names)*50
+
+        return render(request, 'dashboard_manager.html', {'title':'Dashboard', 'note_form': note_form, 'date': date,
+        'tot_mvm': tot_mvm, 'tot_sielte': tot_sielte,
+        'names':names, 'sielte_data_bar':sielte_data_bar, 'mvm_data_bar': mvm_data_bar, 'tickets': tickets, 'height': height})
 
 
 def get_tickets(start_date, end_date):

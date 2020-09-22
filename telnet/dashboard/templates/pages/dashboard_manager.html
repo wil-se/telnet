@@ -30,7 +30,7 @@
 
     <div class="navbar-collapse collapse" id="navbar-filter" style="padding: 20px;">
 
-        <!-- <form method="GET" action="{% url 'get dashboard data' %}" style="display: flex;"> -->
+        <form method="GET" action="{% url 'get dashboard data' %}" style="display: flex;">
 
         <div class="input-group">
             <span class="input-group-prepend">
@@ -41,7 +41,7 @@
         </div>
         <button id="search" class="btn" type="submit"> Cerca </button>
 
-        <!-- </form> -->
+        </form>
 
     </div>
 </div>
@@ -89,7 +89,7 @@
 
 <div class="row">
 
-  <div class="card" style="width:100%">
+  <div class="card" style="width:100%;">
     <div class="card-header header-elements-inline">
       <h5 class="card-title">Guadagno per tecnico</h5>
       <div class="header-elements">
@@ -98,7 +98,7 @@
 
     <div class="card-body">
       <div class="chart-container">
-        <div class="chart has-fixed-height" id="bars_stacked"></div>
+        <div class="chart" id="bars_stacked" style="height: {{ height }}px"></div>
       </div>
     </div>
   </div>

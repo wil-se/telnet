@@ -81,7 +81,11 @@ def ticket_list(request):
     form_fields['start_date'] = ''
     form = SearchForm(request.GET or None, request.FILES or None, initial=form_fields)
 
-    return render(request, 'ticket_list.html', {'title':'Lista ticket', 'tickets': tickets, 'form': form})
+    start_date = datetime.datetime.now() - datetime.timedelta(60)
+    end_date = datetime.datetime.now() + datetime.timedelta(60)
+    date = '{} - {}'.format(start_date.strftime('%m/%d/%Y'), end_date.strftime('%m/%d/%Y'))
+    
+    return render(request, 'ticket_list.html', {'title':'Lista ticket', 'tickets': tickets, 'form': form, 'date': date})
 
 @login_required(login_url='/accounts/login/')
 def search_tickets(request):
@@ -119,6 +123,12 @@ def search_tickets(request):
         mvm_queryset &= (Q(assigned_to=user))
         sielte_queryset &= (Q(assigned_to=user))
 
+    if request.user.role == 3:
+        user = User.objects.get(pk=request.user.pk)
+        print(user)
+        mvm_queryset &= (Q(assigned_to=user))
+        sielte_queryset &= (Q(assigned_to=user))
+
     if status:
         print(status)
         if status != 'TUTTI':
@@ -144,7 +154,7 @@ def search_tickets(request):
     # for ticket in tickets:
     #     print(ticket)
     print(tickets)
-    return render(request, 'ticket_list.html', {'title':'Lista ticket', 'tickets': tickets, 'form':form,})
+    return render(request, 'ticket_list.html', {'title':'Lista ticket', 'tickets': tickets, 'form':form, 'date': date})
 
 @login_required(login_url='/accounts/login/')
 def save_mvm_ticket(request):

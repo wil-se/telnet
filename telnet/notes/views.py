@@ -153,8 +153,8 @@ def search_notes(request):
         start_date = datetime.datetime.strptime(date.split(' - ')[0], '%m/%d/%Y')
         end_date = datetime.datetime.strptime(date.split(' - ')[1], '%m/%d/%Y')
         notequeryset &= (
-        Q(created_by__gte=start_date)&
-        Q(created_by__lte=end_date)
+        Q(start_date__gte=start_date)&
+        Q(start_date__lte=end_date)
         )
 
 
