@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}<title>TelNet</title>{% endblock %}
+{% block import %}
+{% endblock %}
+
+{% block content %}
+<div class="row">
+	<div class="col">
+
+            <div class="card">
+
+              <div class="card-header header-elements-inline bg-dark">
+								<h6 class="card-title font-weight-semibold"></h6>
+							</div>
+
+							<ul class="media-list media-list-linked media-list-bordered">
+								<li class="media bg-light py-2">
+                  <span style="float: left;"><span class="font-weight-semibold">DATA CREAZIONE: &nbsp;</span>{{ note.created_at }} </span>
+                </li>
+							</ul>
+
+              <ul class="media-list media-list-linked media-list-bordered">
+                <li class="media bg-light py-2">
+                  <span style="float: left;"><span class="font-weight-semibold">CREATO DA: &nbsp;</span>{{ note.created_by }} </span>
+                </li>
+              </ul>
+
+              <ul class="media-list media-list-linked media-list-bordered">
+                <li class="media bg-light py-2">
+                  <span style="float: left;"><span class="font-weight-semibold">ASSEGNATO A: &nbsp;</span>{{ note.assigned_to }} </span>
+                </li>
+              </ul>
+
+              <ul class="media-list media-list-linked media-list-bordered">
+                <li class="media bg-light py-2">
+                  <span style="float: left;"><span class="font-weight-semibold">DATA INIZIO RIFERIMENTO: &nbsp;</span>{{ note.start_date }} </span>
+                </li>
+              </ul>
+
+              <ul class="media-list media-list-linked media-list-bordered">
+                <li class="media bg-light py-2">
+                  <span style="float: left;"><span class="font-weight-semibold">DATA FINE RIFERIMENTO: &nbsp;</span>{{ note.end_date }} </span>
+                </li>
+              </ul>
+              
+
+              <ul class="media-list media-list-linked media-list-bordered">
+                <li class="media bg-light py-2">
+                  <span class="font-weight-semibold">NOTA: &nbsp;</span>
+                </li>
+                <li class="media bg-light py-2" style="border-top: transparent;">
+                  <p >{{ note.note }}</p>
+
+                  </li>
+              </ul>
+              <a href="/modifica-nota/{{ note.pk }}"><button class="btn"> Modifica </button></a>
+
+
+            </div>
+
+				<!-- /linked list headers -->
+
+				</div>
+				<!-- /linked list headers -->
+
+</div>
+
+
+
+{% endblock %}

@@ -1,0 +1,294 @@
+{% extends 'base.html' %}
+{% load filters %}
+{% load static %}
+{% block title %}<title>TelNet</title>{% endblock %}
+{% block import %}
+<script src="{% static 'global_assets/js/plugins/pickers/pickadate/picker.js' %}"></script>
+<script src="{% static 'global_assets/js/plugins/pickers/pickadate/picker.time.js' %}"></script>
+<script src="{% static 'global_assets/js/demo_pages/picker_date.js' %}"></script>
+
+<script src="{% static 'global_assets/js/plugins/uploaders/fileinput/plugins/purify.min.js' %}"></script>
+<script src="{% static 'global_assets/js/plugins/uploaders/fileinput/plugins/sortable.min.js' %}"></script>
+<script src="{% static 'global_assets/js/plugins/uploaders/fileinput/fileinput.min.js' %}"></script>
+<script src="{% static 'global_assets/js/demo_pages/uploader_bootstrap.js' %}"></script>
+
+{% endblock %}
+
+{% block content %}
+<div class="row">
+	<div class="col">
+
+		<div class="card">
+
+			<div class="card-header header-elements-inline bg-dark">
+				<h6 class="card-title font-weight-semibold">Anagrafica</h6>
+				<div class="header-elements">
+					<div class="list-icons">
+						<a class="list-icons-item" data-action="collapse"></a>
+					</div>
+				</div>
+			</div>
+{% if request.user.role < 3 %}
+			<ul class="media-list media-list-linked media-list-bordered">
+				<li class="media bg-light py-2">
+
+					<b>GUADAGNO ATTIVITÀ:</b>&nbsp; {{ sielte.attivita.guadagno|default_if_none:"" }}
+				</li>
+			</ul>
+			<ul class="media-list media-list-linked media-list-bordered">
+				<li class="media bg-light py-2">
+
+					<b>GUADAGNO ATTIVITÀ AGGIUNTIVA:</b>&nbsp; {{ extra_price|default_if_none:"" }}
+				</li>
+			</ul>
+{% endif %}
+			<ul class="media-list media-list-linked media-list-bordered">
+				<li class="media bg-light py-2">
+					<b>OCCORRENZE:</b>&nbsp; {{ sielte.occorrenze|default_if_none:"" }}
+				</li>
+			</ul>
+
+
+			<ul class="media-list media-list-linked media-list-bordered">
+				<li class="media bg-light py-2">
+					<b>DESC. TIPO PRATICA:</b>&nbsp; {{ sielte.descrizione_tipologia_pratica|default_if_none:"" }}
+				</li>
+			</ul>
+
+			<ul class="media-list media-list-linked media-list-bordered">
+				<li class="media bg-light py-2">
+					<b>DESC. PRATICA:</b>&nbsp; {{ sielte.descrizione_pratica|default_if_none:"" }}
+				</li>
+			</ul>
+
+			<ul class="media-list media-list-linked media-list-bordered">
+				<li class="media bg-light py-2">
+					<b>COD. CENTRALE:</b>&nbsp; {{ sielte.cod_centrale|default_if_none:"" }}
+				</li>
+			</ul>
+
+			<ul class="media-list media-list-linked media-list-bordered">
+				<li class="media bg-light py-2">
+					<b>DESC. CENTRALE:</b>&nbsp; {{ sielte.descrizione_centrale|default_if_none:"" }}
+				</li>
+			</ul>
+
+			<ul class="media-list media-list-linked media-list-bordered">
+				<li class="media bg-light py-2">
+					<b>COD WR COMMITTENTE:</b>&nbsp; {{ sielte.cod_wr_committente|default_if_none:"" }}
+				</li>
+			</ul>
+
+			<ul class="media-list media-list-linked media-list-bordered">
+				<li class="media bg-light py-2">
+					<b>IMPIANTO:</b>&nbsp; {{ sielte.impianto|default_if_none:"" }}
+				</li>
+			</ul>
+
+			<ul class="media-list media-list-linked media-list-bordered">
+				<li class="media bg-light py-2">
+					<b>NOME:</b>&nbsp; {{ sielte.nome|default_if_none:"" }}
+				</li>
+			</ul>
+
+			<ul class="media-list media-list-linked media-list-bordered">
+				<li class="media bg-light py-2">
+					<b>INDIRIZZO:</b>&nbsp; {{ sielte.indirizzo|default_if_none:"" }}
+				</li>
+			</ul>
+
+			<ul class="media-list media-list-linked media-list-bordered">
+				<li class="media bg-light py-2">
+					<b>TELEFONO CLIENTE 1:</b>&nbsp; {{ sielte.telefono_cliente_1|default_if_none:"" }}
+				</li>
+			</ul>
+
+			<ul class="media-list media-list-linked media-list-bordered">
+				<li class="media bg-light py-2">
+					<b>TELEFONO CLIENTE 2:</b>&nbsp; {{ sielte.telefono_cliente_2|default_if_none:"" }}
+				</li>
+			</ul>
+
+			<ul class="media-list media-list-linked media-list-bordered">
+				<li class="media bg-light py-2">
+					<b>N°:</b>&nbsp; {{ sielte.nr|default_if_none:"" }}
+				</li>
+			</ul>
+
+
+			<ul class="media-list media-list-linked media-list-bordered">
+				<li class="media bg-light py-2">
+					<b>DATA INIZIO APPUNTAMENTO:</b>&nbsp; {{ sielte.data_inizio_appuntamento|default_if_none:"" }}
+				</li>
+			</ul>
+
+			<ul class="media-list media-list-linked media-list-bordered">
+				<li class="media bg-light py-2">
+					<b>ORA APPUNTAMENTO:</b>&nbsp; {{ sielte.ora_inizio_appuntamento|default_if_none:"" }}
+				</li>
+			</ul>
+
+			<ul class="media-list media-list-linked media-list-bordered">
+				<li class="media bg-light py-2">
+					<b>STATUS:</b>&nbsp; {{ sielte.status|default_if_none:"" }}
+				</li>
+			</ul>
+
+
+		</div>
+
+
+
+		<div class="card">
+
+			<div class="card-header header-elements-inline bg-dark">
+				<h6 class="card-title font-weight-semibold">Compilazione</h6>
+				<div class="header-elements">
+					<div class="list-icons">
+						<a class="list-icons-item" data-action="collapse"></a>
+					</div>
+				</div>
+			</div>
+			<br>
+
+			<div class="col-md-6">
+				<form method="POST" action="{% url 'save sielte ticket' %}" enctype="multipart/form-data">
+					{% csrf_token %}
+					<div class="form-group">
+
+
+
+						{% if request.user.role < 3 %}
+						<b>ATTIVITÀ:</b>&nbsp; {{ form.attivita|addclass:'form-control' }}<br>
+						<b>ATTIVITÀ AGGIUNTIVA:</b>&nbsp; {{ form.attivita_aggiuntiva|addclass:'form-control' }}<br>
+						<div id="attivita-agg-dynamic-group"></div>
+
+
+						{% else %}
+						<b>ATTIVITÀ:</b>&nbsp; {{ sielte.attivita.servizio }}<br><br>
+						<b>ATTIVITÀ AGGIUNTIVA:</b>&nbsp; {{ sielte.attivita_aggiuntiva.servizio }}<br>
+						<div id="attivita-agg-dynamic-group"></div><br>
+
+						{% endif %}
+
+
+
+						{% if request.user.role < 3 %}
+						<b>ASSEGNATO A:</b>&nbsp; {{ form.assigned_to|addclass:'form-control'}}<br>
+
+						{% endif %}
+
+						<b>STATO LAVORO:</b>
+						{{ form.status|addclass:'form-control' }}
+						<div id="stato-lavoro-dynamic-group"></div>
+
+						<br>
+						<b>NOTE:</b>
+						{{ form.note|addclass:'form-control' }}
+
+						<br>
+						<b>ORA DA:</b>
+						<div class="input-group">
+							<span class="input-group-prepend">
+								<span class="input-group-text"><i class="icon-alarm"></i></span>
+							</span>
+							{{ form.ora_da|addclass:'form-control pickatime picker__input picker__input--active' }}
+						</div>
+
+						<br>
+						<b>ORA A:</b>
+						<div class="input-group">
+							<span class="input-group-prepend">
+								<span class="input-group-text"><i class="icon-alarm"></i></span>
+							</span>
+							{{ form.ora_a|addclass:'form-control pickatime picker__input picker__input--active' }}
+						</div>
+						<br><br>
+
+						{% if uploaded_files %}
+
+						<b>FILE CARICATI:</b>&nbsp;
+						<br><br>
+						{% for f in uploaded_files %}
+						<a href="/media/{{ f.name }}"><i class="icon-file-empty"></i></a>&nbsp; &nbsp; &nbsp;
+						<a href="/file-sielte-delete/{{ sielte.pk }}/{{ f.pk }}">elimina</a>
+						<br><br>
+						{% endfor %}
+						{% endif %}
+
+
+						<br><br>
+						<div class="form-group row">
+							<label class="col-lg-2 col-form-label font-weight-semibold">CARICA FILE:</label>
+							<div class="col-lg-10">
+								<input multiple="multiple" name="sielte-upload" type="file" class="file-input"
+									data-fouc>
+							</div>
+						</div>
+
+						<input id="id" name="id" type="hidden" value="{{ sielte.pk }}">
+					</div>
+					<button class="btn" type="submit"> Salva </button>
+				</form>
+			</div>
+
+		</div>
+		<!-- /linked list headers -->
+
+
+
+
+	</div>
+	<!-- /linked list headers -->
+
+</div>
+
+
+<script>
+	function generate_stato_lavoro_form() {
+		var data = $('#id_status').val();
+		console.log(data);
+		$("#stato-lavoro-dynamic-group").empty();
+		if (data == 'KO') {
+			$("#stato-lavoro-dynamic-group").append("<br><b>MOTIVO KO:</b>");
+			$("#stato-lavoro-dynamic-group").append("<select id=\"ko-form\" class=\"form-control\" name=\"motivo-ko\">");
+			$("#ko-form").append("<option value=\"TUBAZIONE-A14\">TUBAZIONE PRIVATA A14</option>");
+			$("#ko-form").append("<option value=\"TUBAZIONE-A24\">TUBAZIONE PRIVATA A24</option>");
+			$("#ko-form").append("<option value=\"CLT-IRREPERIBILE\">CLT IRREPERIBILE</option>");
+			$("#ko-form").append("<option value=\"RINUNCIA\">RINUNCIA</option>");
+			$("#ko-form").append("<option value=\"GENERICO\">ECC. DISTANZA / GENERICO</option>");
+			$("#ko-form").append("</select>");
+		}
+	}
+
+	function generate_attivita_agg_form() {
+		var data = $('#id_attivita_aggiuntiva').val();
+		console.log(data);
+		$("#attivita-agg-dynamic-group").empty();
+		{% if request.user.role < 3 %}
+		if (data == 'router' || data == 'telefoni IP' || data == 'ora ECO') {
+			$("#attivita-agg-dynamic-group").append("<b>NUMERO &nbsp;" + data + ": </b>");
+			$("#attivita-agg-dynamic-group").append(
+				"<input type=\"number\" name=\"number\" value=\"1\" class=\"form-control\" id=\"id_number\"><br>");
+			console.log('ecchelo')
+		} {% else %}
+		$("#attivita-agg-dynamic-group").append("<br><b>NUMERO &nbsp;" + "{{ sielte.attivita_aggiuntiva.servizio }}" +
+			":&nbsp; {{ sielte.numero_agg }}</b>"); {% endif %}
+	}
+
+	$(function () {
+		generate_stato_lavoro_form();
+		generate_attivita_agg_form()
+		$("#ko-form").val("{{ sielte.ko_reason }}");
+		$("#id_number").val("{{ sielte.numero_agg }}");
+	});
+
+	$('#id_status').change(function () {
+		generate_stato_lavoro_form()
+	});
+	$('#id_attivita_aggiuntiva').change(function () {
+		generate_attivita_agg_form()
+	});
+</script>
+
+{% endblock %}

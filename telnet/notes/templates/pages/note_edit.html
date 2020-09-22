@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}<title>TelNet</title>{% endblock %}
+{% block import %}
+{% endblock %}
+{% load filters %}
+{% block content %}
+<div class="row">
+	<div class="col">
+
+            <div class="card">
+
+              <div class="card-header header-elements-inline bg-dark">
+								<h6 class="card-title font-weight-semibold"></h6>
+							</div>
+              <form method="POST" action="{% url 'save mod note' %}">
+                {% csrf_token %}
+							<ul class="media-list media-list-linked media-list-bordered">
+								<li class="media bg-light py-2">
+                  <span style="float: left;"><span class="font-weight-semibold">DATA: &nbsp;</span>{{ note.created_at }} </span>
+                </li>
+							</ul>
+
+              <ul class="media-list media-list-linked media-list-bordered">
+                <li class="media bg-light py-2">
+                  <span style="float: left;"><span class="font-weight-semibold">CREATO DA: &nbsp;</span>{{ form.created_by }} </span>
+                </li>
+              </ul>
+
+              <ul class="media-list media-list-linked media-list-bordered">
+                <li class="media bg-light py-2">
+                  <span style="float: left;"><span class="font-weight-semibold">ASSEGNATO A: &nbsp;</span>{{ form.assigned_to|addclass:'form-control' }} </span>
+                </li>
+              </ul>
+
+                            <ul class="media-list media-list-linked media-list-bordered">
+                <li class="media bg-light py-2">
+                  <span style="float: left;"><span class="font-weight-semibold">DATA INIZIO RIFERIMENTO: &nbsp;</span>{{ form.start_date|addclass:'form-control' }} </span>
+                </li>
+              </ul>
+
+              <ul class="media-list media-list-linked media-list-bordered">
+                <li class="media bg-light py-2">
+                  <span style="float: left;"><span class="font-weight-semibold">DATA FINE RIFERIMENTO: &nbsp;</span>{{ form.end_date|addclass:'form-control' }} </span>
+                </li>
+              </ul>
+
+              <ul class="media-list media-list-linked media-list-bordered">
+                <li class="media bg-light py-2">
+                  <span class="font-weight-semibold">NOTA: &nbsp;</span>
+                </li>
+                <li class="media bg-light py-2" style="border-top: transparent;">
+                  <p >{{ form.note|addclass:'form-control' }}</p>
+
+                  </li>
+              </ul>
+
+              <input id="id" name="id" type="hidden" value="{{ note.pk }}">
+
+
+              <button class="btn" type="submit"> Salva </button>
+							<button class="btn" id="delete"> Elimina </button>
+
+              </form>
+
+            </div>
+
+				<!-- /linked list headers -->
+
+				</div>
+				<!-- /linked list headers -->
+
+</div>
+
+<script>
+	$('#delete').click(
+	function(){
+		console.log('bella');
+		$.ajax({
+            headers: {'X-CSRFToken': '{{ csrf_token }}'},
+            type: "POST",
+            url: "/delete-note",
+            data: {'pk': {{ note.pk }}, 'user':{{ request.user.id }} },
+            success: function(data){
+                console.log('success');
+								location.href = '/lista-note';
+            },
+            failure: function(data){
+                console.log("FAIL");
+                console.log(data);
+            },
+        });
+	}
+	)
+	</script>
+
+{% endblock %}

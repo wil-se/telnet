@@ -1,0 +1,96 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>ImportEx</title>
+
+	<link href="https://fonts.googleapis.com/css?family=Roboto:400,300,100,500,700,900"  rel="stylesheet" type="text/css">
+	<link href="{% static 'global_assets/css/icons/icomoon/styles.min.css' %}"  rel="stylesheet" type="text/css">
+	<link href="{% static 'assets/css/bootstrap.min.css' %}"  rel="stylesheet" type="text/css">
+	<link href="{% static 'assets/css/bootstrap_limitless.min.css' %}"  rel="stylesheet" type="text/css">
+	<link href="{% static 'assets/css/layout.min.css' %}"  rel="stylesheet" type="text/css">
+	<link href="{% static 'assets/css/components.min.css' %}"  rel="stylesheet" type="text/css">
+	<link href="{% static 'assets/css/colors.min.css' %}"  rel="stylesheet" type="text/css">
+	<script src="{% static 'global_assets/js/main/jquery.min.js' %}" ></script>
+	<script src="{% static 'global_assets/js/main/bootstrap.bundle.min.js' %}" ></script>
+	<script src="{% static 'global_assets/js/plugins/loaders/blockui.min.js' %}" ></script>
+	<script src="{% static 'global_assets/js/plugins/forms/styling/uniform.min.js' %}" ></script>
+	<script src="{% static 'assets/js/app.js' %}" ></script>
+	<script src="{% static 'global_assets/js/demo_pages/login.js' %}" ></script>
+
+</head>
+
+<body>
+
+
+	<!-- Page content -->
+	<div class="page-content">
+
+		<!-- Main content -->
+		<div class="content-wrapper">
+
+			<!-- Content area -->
+			<div class="content d-flex justify-content-center align-items-center">
+
+				<!-- Login card -->
+				<form class="login-form" method="POST">
+					{% csrf_token %}
+					<div class="card-body">
+						<div class="text-center mb-3">
+							<img src="{% static 'logo.png' %}" width="150">
+							<h5 class="mb-0">Login</h5>
+							<span class="d-block text-muted">Inserisci le tue credenziali</span>
+						</div>
+
+						<div class="form-group form-group-feedback form-group-feedback-left">
+							<input type="input" class="form-control" name="username" id="inputEmail" placeholder="Username" required >
+							<div class="form-control-feedback">
+								<i class="icon-user text-muted"></i>
+							</div>
+						</div>
+
+						<div class="form-group form-group-feedback form-group-feedback-left">
+							<input type="password" class="form-control" name="password" id="inputPass" placeholder="Password" required>
+							<div class="form-control-feedback">
+								<i class="icon-lock2 text-muted"></i>
+							</div>
+						</div>
+
+						<div class="form-group d-flex align-items-center">
+							<div class="form-check mb-0">
+								<label class="form-check-label">
+									<input type="checkbox" name="remember" class="form-input-styled" checked data-fouc>
+									Ricordami
+								</label>
+							</div>
+
+							<a href="login_password_recover.html" class="ml-auto">Password dimenticata?</a>
+						</div>
+
+						<div class="form-group">
+							<button type="submit" class="btn btn-primary btn-block">Accedi <i class="icon-circle-right2 ml-2"></i></button>
+						</div>
+						<!-- <span class="form-text text-center text-muted">tel.net</span> -->
+					</div>
+				</form>
+				<!-- /login card -->
+
+			</div>
+			<!-- /content area -->
+
+			    {% block footer %}
+			      {% include "footer.html" %}
+			    {% endblock %}
+
+		</div>
+		<!-- /main content -->
+
+	</div>
+	<!-- /page content -->
+
+</body>
+</html>

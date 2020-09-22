@@ -1,0 +1,22 @@
+<div class="col-xl-6">
+
+  <div class="card border-left-3 rounded-left-0" style="width: 100%;">
+
+    <div class="card-body">
+      <div class="d-sm-flex align-item-sm-center flex-sm-nowrap">
+
+        <div>
+          <h6><a href="/nota/{{ note.pk }}">{{ note.assigned_to }}</a></h6>
+          <p class="mb-3">{{ note.note|truncatewords:32 }}</p>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="card-footer">
+      <span style="float: left;"><span class="font-weight-semibold">DATA: &nbsp;</span>{{ note.created_at }} </span>
+      <span style="float: right;"><span class="font-weight-semibold">CREATO DA: &nbsp;</span> {{ note.created_by }}</span>
+    </div>
+
+  </div>
+</div>

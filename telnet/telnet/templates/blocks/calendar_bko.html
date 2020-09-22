@@ -1,0 +1,122 @@
+{% load static %}
+
+{% block import %}
+	<script src="{% static 'global_assets/js/plugins/ui/fullcalendar/core/main.min.js' %}"></script>
+	<script src="{% static 'global_assets/js/plugins/ui/fullcalendar/daygrid/main.min.js' %}"></script>
+	<script src="{% static 'global_assets/js/plugins/ui/fullcalendar/timegrid/main.min.js' %}"></script>
+	<script src="{% static 'global_assets/js/plugins/ui/fullcalendar/list/main.min.js' %}"></script>
+	<script src="{% static 'global_assets/js/plugins/ui/fullcalendar/interaction/main.min.js' %}"></script>
+  <script src="{% static 'global_assets/js/plugins/ui/fullcalendar/core/locales-all.min.js' %}"></script>
+
+{% endblock %}
+
+<!-- Calendar view -->
+<div class="card" style="min-width: 100%">
+	<div class="card-header header-elements-inline">
+		<h5 class="card-title">Assegnazioni</h5>
+		<div class="header-elements">
+			<div class="list-icons">
+            		<a class="list-icons-item" data-action="collapse"></a>
+
+            	</div>
+          	</div>
+	</div>
+
+	<div class="card-body">
+
+		<div class="fullcalendar-list"></div>
+	</div>
+</div>
+<!-- Calendar view -->
+
+
+<script>
+
+  var FullCalendarBasic = function() {
+
+
+      //
+      // Setup module components
+      //
+
+      // Basic calendar
+      var _componentFullCalendarBasic = function() {
+          if (typeof FullCalendar == 'undefined') {
+              console.warn('Warning - Fullcalendar files are not loaded.');
+              return;
+          }
+
+          // Add demo events
+          // ------------------------------
+
+          // Default events
+          var events = [
+              {
+                  title: 'Test 0',
+                  start: new Date(),
+              },
+							{
+                  title: 'Test 1',
+                  start: new Date(),
+              },
+							{
+                  title: 'Test 2',
+                  start: new Date(),
+              },
+          ];
+
+
+          //
+          // List view
+          //
+
+          // Define element
+          var calendarListViewElement = document.querySelector('.fullcalendar-list');
+
+          // Initialize
+          if(calendarListViewElement) {
+              var calendarListViewInit = new FullCalendar.Calendar(calendarListViewElement, {
+                  locale: 'it',
+                  plugins: [ 'list', 'interaction' ],
+                  header: {
+                      left: 'prev,next today',
+                      center: 'title',
+                      right: 'listDay,listWeek,listMonth'
+                  },
+                  views: {
+                      listDay: { buttonText: 'Giorno' },
+                      listWeek: { buttonText: 'Settimana' },
+                      listMonth: { buttonText: 'Mese' }
+                  },
+                  defaultView: 'listWeek',
+                  defaultDate: new Date(),
+                  navLinks: true, // can click day/week names to navigate views
+                  editable: true,
+                  eventLimit: true, // allow "more" link when too many events
+                  events: events,
+
+              }).render();
+          }
+      };
+
+
+      //
+      // Return objects assigned to module
+      //
+
+      return {
+          init: function() {
+              _componentFullCalendarBasic();
+          }
+      }
+  }();
+
+
+  // Initialize module
+  // ------------------------------
+
+  document.addEventListener('DOMContentLoaded', function() {
+      FullCalendarBasic.init();
+  });
+
+</script>

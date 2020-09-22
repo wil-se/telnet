@@ -1,0 +1,616 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}<title>TelNet | {{ title }}</title>{% endblock %}
+{% load filters %}
+{% block import %}
+<script src="{% static 'global_assets/js/plugins/visualization/echarts/echarts.min.js' %}"></script>
+<script src="{% static 'js/bar.js' %}"></script>
+<script src="{% static 'js/pie.js' %}"></script>
+
+<script src="{% static 'global_assets/js/plugins/ui/moment/moment.min.js' %}"></script>
+<script src="{% static 'global_assets/js/plugins/pickers/daterangepicker.js' %}"></script>
+<script src="{% static 'global_assets/js/demo_pages/picker_date.js' %}"></script>
+
+<script src="{% static 'global_assets/js/plugins/extensions/jquery_ui/widgets.min.js' %}"></script>
+<script src="{% static 'global_assets/js/plugins/tables/datatables/datatables.min.js' %}"></script>
+<script src="{% static 'global_assets/js/plugins/tables/datatables/extensions/natural_sort.js' %}"></script>
+<script src="{% static 'global_assets/js/plugins/forms/selects/select2.min.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<!-- Filter toolbar -->
+<div class="navbar navbar-expand-lg navbar-light navbar-component rounded" style="width: 100%;">
+    <div class="text-center d-lg-none w-100">
+        <button type="button" class="navbar-toggler dropdown-toggle" data-toggle="collapse"
+            data-target="#navbar-filter">
+            <i class="icon-unfold mr-2"></i>
+            Filtra ricerca
+        </button>
+    </div>
+
+    <div class="navbar-collapse collapse" id="navbar-filter" style="padding: 20px;">
+
+        <!-- <form method="GET" action="{% url 'get dashboard data' %}" style="display: flex;"> -->
+
+        <div class="input-group">
+            <span class="input-group-prepend">
+                <span class="input-group-text"><i class="icon-calendar22"></i></span>
+            </span>
+            <input id="daterange" name="date" type="text" class="form-control daterange-basic"
+                value="{{ date }}">
+        </div>
+        <button id="search" class="btn" type="submit"> Cerca </button>
+
+        <!-- </form> -->
+
+    </div>
+</div>
+<!-- /filter toolbar -->
+
+<div class="row">
+    <div class="card col-xl-6">
+        <div class="card-header header-elements-inline">
+            <h5 class="card-title">Fatturato</h5>
+        </div>
+
+
+        <div class="card-body">
+            <div class="chart-container">
+                <div class="chart has-fixed-height" id="pie_basic"></div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="card col-xl-6">
+        <div class="card-header header-elements-inline">
+            <h5 class="card-title">Note</h5>
+        </div>
+
+        <div class="card-body">
+            <br>
+            <b>Assegnatario:</b>
+            {{ note_form.assigned_to|addclass:'form-control' }}
+            <br>
+            <b>Data inizio riferimento:</b>
+            {{ note_form.start_date }}
+            <br>
+            <b>Data fine riferimento:</b>
+            {{ note_form.end_date }}
+            <br>
+            {{ note_form.note|addclass:'form-control' }}
+            <br>
+            <button class="btn" id="note-submit"> Salva </button>
+        </div>
+    </div>
+
+</div>
+
+
+<div class="row">
+
+  <div class="card" style="width:100%">
+    <div class="card-header header-elements-inline">
+      <h5 class="card-title">Guadagno per tecnico</h5>
+      <div class="header-elements">
+              </div>
+    </div>
+
+    <div class="card-body">
+      <div class="chart-container">
+        <div class="chart has-fixed-height" id="bars_stacked"></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+
+<div class="row">
+
+    <!-- Task manager table -->
+    <div class="card">
+      <div class="card-header bg-transparent header-elements-inline">
+        <h6 class="card-title">Task manager</h6>
+      </div>
+
+      <table class="table tasks-list table-lg" style="width: 100%;  ">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>TECNICO</th>
+            <th>COD CENTRALE</th>
+            <th>DESC CENTRALE</th>
+            <th>WR</th>
+            <th>TELEFONO</th>
+            <th>NOMINATIVO</th>
+            <th>ORA APPUNTAMENTO</th>
+            <th>SCADENZA</th>
+            <th>TIPO PRATICA</th>
+            <th>STATUS</th>
+           </tr>
+        </thead>
+        <tbody>
+
+
+            {% for item in tickets %}
+
+                {% if item|get_class == 'MvmImport' %}
+                  {% include 'ticket_dashboard_admin_mvm.html' with ticket=item %}
+                {% endif %}
+
+                {% if item|get_class == 'SielteImport' %}
+                  {% include 'ticket_dashboard_admin_sielte.html' with ticket=item %}
+                {% endif %}
+
+            {% endfor %}
+
+        </tbody>
+      </table>
+    </div>
+    <!-- /task manager table -->
+
+  <!-- /content area -->
+
+
+</div>
+
+<script>
+
+	var TaskManagerList = function () {
+
+
+
+	    var _componentDatatable = function() {
+	        if (!$().DataTable) {
+	            console.warn('Warning - datatables.min.js is not loaded.');
+	            return;
+	        }
+
+
+
+	        // Initialize data table
+	        $('.tasks-list').DataTable({
+	            autoWidth: false,
+							"scrollX": true,
+	            columnDefs: [
+	                {
+	                    type: "natural",
+	                    width: 20,
+	                    targets: 0
+	                },
+	                {
+	                    visible: true,
+	                    targets: 1
+	                },
+	                {
+	               //     width: '40%',
+	                    targets: 2
+	                },
+	                {
+	                    width: '10%',
+	                    targets: 3
+	                },
+	                {
+	                    orderDataType: 'dom-text',
+	                    type: 'string',
+	                    targets: 4
+	                },
+	                {
+	                    orderDataType: 'dom-select',
+	                    type: 'string',
+	                    targets: 5
+	                },
+	                {
+	                    width: 100,
+	                    targets: 6
+	                },
+									{
+                      orderable: false,
+	                    orderDataType: 'dom-text',
+	                    type: 'string',
+	                    targets: 7
+	                },
+									{
+                      orderable: false,
+	                    orderDataType: 'dom-text',
+	                    type: 'string',
+	                    targets: 8
+	                },
+									{
+	                    orderDataType: 'dom-text',
+	                    type: 'string',
+	                    targets: 9
+	                },
+									{
+                      orderable: false,
+											orderDataType: 'dom-text',
+											type: 'string',
+											targets: 10
+									},
+
+
+	            ],
+	            order: [[ 0, 'desc' ]],
+	            dom: '<"datatable-header"fl><"datatable-scroll-lg"t><"datatable-footer"ip>',
+	            language: {
+	                search: '<span>Filtra:</span> _INPUT_',
+	                searchPlaceholder: 'Cerca...',
+	                lengthMenu: '',
+	                paginate: { 'first': 'First', 'last': 'Last', 'next': $('html').attr('dir') == 'rtl' ? '&larr;' : '&rarr;', 'previous': $('html').attr('dir') == 'rtl' ? '&rarr;' : '&larr;' }
+	            },
+	            lengthMenu: [ 15, 25, 50, 75, 100 ],
+	            displayLength: 25,
+	            drawCallback: function (settings) {
+	                var api = this.api();
+	                var rows = api.rows({page:'current'}).nodes();
+	                var last=null;
+
+	                // Initialize components
+	                _componentUiDatepicker();
+	                _componentSelect2();
+	            }
+	        });
+	    };
+
+	    // Datepicker
+	    var _componentUiDatepicker = function() {
+	        if (!$().datepicker) {
+	            console.warn('Warning - jQuery UI components are not loaded.');
+	            return;
+	        }
+
+	        // Initialize
+	        $('.datepicker').datepicker({
+	            showOtherMonths: true,
+	            dateFormat: 'd MM, y'
+	        });
+	    };
+
+	    // Select2
+	    var _componentSelect2 = function() {
+	        if (!$().select2) {
+	            console.warn('Warning - select2.min.js is not loaded.');
+	            return;
+	        }
+
+	        // Initialize
+	        $('.form-control-select2').select2({
+	            minimumResultsForSearch: Infinity
+	        });
+
+	        // Length menu styling
+	        $('.dataTables_length select').select2({
+	            minimumResultsForSearch: Infinity,
+	            dropdownAutoWidth: true,
+	            width: 'auto'
+	        });
+	    };
+
+
+	    //
+	    // Return objects assigned to module
+	    //
+
+	    return {
+	        init: function() {
+	            _componentDatatable();
+	            _componentSelect2();
+	        }
+	    }
+	}();
+
+
+	// Initialize module
+	// ------------------------------
+
+	document.addEventListener('DOMContentLoaded', function() {
+	    TaskManagerList.init();
+	});
+
+</script>
+
+<script>
+
+    var Bar = function(options) {
+        if (typeof echarts == 'undefined') {
+            console.warn('Warning - echarts.min.js is not loaded.');
+            return;
+        }
+
+        // Define element
+        var bars_stacked_element = document.getElementById('bars_stacked');
+
+
+        //
+        // Charts configuration
+        //
+
+        if (bars_stacked_element) {
+
+            // Initialize chart
+            var bars_stacked = echarts.init(bars_stacked_element);
+
+
+            //
+            // Chart config
+            //
+
+            // Options
+            bars_stacked.setOption({
+
+                // Global text styles
+                textStyle: {
+                    fontFamily: 'Roboto, Arial, Verdana, sans-serif',
+                    fontSize: 13
+                },
+
+                // Chart animation duration
+                animationDuration: 750,
+
+                // Setup grid
+                grid: {
+                    left: 0,
+                    right: 30,
+                    top: 35,
+                    bottom: 0,
+                    containLabel: true
+                },
+
+                // Add legend
+                legend: {
+                    data: ['Mvm', 'Sielte'],
+                    itemHeight: 8,
+                    itemGap: 20,
+                    textStyle: {
+                        padding: [0, 5]
+                    }
+                },
+
+                // Add tooltip
+                tooltip: {
+                    trigger: 'axis',
+                    backgroundColor: 'rgba(0,0,0,0.75)',
+                    padding: [10, 15],
+                    textStyle: {
+                        fontSize: 13,
+                        fontFamily: 'Roboto, sans-serif'
+                    },
+                    axisPointer: {
+                        type: 'shadow',
+                        shadowStyle: {
+                            color: 'rgba(0,0,0,0.025)'
+                        }
+                    }
+                },
+
+                // Horizontal axis
+                xAxis: [{
+                    type: 'value',
+                    axisLabel: {
+                        color: '#333'
+                    },
+                    axisLine: {
+                        lineStyle: {
+                            color: '#999'
+                        }
+                    },
+                    splitLine: {
+                        show: true,
+                        lineStyle: {
+                            color: '#eee',
+                            type: 'dashed'
+                        }
+                    }
+                }],
+
+                // Vertical axis
+                yAxis: [{
+                    type: 'category',
+                    data: {{ names|safe }},
+                    axisLabel: {
+                        color: '#333'
+                    },
+                    axisLine: {
+                        lineStyle: {
+                            color: '#999'
+                        }
+                    },
+                    splitLine: {
+                        show: true,
+                        lineStyle: {
+                            color: ['#eee']
+                        }
+                    },
+                    splitArea: {
+                        show: true,
+                        areaStyle: {
+                            color: ['rgba(250,250,250,0.1)', 'rgba(0,0,0,0.015)']
+                        }
+                    }
+                }],
+
+
+                // Add series
+                series: [
+                    {
+                        name: 'Mvm',
+                        type: 'bar',
+                        stack: 'Total',
+                        barWidth: 36,
+                        itemStyle: {
+                            normal: {
+                                color: '#68ACB4',
+                                label: {
+                                    show: true,
+                                    position: 'insideRight',
+                                    padding: [0, 10],
+                                    fontSize: 12
+                                }
+                            }
+                        },
+                        data:{{ mvm_data_bar|safe }},
+                    },
+                    {
+                        name: 'Sielte',
+                        type: 'bar',
+                        stack: 'Total',
+                        itemStyle: {
+                            normal: {
+                                color: '#81C784',
+                                label: {
+                                    show: true,
+                                    position: 'insideRight',
+                                    padding: [0, 10],
+                                    fontSize: 12
+                                }
+                            }
+                        },
+                        data:{{ sielte_data_bar|safe }},
+                    }
+                ],
+            });
+        }
+
+
+        //
+        // Resize charts
+        //
+
+        // Resize function
+        var triggerChartResize = function() {
+            bars_stacked_element && bars_stacked.resize();
+        };
+
+        // On sidebar width change
+        var sidebarToggle = document.querySelector('.sidebar-control');
+        sidebarToggle && sidebarToggle.addEventListener('click', triggerChartResize);
+
+        // On window resize
+        var resizeCharts;
+        window.addEventListener('resize', function() {
+            clearTimeout(resizeCharts);
+            resizeCharts = setTimeout(function () {
+                triggerChartResize();
+            }, 200);
+        });
+    };
+
+</script>
+
+
+<script>
+var Pie = function(options) {
+    if (typeof echarts == 'undefined') {
+        console.warn('Warning - echarts.min.js is not loaded.');
+        return;
+    }
+    var pie_basic_element = document.getElementById('pie_basic');
+    opts = {
+        color: [
+            '#68ACB4', '#81C784'
+        ],
+        textStyle: {
+            fontFamily: 'Roboto, Arial, Verdana, sans-serif',
+            fontSize: 13
+        },
+        tooltip: {
+            trigger: 'item',
+            backgroundColor: 'rgba(0,0,0,0.75)',
+            padding: [10, 15],
+            textStyle: {
+                fontSize: 13,
+                fontFamily: 'Roboto, sans-serif'
+            },
+            formatter: "{a} <br/>{b}: {c} ({d}%)"
+        },
+        legend: {
+            orient: 'vertical',
+            top: 'center',
+            left: 0,
+            data: ['Mvm', 'Sielte',],
+            itemHeight: 8,
+            itemWidth: 8
+        },
+        series: [{
+            name: 'guadagno',
+            type: 'pie',
+            radius: '70%',
+            center: ['50%', '57.5%'],
+            itemStyle: {
+                normal: {
+                    borderWidth: 1,
+                    borderColor: '#fff'
+                }
+            },
+            data: [ {value: {{ tot_mvm}}, name: 'Mvm'}, 
+            {value: {{ tot_sielte }}, name: 'Sielte'} ],
+        }]
+    }
+
+    if (pie_basic_element) {
+        var pie_basic = echarts.init(pie_basic_element);
+        pie_basic.setOption(opts);
+    }
+    var triggerChartResize = function() {
+        pie_basic_element && pie_basic.resize();
+    };
+    var sidebarToggle = document.querySelector('.sidebar-control');
+    sidebarToggle && sidebarToggle.addEventListener('click', triggerChartResize);
+    var resizeCharts;
+    window.addEventListener('resize', function() {
+        clearTimeout(resizeCharts);
+        resizeCharts = setTimeout(function () {
+            triggerChartResize();
+        }, 200);
+    });
+};
+
+$(function(){
+    Pie();
+    Bar();
+})
+
+</script>
+
+
+<script>
+  $('#note-submit').click( function(){
+    assigned_to = $('#id_assigned_to option:selected').text();
+    note = $('#id_note').val();
+    start_date = $('#id_start_date').val()
+    end_date = $('#id_end_date').val()
+    $.ajax({
+            headers: {'X-CSRFToken': '{{ csrf_token }}'},
+            type: "POST",
+            url: "/save-note",
+            data: {'assigned_to': assigned_to, 'note': note, 'user':{{request.user.id}}, 'start_date': start_date, 'end_date': end_date},
+            success: function(data){
+                console.log('success');
+                $('#id_assigned_to option:contains("----")').prop('selected',true);
+                $('#id_note').val('');
+            },
+            failure: function(data){
+                console.log("FAIL");
+                console.log(data);
+            },
+        });
+  });
+</script>
+
+
+<style>
+  @media (max-width: 800px) {
+
+    .content{
+      padding: 0px; !important
+    }
+  }
+
+  .row{
+      margin: 0px;
+  }
+</style>
+
+{% endblock %}

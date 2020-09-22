@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load filters %}
+{% block title %}<title>TelNet</title>{% endblock %}
+{% block import %}
+<script src="{% static 'global_assets/js/plugins/forms/styling/switchery.min.js' %}"></script>
+<script src="{% static 'global_assets/js/demo_pages/task_manager_grid.js' %}"></script>
+<script src="{% static 'global_assets/js/plugins/ui/moment/moment.min.js' %}"></script>
+<script src="{% static 'global_assets/js/plugins/pickers/daterangepicker.js' %}"></script>
+<script src="{% static 'global_assets/js/demo_pages/picker_date.js' %}"></script>
+
+{% endblock %}
+
+{% block content %}
+
+
+
+{% include 'search_tickets.html' %}
+
+
+<div class="row">
+
+  				<!-- Inner container -->
+  				<div class="d-flex align-items-start flex-column flex-md-row" style="width: 100%">
+
+  					<!-- Left content -->
+  					<div class="w-100 order-2 order-md-1">
+
+  						<!-- Task grid -->
+              <div class="row">
+              {% for item in tickets %}
+
+                  {% if item|get_class == 'MvmImport' %}
+                    {% include 'mvm_ticket_preview.html' with ticket=item %}
+                  {% endif %}
+
+                  {% if item|get_class == 'SielteImport' %}
+                    {% include 'sielte_ticket_preview.html' with ticket=item %}
+                  {% endif %}
+
+                  {% if forloop.counter|divisibleby:2 %}
+              </div>
+              <div class="row">
+                  {% endif %}
+              {% endfor %}
+              </div>
+
+  						<!-- /task grid -->
+
+
+  					</div>
+  					<!-- /left content -->
+
+
+  				</div>
+  				<!-- /inner container -->
+
+
+
+</div>
+{% endblock %}

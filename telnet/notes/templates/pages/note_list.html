@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load filters %}
+{% block title %}<title>TelNet</title>{% endblock %}
+{% block import %}
+<script src="{% static 'global_assets/js/plugins/forms/styling/switchery.min.js' %}"></script>
+<script src="{% static 'global_assets/js/demo_pages/task_manager_grid.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+
+
+{% include 'search_notes.html' %}
+
+
+<div class="row">
+
+  				<!-- Inner container -->
+  				<div class="d-flex align-items-start flex-column flex-md-row" style="width: 100%">
+
+  					<!-- Left content -->
+  					<div class="w-100 order-2 order-md-1">
+
+  						<!-- Task grid -->
+              <div class="row">
+              {% for item in notes %}
+
+                    {% include 'note_preview.html' with note=item %}
+
+                  {% if forloop.counter|divisibleby:2 %}
+              </div>
+              <div class="row">
+                  {% endif %}
+              {% endfor %}
+              </div>
+
+  						<!-- /task grid -->
+
+
+  					</div>
+  					<!-- /left content -->
+
+
+  				</div>
+  				<!-- /inner container -->
+
+
+
+</div>
+{% endblock %}

@@ -1,0 +1,13 @@
+<tr>
+	<td><a href="/sielte-ticket/{{ ticket.pk }}">SIELTE</a></td>
+	<td>{{ ticket.assigned_to|default_if_none:"" }}</td>
+	<td>{{ ticket.cod_centrale|default_if_none:"" }}</td>
+	<td>{{ ticket.descrizione_centrale|default_if_none:"" }}</td>
+	<td>{{ ticket.cod_wr_committente|default_if_none:"" }}</td>
+  	<td>{% if ticket.telefono_cliente_1 %}{{ ticket.telefono_cliente_1|default_if_none:"" }}{% endif %} {% if not ticket.telefono_cliente_1 and ticket.telefono_cliente_2 %}{{ ticket.telefono_cliente_2|default_if_none:"" }}{% endif %}</td>
+  	<td>{{ ticket.nome|default_if_none:"" }}</td>
+  	<td>{{ ticket.data_inizio_appuntamento|default_if_none:"" }}</td>
+	<td>{{ ticket.data_scadenza|default_if_none:"" }}</td>
+	<td>{{ ticket.descrizione_tipologia_pratica|default_if_none:"" }}</td>
+	<td>{{ ticket.status|default_if_none:"" }}</td>
+</tr>

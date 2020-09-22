@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}<title>TelNet</title>{% endblock %}
+{% load filters %}
+{% block import %}
+
+{% endblock %}
+
+
+
+
+{% block content %}
+
+
+<div class="card-body">
+
+
+              <div class="card">
+
+                <div class="card-header header-elements-inline bg-dark">
+  								<h6 class="card-title font-weight-semibold">Risultati</h6>
+  								<div class="header-elements">
+  									<div class="list-icons">
+                      <a class="list-icons-item" data-action="collapse"></a>
+  				          </div>
+  			          </div>
+  							</div>
+
+                {% for k, v in result.items %}
+                <ul class="media-list media-list-linked media-list-bordered">
+  								<li class="media bg-light py-2">
+                    riga {{ k }}, risultato: {{ v }}
+                  </li>
+  							</ul>
+                {% endfor %}
+              </div>
+
+
+</div>
+
+
+{% endblock %}

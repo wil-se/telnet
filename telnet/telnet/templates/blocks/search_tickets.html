@@ -1,0 +1,86 @@
+{% load filters %}
+
+<div class="navbar navbar-expand-lg navbar-light navbar-component rounded" >
+  <div class="text-center d-lg-none w-100">
+    <button type="button" class="navbar-toggler dropdown-toggle" data-toggle="collapse" data-target="#navbar-filter">
+      <i class="icon-unfold mr-2"></i>
+      Filtra ricerca
+    </button>
+  </div>
+
+  <div class="navbar-collapse collapse" id="navbar-filter" style="padding: 20px;">
+
+
+
+  <div style="margin: 0px 20px 0px 0px;">
+    <form method="GET" action="{% url 'search tickets' %}" style="display: flex; flex-flow: row wrap;" class="form-inline">
+
+      <div class="input-group">
+        <span class="input-group-prepend">
+          <span class="input-group-text"><i class="icon-calendar22"></i></span>
+        </span>
+        <input id="daterange" name="date" type="text" class="form-control daterange-basic" value=" ">
+      </div>
+
+          <div class="form-group-feedback form-group-feedback-right" style=" margin: 0px 12px 0px 24px;">
+            {{ form.text|addclass:'form-control' }}
+            <div class="form-control-feedback">
+              <i class="icon-search4 font-size-base text-muted"></i>
+            </div>
+          </div>
+          {% if user.request.role < 3 %}
+          <div class="form-group-feedback form-group-feedback-right" style=" margin: 12px;">
+            {{ form.user|addclass:'form-control' }}
+          </div>
+          {% endif %}
+
+          <div class="form-group-feedback form-group-feedback-right" style=" margin: 12px;">
+            {{ form.status|addclass:'form-control' }}
+          </div>
+
+          <button type="button" class="btn btn-secondary" id="export">Export</button>
+
+          <button class="btn btn-primary" type="submit" style="width: 100px; margin: 12px;"> Cerca </button>
+    </form>
+  </div>
+
+  </div>
+</div>
+<!-- /filter toolbar -->
+
+<script>
+$('#export').click(function(){
+  daterange = $('#daterange').val();
+  text = $('#id_text').val();
+  status = $('#id_status').val();
+  $.ajax({
+        type: "GET",
+        url: "/export-tickets",
+        data: {'daterange': daterange, 'text': text, 'status': status},
+        success: function(data){
+            console.log('success');
+            
+        },
+        failure: function(data){
+            console.log("FAIL");
+            
+        },
+    });
+});
+</script>
+
+<style>
+
+  .form-inline {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+}
+  @media (max-width: 800px) {
+
+    .form-inline {
+      flex-direction: column;
+      align-items: stretch;
+    }
+  }
+</style>

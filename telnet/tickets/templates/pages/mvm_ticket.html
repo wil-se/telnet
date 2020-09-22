@@ -1,0 +1,424 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load filters %}
+{% block title %}<title>TelNet</title>{% endblock %}
+{% block content %}
+{% block import %}
+<script src="{% static 'global_assets/js/plugins/uploaders/fileinput/plugins/purify.min.js' %}"></script>
+<script src="{% static 'global_assets/js/plugins/uploaders/fileinput/plugins/sortable.min.js' %}"></script>
+<script src="{% static 'global_assets/js/plugins/uploaders/fileinput/fileinput.min.js' %}"></script>
+<script src="{% static 'global_assets/js/demo_pages/uploader_bootstrap.js' %}"></script>
+{% endblock %}
+
+
+<div class="row">
+	<div class="col">
+
+            <div class="card">
+
+              <div class="card-header header-elements-inline bg-dark">
+								<h6 class="card-title font-weight-semibold">Anagrafica</h6>
+								<div class="header-elements">
+									<div class="list-icons">
+                    <a class="list-icons-item" data-action="collapse"></a>
+				          </div>
+			          </div>
+							</div>
+
+							<ul class="media-list media-list-linked media-list-bordered">
+								<li class="media bg-light py-2">
+									<b>OCCORRENZE:</b>&nbsp; {{ mvm.occorrenze|default_if_none:"" }}
+								</li>
+							</ul>
+							{% if request.user.role < 3 %}
+							<ul class="media-list media-list-linked media-list-bordered">
+								<li class="media bg-light py-2">
+									<b>GUADAGNO:</b>&nbsp; {{ mvm.price|default_if_none:"" }}
+								</li>
+							</ul>
+							{% endif %}
+
+							{% if mvm.pdf_wr %}
+							<ul class="media-list media-list-linked media-list-bordered">
+								<li class="media bg-light py-2">
+									<b>ALLEGATO:</b>&nbsp; <a href="/media/{{ mvm.pdf_wr }}"><i class="icon-file-pdf"></i></a>
+								</li>
+							</ul>
+							{% endif %}
+
+
+
+							<ul class="media-list media-list-linked media-list-bordered">
+								<li class="media bg-light py-2">
+                  <b>COD. CENTRALE:</b>&nbsp; {{ mvm.codicent|default_if_none:"" }}
+                </li>
+							</ul>
+
+              <ul class="media-list media-list-linked media-list-bordered">
+								<li class="media bg-light py-2">
+                  <b>CENTRALE:</b>&nbsp; {{ mvm.desccent|default_if_none:"" }}
+                </li>
+							</ul>
+
+              <ul class="media-list media-list-linked media-list-bordered">
+								<li class="media bg-light py-2">
+                  <b>WR:</b>&nbsp; {{ mvm.cod_wrid|default_if_none:"" }}
+                </li>
+							</ul>
+
+              <ul class="media-list media-list-linked media-list-bordered">
+								<li class="media bg-light py-2">
+                  <b>NUMERO:</b>&nbsp; {{ mvm.numetele|default_if_none:"" }}
+                </li>
+							</ul>
+
+              <ul class="media-list media-list-linked media-list-bordered">
+								<li class="media bg-light py-2">
+                  <b>RAGIONE SOCIALE:</b>&nbsp; {{ mvm.des_cogn|default_if_none:"" }}
+                </li>
+							</ul>
+
+              <ul class="media-list media-list-linked media-list-bordered">
+								<li class="media bg-light py-2">
+                  <b>INDIRIZZO:</b>&nbsp; {{ mvm.des_indi|default_if_none:"" }}
+                </li>
+							</ul>
+
+              <ul class="media-list media-list-linked media-list-bordered">
+								<li class="media bg-light py-2">
+                  <b>APPUNTAMENTO:</b>&nbsp; {{ mvm.appualle|default_if_none:"" }}
+                </li>
+							</ul>
+
+              <ul class="media-list media-list-linked media-list-bordered">
+								<li class="media bg-light py-2">
+                  <b>TEMPO OBBIETTIVO:</b>&nbsp; {{ mvm.tempobbi|default_if_none:"" }}
+                </li>
+							</ul>
+
+              <ul class="media-list media-list-linked media-list-bordered">
+								<li class="media bg-light py-2">
+                  <b>JOB TYPE:</b>&nbsp; {{ mvm.job_type|default_if_none:"" }}
+                </li>
+							</ul>
+
+              <ul class="media-list media-list-linked media-list-bordered">
+								<li class="media bg-light py-2">
+                  <b>DESCRIZIONE JOB:</b>&nbsp; {{ mvm.desc_job|default_if_none:"" }}
+                </li>
+							</ul>
+
+            </div>
+
+
+
+
+            <div class="card">
+
+              <div class="card-header header-elements-inline bg-dark">
+								<h6 class="card-title font-weight-semibold">Descrizione tecnica</h6>
+								<div class="header-elements">
+									<div class="list-icons">
+                    <a class="list-icons-item" data-action="collapse"></a>
+				          </div>
+			          </div>
+							</div>
+
+							<ul class="media-list media-list-linked media-list-bordered">
+								<li class="media bg-light py-2">
+                  <b>COD. GESTORE:</b>&nbsp; {{ mvm.codi_isp|default_if_none:"" }}
+                </li>
+							</ul>
+
+              <ul class="media-list media-list-linked media-list-bordered">
+								<li class="media bg-light py-2">
+                  <b>GESTORE:</b>&nbsp; {{ mvm.desc_olo|default_if_none:"" }}
+                </li>
+							</ul>
+
+              <ul class="media-list media-list-linked media-list-bordered">
+								<li class="media bg-light py-2">
+                  <b>GESTORE2:</b>&nbsp; {{ mvm.ref_cogn|default_if_none:"" }}
+                </li>
+							</ul>
+
+              <ul class="media-list media-list-linked media-list-bordered">
+								<li class="media bg-light py-2">
+                  <b>GESTORE3:</b>&nbsp; {{ mvm.ref_nome|default_if_none:"" }}
+                </li>
+							</ul>
+
+              <ul class="media-list media-list-linked media-list-bordered">
+								<li class="media bg-light py-2">
+                  <b>OPZIONE RICADUTA:</b>&nbsp; {{ mvm.prognazi|default_if_none:"" }}
+                </li>
+							</ul>
+
+              <ul class="media-list media-list-linked media-list-bordered">
+								<li class="media bg-light py-2">
+                  <b>RIPETIZIONI:</b>&nbsp; {{ mvm.numeripe|default_if_none:"" }}
+                </li>
+							</ul>
+
+              <ul class="media-list media-list-linked media-list-bordered">
+								<li class="media bg-light py-2">
+                  <b>NOTE TELNET:</b>&nbsp; {{ mvm.campo001|default_if_none:"" }}
+                </li>
+							</ul>
+
+              <ul class="media-list media-list-linked media-list-bordered">
+								<li class="media bg-light py-2">
+                  <b>DTU:</b>&nbsp; {{ mvm.codi_dtu|default_if_none:"" }}
+                </li>
+							</ul>
+
+              <ul class="media-list media-list-linked media-list-bordered">
+								<li class="media bg-light py-2">
+                  <b>NOTE IMPRESA:</b>&nbsp; {{ mvm.noteimpr|default_if_none:"" }}
+                </li>
+							</ul>
+
+              <ul class="media-list media-list-linked media-list-bordered">
+								<li class="media bg-light py-2">
+                  <b>ANNOTAZIONE:</b>&nbsp; {{ mvm.annotazi|default_if_none:"" }}
+                </li>
+							</ul>
+
+              <ul class="media-list media-list-linked media-list-bordered">
+								<li class="media bg-light py-2">
+                  <b>DESCR. PRATICA:</b>&nbsp; {{ mvm.desclavb|default_if_none:"" }}
+                </li>
+							</ul>
+
+              <ul class="media-list media-list-linked media-list-bordered">
+								<li class="media bg-light py-2">
+                  <b>ZONA:</b>&nbsp; {{ mvm.zonacent|default_if_none:"" }}
+                </li>
+							</ul>
+
+
+						</div>
+
+
+
+
+
+
+						<div class="card">
+
+							<div class="card-header header-elements-inline bg-dark">
+								<h6 class="card-title font-weight-semibold">Compilazione</h6>
+								<div class="header-elements">
+									<div class="list-icons">
+										<a class="list-icons-item" data-action="collapse"></a>
+									</div>
+								</div>
+							</div>
+							<br>
+							<div class="row">
+							
+							<div class="col-md-6" style="padding: 30px">
+								<form method="POST" action="{% url 'save mvm ticket' %}" enctype="multipart/form-data">
+									{% csrf_token %}
+
+								{% if request.user.role < 3 %}
+								<b>ASSEGNATO A:</b>&nbsp; {{ form.assigned_to|addclass:'form-control' }}<br><br>
+								{% else %}
+								<b>ASSEGNATO A:</b>&nbsp; {{ mvm.assigned_to|default_if_none:"" }}<br><br>
+								{% endif %}
+
+								<div class="form-group">
+									<b>NOTE:</b>
+									{{ form.note|addclass:'form-control' }}
+
+									<br>
+									<b>TIPO LINEA:</b>
+                    {{ form.tipo_linea|addclass:'form-control' }}
+									<br>
+
+									<b>STATO LAVORO:</b>
+										{{ form.status|addclass:'form-control' }}
+
+									<div id="stato-lavoro-dynamic-group"></div>
+									<div id="tipo-linea-dynamic-group"></div>
+
+									<br>
+											<b>SECONDARIA: </b>
+									{{ form.secondaria|addclass:'form-control' }}
+
+
+									<br>
+										<b>DERIVATO: </b>
+										{{ form.derivato|addclass:'form-control' }}
+
+									<br>
+										<b>PRESA: </b>
+										{{ form.presa|addclass:'form-control' }}
+
+									<br>
+									<b>CAVETTO:</b>
+									{{ form.cavetto|addclass:'form-control' }}
+
+									<br>
+									<b>TIPOLOGIA MODEM:</b>
+									{{ form.tipologia_modem|addclass:'form-control' }}
+
+									<br>
+									<b>SERIALE MODEM:</b>
+									{{ form.seriale_modem|addclass:'form-control' }}
+<br><br>
+
+{% if uploaded_files %}
+
+		<b>FILE CARICATI:</b>&nbsp; 
+		<br><br>
+		{% for f in uploaded_files %}
+		<a href="/media/file_uploads_mvm/{{ f.name }}"><i class="icon-file-empty"></i></a>&nbsp; &nbsp; &nbsp;
+		<a href="/file-mvm-delete/{{ mvm.pk }}/{{ f.pk }}">elimina</a>
+		<br><br>
+		{% endfor %}
+{% endif %}
+
+<br><br>
+
+
+										<div class="form-group row">
+											<label class="col-lg-2 col-form-label font-weight-semibold">CARICA FILE:</label>
+											<div class="col-lg-10">
+												<input multiple="multiple" name="mvm-upload" type="file" class="file-input" data-fouc>
+											</div>
+										</div>
+
+
+									<input id="id" name="id" type="hidden" value="{{ mvm.pk }}">
+								</div>
+								<button class="btn" type="submit"> Salva </button>
+							</form>
+						</div>
+
+
+
+					<div class="col-md-6" style="padding: 30px">
+							<b>NOTE: </b><br>
+							{% if mvm.note %}{{ mvm.note }}{% endif %}
+							<br>
+															<b>TIPO LINEA:</b>
+                    {% if mvm.tipo_linea %}{{ mvm.tipo_linea }}{% endif %}
+									<br>
+
+									<b>STATO LAVORO:</b>
+										{% if mvm.status %}{{ mvm.status }}{% endif %}
+
+									<a id="stato-lavoro-dynamic-group-resume"></a>
+									<a id="tipo-linea-dynamic-group-resume"></a>
+
+									<br>
+											<b>SECONDARIA: </b>
+									{% if mvm.secondaria %}{{ mvm.secondaria }}{% endif %}
+
+
+									<br>
+										<b>DERIVATO: </b>
+										{% if mvm.derivato %}{{ mvm.derivato }}{% endif %}
+
+									<br>
+										<b>PRESA: </b>
+										{% if mvm.presa %}{{ mvm.presa }}{% endif %}
+
+									<br>
+									<b>CAVETTO:</b>
+									{% if mvm.cavetto %}{{ mvm.cavetto }}{% endif %}
+
+									<br>
+									<b>TIPOLOGIA MODEM:</b>
+									{% if mvm.tipologia_modem %}{{ mvm.tipologia_modem }}{% endif %}
+
+									<br>
+									<b>SERIALE MODEM:</b>
+									{% if mvm.seriale_modem %}{{ mvm.seriale_modem }}{% endif %}
+					</div>
+					</div>
+					
+				</div>
+				<!-- /linked list headers -->
+
+</div>
+
+<script>
+function generate_tipo_linea_form(){
+	var data= $('#id_tipo_linea').val();
+	console.log(data);
+	$("#tipo-linea-dynamic-group").empty();
+	$("#tipo-linea-dynamic-group-resume").empty();
+
+	if (data == 'TRADIZIONALE'){
+		$("#tipo-linea-dynamic-group").append("<br><div class=\"form-group\"><label class=\"col-form-label\"><b>MSAN: </b></label><div class=\"col-lg-10\"><input id=\"msan\" type=\"text\" class=\"form-control\" name=\"msan\"></div></div>");
+		$("#tipo-linea-dynamic-group").append("<b>RETE RIGIDA:</b>");
+		$("#tipo-linea-dynamic-group").append("<select id=\"rete-rigida-form\" class=\"form-control\" name=\"rete-rigida\">");
+		$("#rete-rigida-form").append("<option value=\"SI\">SI</option>");
+		$("#rete-rigida-form").append("<option value=\"NO\">NO</option>");
+		$("#rete-rigida-form").append("</select>");
+		$("#tipo-linea-dynamic-group").append("<br><div class=\"form-group\"><label class=\"col-form-label\"><b>CAVO/CP-CAVO: </b></label><div class=\"col-lg-10\"><input id=\"cavo\" type=\"text\" class=\"form-control\" name=\"cavo\"></div></div>");
+		$("#tipo-linea-dynamic-group").append("<br><div class=\"form-group\"><label class=\"col-form-label\"><b>COLONNA: </b></label><div class=\"col-lg-10\"><input id=\"colonna\" type=\"text\" class=\"form-control\" name=\"colonna\"></div></div>");
+		$("#tipo-linea-dynamic-group").append("<br><div class=\"form-group\"><label class=\"col-form-label\"><b>CP COLONNA: </b></label><div class=\"col-lg-10\"><input id=\"cp-colonna\" type=\"text\" class=\"form-control\" name=\"cp-colonna\"></div></div>");
+		$("#tipo-linea-dynamic-group").append("<br><div class=\"form-group\"><label class=\"col-form-label\"><b>RL: </b></label><div class=\"col-lg-10\"><input id=\"rl\" type=\"text\" class=\"form-control\" name=\"rl\"></div></div>");
+		$("#tipo-linea-dynamic-group").append("<br><div class=\"form-group\"><label class=\"col-form-label\"><b>CP RL: </b></label><div class=\"col-lg-10\"><input id=\"cp-rl\" type=\"text\" class=\"form-control\" name=\"cp-rl\"></div></div>");
+
+
+		$("#tipo-linea-dynamic-group-resume").append("<br><b>MSAN: </b>&nbsp;{% if mvm.msan %}{{ mvm.msan }}{% endif %}");
+		$("#tipo-linea-dynamic-group-resume").append("<br><b>RETE RIGIDA:</b>&nbsp;{% if mvm.rete_rigida %}{{ mvm.rete_rigida }}{% endif %}");
+		$("#tipo-linea-dynamic-group-resume").append("<br><b>CAVO/CP-CAVO: </b>&nbsp;{% if mvm.cp_cavo %}{{ mvm.cavo_cp_cavo }}{% endif %}");
+		$("#tipo-linea-dynamic-group-resume").append("<br><b>COLONNA: </b>&nbsp;{% if mvm.colonna %}{{ mvm.colonna }}{% endif %}");
+		$("#tipo-linea-dynamic-group-resume").append("<br><b>CP COLONNA: </b>&nbsp;{% if mvm.cp_col %}{{ mvm.cp_col }}{% endif %}");
+		$("#tipo-linea-dynamic-group-resume").append("<br><b>RL: </b>&nbsp;{% if mvm.rl %}{{ mvm.rl }}{% endif %}");
+		$("#tipo-linea-dynamic-group-resume").append("<br><b>CP RL: </b>&nbsp;{% if mvm.cp_rl %}{{ mvm.cp_rl }}{% endif %}");
+
+	}else if (data == 'FIBRA') {
+		$("#tipo-linea-dynamic-group").append("<br><div class=\"form-group\"><label class=\"col-form-label\"><b>RL: </b></label><div class=\"col-lg-10\"><input id=\"rl\" type=\"text\" class=\"form-control\" name=\"rl\"></div></div>");
+		$("#tipo-linea-dynamic-group").append("<br><div class=\"form-group\"><label class=\"col-form-label\"><b>PORTA: </b></label><div class=\"col-lg-10\"><input id=\"porta\" type=\"text\" class=\"form-control\" name=\"porta\"></div></div>");
+		$("#tipo-linea-dynamic-group-resume").append("<br><b>RL: </b>&nbsp;{% if mvm.rl %}{{ mvm.rl }}{% endif %}");
+		$("#tipo-linea-dynamic-group-resume").append("<br><b>PORTA: </b> &nbsp;{% if mvm.porta %}{{ mvm.porta }}{% endif %}");
+	}
+}
+
+
+function generate_stato_lavoro_form(){
+	var data= $('#id_status').val();
+	console.log(data);
+	$("#stato-lavoro-dynamic-group").empty();
+	$("#stato-lavoro-dynamic-group-resume").empty();
+
+	if (data == 'KO'){
+		$("#stato-lavoro-dynamic-group").append("<br><b>MOTIVO KO:</b>");
+		$("#stato-lavoro-dynamic-group").append("<select id=\"ko-form\" class=\"form-control\" name=\"motivo-ko\">");
+		$("#ko-form").append("<option value=\"TUBAZIONE-A14\">TUBAZIONE PRIVATA A14</option>");
+		$("#ko-form").append("<option value=\"TUBAZIONE-A24\">TUBAZIONE PRIVATA A24</option>");
+		$("#ko-form").append("<option value=\"CLT-IRREPERIBILE\">CLT IRREPERIBILE</option>");
+		$("#ko-form").append("<option value=\"RINUNCIA\">RINUNCIA</option>");
+		$("#ko-form").append("<option value=\"GENERICO\">ECC. DISTANZA / GENERICO</option>");
+		$("#ko-form").append("</select>");
+		$("#stato-lavoro-dynamic-group-resume").append("<br><b>MOTIVO KO:</b>&nbsp;{% if mvm.ko_reason %}{{ mvm.ko_reason }}{% endif %}");
+	}
+}
+
+$(function() {
+    generate_tipo_linea_form();
+		generate_stato_lavoro_form();
+		$("#ko-form").val("{{mvm.ko_reason}}");
+		$("#cavo").val("{{mvm.cavo}}");
+		$("#msan").val("{{mvm.msan}}");
+		$("#rete-rigida-form select").val("{{mvm.rete_rigida}}");
+		$("#cp-cavo").val("{{mvm.cp_cavo}}");
+		$("#colonna").val("{{mvm.colonna}}");
+		$("#cp-colonna").val("{{mvm.cp_col}}");
+		$("#rl").val("{{mvm.rl}}");
+		$("#cp-rl").val("{{mvm.cp_rl}}");
+		$("#porta").val("{{mvm.porta}}");
+
+
+});
+$('#id_tipo_linea').change(function(){generate_tipo_linea_form()});
+$('#id_status').change(function(){generate_stato_lavoro_form()});
+
+	</script>
+{% endblock %}
