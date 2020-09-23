@@ -20,7 +20,7 @@ urlpatterns = [
     path('save-sielte-ticket', tickets_views.save_sielte_ticket, name='save sielte ticket'),
     path('file-mvm-delete/<int:ticket>/<int:id>', tickets_views.file_mvm_delete, name='file mvm delete'),
     path('file-sielte-delete/<int:ticket>/<int:id>', tickets_views.file_sielte_delete, name='file sielte delete'),
-    
+    path('export-tickets', tickets_views.export_tickets, name='export tickets'),
 
     path('import', tickets_views    .import_page, name='import'),
     path('upload-mvm', tickets_views.upload_mvm, name='upload mvm'),
