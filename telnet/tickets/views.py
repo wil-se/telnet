@@ -79,6 +79,7 @@ def ticket_list(request):
     form_fields['user'] = ''
     form_fields['end_date'] = ''
     form_fields['start_date'] = ''
+    form_fields['company'] = ''
     form = SearchForm(request.GET or None, request.FILES or None, initial=form_fields)
 
     start_date = datetime.datetime.now() - datetime.timedelta(60)
@@ -93,6 +94,7 @@ def search_tickets(request):
     form_fields['text'] = ''
     form_fields['status'] = ''
     form_fields['user'] = ''
+    form_fields['company'] = ''
 
     form = SearchForm(request.GET or None, request.FILES or None, initial=form_fields)
 
@@ -100,6 +102,7 @@ def search_tickets(request):
     userpk = request.GET.get('user', '')
     status = request.GET.get('status', '')
     date = request.GET.get('date', '')
+    company = request.GET.get('company', '')
 
     mvm_queryset = Q()
     sielte_queryset = Q()
@@ -150,7 +153,15 @@ def search_tickets(request):
 
     mvm_tickets = MvmImport.objects.filter(mvm_queryset).distinct()
     sielte_tickets = SielteImport.objects.filter(sielte_queryset).distinct()
-    tickets = list(chain(mvm_tickets, sielte_tickets))
+    
+    if company == 'TUTTI':
+        tickets = list(chain(mvm_tickets, sielte_tickets))    
+    elif company == 'MVM':
+        tickets = MvmImport.objects.filter(mvm_queryset).distinct()
+    elif company == 'SIELTE':
+        tickets = SielteImport.objects.filter(sielte_queryset).distinct()
+
+    
     # for ticket in tickets:
     #     print(ticket)
     # print(tickets)
@@ -860,7 +871,8 @@ def export_tickets(request):
     userpk = request.GET.get('user', '')
     status = request.GET.get('status', '')
     date = request.GET.get('date', '')
-
+    company = request.GET.get('company', '')
+    print(company)
     mvm_queryset = Q()
     sielte_queryset = Q()
 
@@ -907,160 +919,161 @@ def export_tickets(request):
     sielte_tickets = SielteImport.objects.filter(sielte_queryset).distinct()
     tickets = list(chain(mvm_tickets, sielte_tickets))
 
-    print(len(mvm_tickets))
-    mvm_assigned_to = []
-    mvm_centrale = []
-    mvm_wr = []
-    mvm_ragione_sociale = []
-    mvm_indirizzo = []
-    mvm_appuntamento = []
-    mvm_tempo_obbiettivo = []
-    mvm_job_type = []
-    mvm_compilazione = []
-    mvm_status = []
+    if company == 'TUTTI' or company == 'MVM':
+        print('AOOO')
+        mvm_assigned_to = []
+        mvm_centrale = []
+        mvm_wr = []
+        mvm_ragione_sociale = []
+        mvm_indirizzo = []
+        mvm_appuntamento = []
+        mvm_tempo_obbiettivo = []
+        mvm_job_type = []
+        mvm_compilazione = []
+        mvm_status = []
 
-    print(mvm_tickets)
-    for mvm in mvm_tickets:
-        mvm_assigned_to.append(mvm.assigned_to) if mvm.assigned_to else mvm_assigned_to.append('') 
-        mvm_centrale.append(mvm.codicent) if mvm.codicent else mvm_centrale.append('')
-        mvm_wr.append(mvm.cod_wrid) if mvm.cod_wrid else mvm_wr.append('')
-        mvm_ragione_sociale.append(mvm.des_cogn) if mvm.des_cogn else mvm_ragione_sociale.append('')
-        mvm_indirizzo.append(mvm.des_indi) if mvm.des_indi else mvm_indirizzo.append('')
-        mvm_appuntamento.append(mvm.appualle) if mvm.appualle else mvm_appuntamento.append('')
-        mvm_tempo_obbiettivo.append(mvm.tempobbi) if mvm.tempobbi else mvm_tempo_obbiettivo.append('')
-        mvm_job_type.append(mvm.job_type) if mvm.job_type else mvm_job_type.append('')
+        print(mvm_tickets)
+        for mvm in mvm_tickets:
+            mvm_assigned_to.append(mvm.assigned_to) if mvm.assigned_to else mvm_assigned_to.append('') 
+            mvm_centrale.append(mvm.codicent) if mvm.codicent else mvm_centrale.append('')
+            mvm_wr.append(mvm.cod_wrid) if mvm.cod_wrid else mvm_wr.append('')
+            mvm_ragione_sociale.append(mvm.des_cogn) if mvm.des_cogn else mvm_ragione_sociale.append('')
+            mvm_indirizzo.append(mvm.des_indi) if mvm.des_indi else mvm_indirizzo.append('')
+            mvm_appuntamento.append(mvm.appualle) if mvm.appualle else mvm_appuntamento.append('')
+            mvm_tempo_obbiettivo.append(mvm.tempobbi) if mvm.tempobbi else mvm_tempo_obbiettivo.append('')
+            mvm_job_type.append(mvm.job_type) if mvm.job_type else mvm_job_type.append('')
 
-        compilazione = ''
-        if mvm.note:
-            compilazione += 'NOTE: '+mvm.note.strip()+'\n'
-        if mvm.tipologia_modem:
-            compilazione += 'TIPOLOGIA MODEM: '+mvm.tipologia_modem.strip()+'\n'
-        if mvm.seriale_modem:
-            compilazione += 'SERIALE MODEM: '+mvm.seriale_modem.strip()+'\n'
-        if mvm.seriale_modem:
-            compilazione += 'TIPO LINEA: '+mvm.tipo_linea.strip()+'\n'
-        if mvm.ko_reason:
-            compilazione += 'MOTIVO KO: '+mvm.ko_reason.strip()+'\n'
-        if mvm.msan:
-            compilazione += 'MSAN: '+mvm.msan.strip()+'\n'
-        if mvm.rete_rigida:
-            compilazione += 'RETE RIGIDA: '+mvm.rete_rigida.strip()+'\n'
-        if mvm.cavo_cp_cavo:
-            compilazione += 'CAVO CP CAVO: '+mvm.cavo_cp_cavo.strip()+'\n'
-        if mvm.colonna_cp_colonna:
-            compilazione += 'COLONNA/CP-COLONNA: '+mvm.colonna_cp_colonna.strip()+'\n'
-        if mvm.rl_cp_rl:
-            compilazione += 'RL/CP-RL: '+mvm.rl_cp_rl.strip()+'\n'
-        if mvm.secondaria:
-            compilazione += 'SECONDARIA: '+mvm.secondaria.strip()+'\n'
-        if mvm.derivato:
-            compilazione += 'DERIVATO: '+str(mvm.derivato)+'\n'
-        if mvm.presa:
-            compilazione += 'PRESA: '+mvm.presa.strip()+'\n'
-        if mvm.cavetto:
-            compilazione += 'CAVETTO: '+mvm.cavetto.strip()+'\n'
-        if mvm.stato_cavo:
-            compilazione += 'STATO CAVO: '+mvm.stato_cavo.strip()+'\n'
-        if mvm.porta:
-            compilazione += 'PORTA: '+mvm.porta.strip()+'\n'
+            compilazione = ''
+            if mvm.note:
+                compilazione += 'NOTE: '+mvm.note.strip()+'\n'
+            if mvm.tipologia_modem:
+                compilazione += 'TIPOLOGIA MODEM: '+mvm.tipologia_modem.strip()+'\n'
+            if mvm.seriale_modem:
+                compilazione += 'SERIALE MODEM: '+mvm.seriale_modem.strip()+'\n'
+            if mvm.seriale_modem:
+                compilazione += 'TIPO LINEA: '+mvm.tipo_linea.strip()+'\n'
+            if mvm.ko_reason:
+                compilazione += 'MOTIVO KO: '+mvm.ko_reason.strip()+'\n'
+            if mvm.msan:
+                compilazione += 'MSAN: '+mvm.msan.strip()+'\n'
+            if mvm.rete_rigida:
+                compilazione += 'RETE RIGIDA: '+mvm.rete_rigida.strip()+'\n'
+            if mvm.cavo_cp_cavo:
+                compilazione += 'CAVO CP CAVO: '+mvm.cavo_cp_cavo.strip()+'\n'
+            if mvm.colonna_cp_colonna:
+                compilazione += 'COLONNA/CP-COLONNA: '+mvm.colonna_cp_colonna.strip()+'\n'
+            if mvm.rl_cp_rl:
+                compilazione += 'RL/CP-RL: '+mvm.rl_cp_rl.strip()+'\n'
+            if mvm.secondaria:
+                compilazione += 'SECONDARIA: '+mvm.secondaria.strip()+'\n'
+            if mvm.derivato:
+                compilazione += 'DERIVATO: '+str(mvm.derivato)+'\n'
+            if mvm.presa:
+                compilazione += 'PRESA: '+mvm.presa.strip()+'\n'
+            if mvm.cavetto:
+                compilazione += 'CAVETTO: '+mvm.cavetto.strip()+'\n'
+            if mvm.stato_cavo:
+                compilazione += 'STATO CAVO: '+mvm.stato_cavo.strip()+'\n'
+            if mvm.porta:
+                compilazione += 'PORTA: '+mvm.porta.strip()+'\n'
+            
+
+            print('compilazione')
+            print(compilazione)
+
+            mvm_compilazione.append(compilazione)
+            mvm_status.append(mvm.status) if mvm.status else mvm_status.append('')
+
+
+        mvm_df = pd.DataFrame({
+            'assegnato a': mvm_assigned_to,
+            'centrale': mvm_centrale,
+            'wr': mvm_wr,
+            'ragione_sociale': mvm_ragione_sociale,
+            'indirizzo': mvm_indirizzo,
+            'appuntamento': mvm_appuntamento,
+            'tempo obbiettivo': mvm_tempo_obbiettivo,
+            'job type': mvm_job_type,
+            'compilazione': mvm_compilazione,
+            'status': mvm_status,
+        })
+
+        mvm_filename = 'mvm-export-{}.xlsx'.format(datetime.datetime.now())
+        writer = pd.ExcelWriter('media/mvm_export/'+mvm_filename, engine='xlsxwriter')
+        mvm_df.to_excel(writer, sheet_name='Sheet1', index=False)
+        writer.save()
+
+        mvm_export = MvmExport()
+        mvm_export.name = mvm_filename
+        mvm_export.file = 'mvm_export/'+mvm_filename
+        mvm_export.save()
+
+    if company == 'TUTTI' or company == 'SIELTE':
+        sielte_assigned_to = []
+        sielte_desc_tipo_pratica = []
+        sielte_desc_pratica = []
+        sielte_desccent = []
+        sielte_cod_wr = []
+        sielte_impianto = []
+        sielte_nome = []
+        sielte_indirizzo = []
+        sielte_data_inizio = []
+        sielte_ora_inizio = []
+        sielte_status = []
+        sielte_compilazione = []
         
+        for sielte in sielte_tickets:
+            sielte_assigned_to.append(sielte.assigned_to) if sielte.assigned_to else sielte_assigned_to.append('')
+            sielte_desc_tipo_pratica.append(sielte.descrizione_tipologia_pratica) if sielte.descrizione_tipologia_pratica else sielte_desc_tipo_pratica.append('')
+            sielte_desc_pratica.append(sielte.descrizione_pratica) if sielte.descrizione_pratica else sielte_desc_pratica.append('')
+            sielte_desccent.append(sielte.descrizione_centrale) if sielte.descrizione_centrale else sielte_desccent.append('')
+            sielte_cod_wr.append(sielte.cod_wr_committente) if sielte.cod_wr_committente else sielte_cod_wr.append('')
+            sielte_impianto.append(sielte.impianto) if sielte.impianto else sielte_impianto.append('')
+            sielte_nome.append(sielte.nome) if sielte.nome else sielte_nome.append('')
+            sielte_indirizzo.append(sielte.indirizzo) if sielte.indirizzo else sielte_indirizzo.append('')
+            sielte_data_inizio.append(sielte.data_inizio_appuntamento) if sielte.data_inizio_appuntamento else sielte_data_inizio.append('')
+            sielte_ora_inizio.append(sielte.ora_inizio_appuntamento) if sielte.ora_inizio_appuntamento else sielte_ora_inizio.append('')
+            sielte_status.append(sielte.status) if sielte.status else sielte_status.append('')
 
-        print('compilazione')
-        print(compilazione)
+            compilazione = ''
+            if sielte.note:
+                compilazione += 'NOTE: '+sielte.note.strip()+'\n'
+            if sielte.attivita:
+                compilazione += 'ATTIVITÀ: '+sielte.attivita.servizio.strip()+'\n'
+            if sielte.attivita_aggiuntiva:
+                compilazione += 'ATTIVITÀ AGGIUNTIVA: '+sielte.attivita_aggiuntiva.servizio.strip()+'\n'
+            if sielte.ko_reason:
+                compilazione += 'MOTIVO KO: '+sielte.ko_reason.strip()+'\n'
+            if sielte.ora_da:
+                compilazione += 'ORA DA: '+str(sielte.ora_da)+'\n'
+            if sielte.ora_a:
+                compilazione += 'ORA A: '+str(sielte.ora_a)+'\n'
+            
+            sielte_compilazione.append(compilazione)
 
-        mvm_compilazione.append(compilazione)
-        mvm_status.append(mvm.status) if mvm.status else mvm_status.append('')
+        sielte_df = pd.DataFrame({
+            'assegnato a': sielte_assigned_to,
+            'descrizione tipo pratica': sielte_desc_tipo_pratica,
+            'descrizione pratica': sielte_desc_pratica,
+            'descrizione centrale': sielte_desccent,
+            'wr': sielte_cod_wr,
+            'impianto': sielte_impianto,
+            'nome': sielte_nome,
+            'indirizzo': sielte_indirizzo,
+            'data inizio': sielte_data_inizio,
+            'ora inizio': sielte_ora_inizio,
+            'status': sielte_status,
+            'compilazione': sielte_compilazione
+        })
 
+        sielte_filename = 'sielte-export-{}.xlsx'.format(datetime.datetime.now())
+        writer = pd.ExcelWriter('media/sielte_export/'+sielte_filename, engine='xlsxwriter')
+        sielte_df.to_excel(writer, sheet_name='Sheet1', index=False)
+        writer.save()
 
-    mvm_df = pd.DataFrame({
-        'assegnato a': mvm_assigned_to,
-        'centrale': mvm_centrale,
-        'wr': mvm_wr,
-        'ragione_sociale': mvm_ragione_sociale,
-        'indirizzo': mvm_indirizzo,
-        'appuntamento': mvm_appuntamento,
-        'tempo obbiettivo': mvm_tempo_obbiettivo,
-        'job type': mvm_job_type,
-        'compilazione': mvm_compilazione,
-        'status': mvm_status,
-    })
-
-    mvm_filename = 'mvm-export-{}.xlsx'.format(datetime.datetime.now())
-    writer = pd.ExcelWriter('media/mvm_export/'+mvm_filename, engine='xlsxwriter')
-    mvm_df.to_excel(writer, sheet_name='Sheet1', index=False)
-    writer.save()
-
-    mvm_export = MvmExport()
-    mvm_export.name = mvm_filename
-    mvm_export.file = 'mvm_export/'+mvm_filename
-    mvm_export.save()
-
-
-    sielte_assigned_to = []
-    sielte_desc_tipo_pratica = []
-    sielte_desc_pratica = []
-    sielte_desccent = []
-    sielte_cod_wr = []
-    sielte_impianto = []
-    sielte_nome = []
-    sielte_indirizzo = []
-    sielte_data_inizio = []
-    sielte_ora_inizio = []
-    sielte_status = []
-    sielte_compilazione = []
-    
-    for sielte in sielte_tickets:
-        sielte_assigned_to.append(sielte.assigned_to) if sielte.assigned_to else sielte_assigned_to.append('')
-        sielte_desc_tipo_pratica.append(sielte.descrizione_tipologia_pratica) if sielte.descrizione_tipologia_pratica else sielte_desc_tipo_pratica.append('')
-        sielte_desc_pratica.append(sielte.descrizione_pratica) if sielte.descrizione_pratica else sielte_desc_pratica.append('')
-        sielte_desccent.append(sielte.descrizione_centrale) if sielte.descrizione_centrale else sielte_desccent.append('')
-        sielte_cod_wr.append(sielte.cod_wr_committente) if sielte.cod_wr_committente else sielte_cod_wr.append('')
-        sielte_impianto.append(sielte.impianto) if sielte.impianto else sielte_impianto.append('')
-        sielte_nome.append(sielte.nome) if sielte.nome else sielte_nome.append('')
-        sielte_indirizzo.append(sielte.indirizzo) if sielte.indirizzo else sielte_indirizzo.append('')
-        sielte_data_inizio.append(sielte.data_inizio_appuntamento) if sielte.data_inizio_appuntamento else sielte_data_inizio.append('')
-        sielte_ora_inizio.append(sielte.ora_inizio_appuntamento) if sielte.ora_inizio_appuntamento else sielte_ora_inizio.append('')
-        sielte_status.append(sielte.status) if sielte.status else sielte_status.append('')
-
-        compilazione = ''
-        if sielte.note:
-            compilazione += 'NOTE: '+sielte.note.strip()+'\n'
-        if sielte.attivita:
-            compilazione += 'ATTIVITÀ: '+sielte.attivita.servizio.strip()+'\n'
-        if sielte.attivita_aggiuntiva:
-            compilazione += 'ATTIVITÀ AGGIUNTIVA: '+sielte.attivita_aggiuntiva.servizio.strip()+'\n'
-        if sielte.ko_reason:
-            compilazione += 'MOTIVO KO: '+sielte.ko_reason.strip()+'\n'
-        if sielte.ora_da:
-            compilazione += 'ORA DA: '+str(sielte.ora_da)+'\n'
-        if sielte.ora_a:
-            compilazione += 'ORA A: '+str(sielte.ora_a)+'\n'
-        
-        sielte_compilazione.append(compilazione)
-
-    sielte_df = pd.DataFrame({
-        'assegnato a': sielte_assigned_to,
-        'descrizione tipo pratica': sielte_desc_tipo_pratica,
-        'descrizione pratica': sielte_desc_pratica,
-        'descrizione centrale': sielte_desccent,
-        'wr': sielte_cod_wr,
-        'impianto': sielte_impianto,
-        'nome': sielte_nome,
-        'indirizzo': sielte_indirizzo,
-        'data inizio': sielte_data_inizio,
-        'ora inizio': sielte_ora_inizio,
-        'status': sielte_status,
-        'compilazione': sielte_compilazione
-    })
-
-    sielte_filename = 'sielte-export-{}.xlsx'.format(datetime.datetime.now())
-    writer = pd.ExcelWriter('media/sielte_export/'+sielte_filename, engine='xlsxwriter')
-    sielte_df.to_excel(writer, sheet_name='Sheet1', index=False)
-    writer.save()
-
-    sielte_export = SielteExport()
-    sielte_export.name = sielte_filename
-    sielte_export.file = 'sielte_export/'+sielte_filename
-    sielte_export.save()
+        sielte_export = SielteExport()
+        sielte_export.name = sielte_filename
+        sielte_export.file = 'sielte_export/'+sielte_filename
+        sielte_export.save()
 
     return HttpResponseRedirect('/export')
