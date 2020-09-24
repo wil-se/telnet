@@ -29,7 +29,7 @@
         <!-- Main -->
         <li class="nav-item-header"><div class="text-uppercase font-size-xs line-height-xs">Menù</div> <i class="icon-menu" title="Main"></i></li>
         <li class="nav-item">
-          <a href="/dashboard" class="nav-link  {% if url_name == 'dashboard' %}active{% endif %}">
+          <a href="/dashboard" class="nav-link  {% if url_name == 'dashboard'  or url_name == 'get dashboard data' %}active{% endif %}">
             <i class="icon-home4"></i>
             <span>
               Dashboard
@@ -48,7 +48,7 @@
 
         {% if request.user.role < 3 %}
         <li class="nav-item">
-          <a href="/lista-note" class="nav-link {% if url_name == 'lista note' or url_name == 'note' %}active{% endif %}">
+          <a href="/lista-note" class="nav-link {% if url_name == 'lista note' or url_name == 'note'  or url_name == 'note edit'%}active{% endif %}">
             <i class="icon-file-text"></i>
             <span>
               Note
@@ -61,6 +61,15 @@
             <i class="icon-file-upload"></i>
             <span>
               Import
+            </span>
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a href="/export" class="nav-link {% if url_name == 'export' %}active{% endif %}">
+            <i class="icon-file-download"></i>
+            <span>
+              Export
             </span>
           </a>
         </li>

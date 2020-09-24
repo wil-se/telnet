@@ -21,6 +21,9 @@ urlpatterns = [
     path('file-mvm-delete/<int:ticket>/<int:id>', tickets_views.file_mvm_delete, name='file mvm delete'),
     path('file-sielte-delete/<int:ticket>/<int:id>', tickets_views.file_sielte_delete, name='file sielte delete'),
     path('export-tickets', tickets_views.export_tickets, name='export tickets'),
+    path('export', tickets_views.export, name='export'),
+    path('export-mvm-delete/<int:id>', tickets_views.export_mvm_delete, name='export mvm delete'),
+    path('export-sielte-delete/<int:id>', tickets_views.export_sielte_delete, name='export sielte delete'),
 
     path('import', tickets_views    .import_page, name='import'),
     path('upload-mvm', tickets_views.upload_mvm, name='upload mvm'),

@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from .models import MvmImport, SielteImport, SielteActivity, SielteExtraActivity, UploadedFileMvm, UploadedFileSielte, MvmPrice, MvmJob
+from .models import MvmImport, SielteImport, SielteActivity, SielteExtraActivity, UploadedFileMvm, UploadedFileSielte, MvmPrice, MvmJob, MvmExport, SielteExport
 from .forms import MvmImportForm, SielteImportForm, SearchForm
 from itertools import chain
 from django.db.models import Q
@@ -107,7 +107,7 @@ def search_tickets(request):
     if text:
         print("TEXT: " +text)
         mvm_queryset &= (Q(cod_wrid__icontains=text)|
-        Q(keylavor__icontains=text)|
+        Q(numetele__icontains=text)|
         Q(des_cogn__icontains=text)|
         Q(des_indi__icontains=text))
         sielte_queryset &= (
@@ -241,23 +241,15 @@ def save_mvm_ticket(request):
 
         colonna = request.POST.get('colonna', '')
         if colonna:
-            mvm_ticket.colonna = colonna
+            mvm_ticket.colonna_cp_colonna = colonna
             print('COLONNA: '+colonna)
 
-        cp_colonna = request.POST.get('cp-colonna', '')
-        if cp_colonna:
-            mvm_ticket.cp_col = cp_colonna
-            print('CP COLONNA: '+cp_colonna)
 
         rl_trad = request.POST.get('rl', '')
         if rl_trad:
-            mvm_ticket.rl = rl_trad
+            mvm_ticket.rl_cp_rl = rl_trad
             print('RL TRADIZIONALE: '+rl_trad)
 
-        cp_rl = request.POST.get('cp-rl', '')
-        if cp_rl:
-            mvm_ticket.cp_rl = cp_rl
-            print('CP RL: '+cp_rl)
 
     if tipo_linea == 'FIBRA':
         rl_fibra = request.POST.get('rl', '')
@@ -333,7 +325,7 @@ def save_sielte_ticket(request):
         print('ATTIVITA: '+attivita)
 
     attivita_agg = request.POST.get('attivita_aggiuntiva', '')
-    if attivita:
+    if attivita_agg:
         activity_agg = SielteExtraActivity.objects.get(servizio=attivita_agg)
         numero = request.POST.get('number', '')
         if numero:
@@ -345,12 +337,12 @@ def save_sielte_ticket(request):
 
 
     ora_da = request.POST.get('ora_da', '')
-    if attivita:
+    if ora_da:
         sielte_ticket.ora_da = ora_da
         print('ORA DA: '+ora_da)
 
     ora_a = request.POST.get('ora_a', '')
-    if attivita:
+    if ora_a:
         sielte_ticket.ora_a = ora_a
         print('ORA A: '+ora_a)
 
@@ -844,7 +836,23 @@ def file_sielte_delete(request, ticket, id):
     file.delete()
     return HttpResponseRedirect('/sielte-ticket/'+str(ticket))
 
+@login_required(login_url='/accounts/login/')
+def export(request):
+    mvm_exports = MvmExport.objects.all()
+    sielte_exports = SielteExport.objects.all()
+    return render(request, 'export.html', {'title':'Export', 'mvm_exports': mvm_exports, 'sielte_exports': sielte_exports})
 
+@login_required(login_url='/accounts/login/')
+def export_mvm_delete(request, id):
+    file = MvmExport.objects.get(pk=id)
+    file.delete()
+    return HttpResponseRedirect('/export')
+
+@login_required(login_url='/accounts/login/')
+def export_sielte_delete(request, id):
+    file = SielteExport.objects.get(pk=id)
+    file.delete()
+    return HttpResponseRedirect('/export')
 
 @login_required(login_url='/accounts/login/')
 def export_tickets(request):
@@ -859,7 +867,7 @@ def export_tickets(request):
     if text:
         print("TEXT: " +text)
         mvm_queryset &= (Q(cod_wrid__icontains=text)|
-        Q(keylavor__icontains=text)|
+        Q(numetele__icontains=text)|
         Q(des_cogn__icontains=text)|
         Q(des_indi__icontains=text))
         sielte_queryset &= (
@@ -911,7 +919,7 @@ def export_tickets(request):
     mvm_compilazione = []
     mvm_status = []
 
-
+    print(mvm_tickets)
     for mvm in mvm_tickets:
         mvm_assigned_to.append(mvm.assigned_to) if mvm.assigned_to else mvm_assigned_to.append('') 
         mvm_centrale.append(mvm.codicent) if mvm.codicent else mvm_centrale.append('')
@@ -939,14 +947,10 @@ def export_tickets(request):
             compilazione += 'RETE RIGIDA: '+mvm.rete_rigida.strip()+'\n'
         if mvm.cavo_cp_cavo:
             compilazione += 'CAVO CP CAVO: '+mvm.cavo_cp_cavo.strip()+'\n'
-        if mvm.colonna:
-            compilazione += 'COLONNA: '+mvm.colonna.strip()+'\n'
-        if mvm.cp_col:
-            compilazione += 'CP COLONNA: '+mvm.cp_col.strip()+'\n'
-        if mvm.rl:
-            compilazione += 'RL: '+mvm.rl.strip()+'\n'
-        if mvm.cp_rl:
-            compilazione += 'CP RL: '+mvm.cp_rl.strip()+'\n'
+        if mvm.colonna_cp_colonna:
+            compilazione += 'COLONNA/CP-COLONNA: '+mvm.colonna_cp_colonna.strip()+'\n'
+        if mvm.rl_cp_rl:
+            compilazione += 'RL/CP-RL: '+mvm.rl_cp_rl.strip()+'\n'
         if mvm.secondaria:
             compilazione += 'SECONDARIA: '+mvm.secondaria.strip()+'\n'
         if mvm.derivato:
@@ -960,6 +964,9 @@ def export_tickets(request):
         if mvm.porta:
             compilazione += 'PORTA: '+mvm.porta.strip()+'\n'
         
+
+        print('compilazione')
+        print(compilazione)
 
         mvm_compilazione.append(compilazione)
         mvm_status.append(mvm.status) if mvm.status else mvm_status.append('')
@@ -977,9 +984,16 @@ def export_tickets(request):
         'compilazione': mvm_compilazione,
         'status': mvm_status,
     })
-    writer = pd.ExcelWriter('media/mvm_export/mvm-export-{}.xlsx'.format(datetime.datetime.now()), engine='xlsxwriter')
+
+    mvm_filename = 'mvm-export-{}.xlsx'.format(datetime.datetime.now())
+    writer = pd.ExcelWriter('media/mvm_export/'+mvm_filename, engine='xlsxwriter')
     mvm_df.to_excel(writer, sheet_name='Sheet1', index=False)
     writer.save()
+
+    mvm_export = MvmExport()
+    mvm_export.name = mvm_filename
+    mvm_export.file = 'mvm_export/'+mvm_filename
+    mvm_export.save()
 
 
     sielte_assigned_to = []
@@ -1038,8 +1052,15 @@ def export_tickets(request):
         'status': sielte_status,
         'compilazione': sielte_compilazione
     })
-    writer = pd.ExcelWriter('media/sielte_export/sielte-export-{}.xlsx'.format(datetime.datetime.now()), engine='xlsxwriter')
+
+    sielte_filename = 'sielte-export-{}.xlsx'.format(datetime.datetime.now())
+    writer = pd.ExcelWriter('media/sielte_export/'+sielte_filename, engine='xlsxwriter')
     sielte_df.to_excel(writer, sheet_name='Sheet1', index=False)
     writer.save()
 
-    return HttpResponseRedirect('/lista-ticket/')
+    sielte_export = SielteExport()
+    sielte_export.name = sielte_filename
+    sielte_export.file = 'sielte_export/'+sielte_filename
+    sielte_export.save()
+
+    return HttpResponseRedirect('/export')

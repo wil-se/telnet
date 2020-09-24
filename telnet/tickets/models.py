@@ -305,10 +305,8 @@ class MvmImport(models.Model):
     msan = models.CharField(verbose_name='Msan', max_length=256, blank=True, null=True)
     rete_rigida = models.CharField(verbose_name='Rete rigida', choices=(('SI', 'SI'),('NO', 'NO')),  max_length=256, blank=True, null=True)
     cavo_cp_cavo = models.CharField(verbose_name='Cavo', max_length=256, blank=True, null=True)
-    colonna = models.CharField(verbose_name='Colonna', max_length=256, blank=True, null=True)
-    cp_col = models.CharField(verbose_name='Coppia colonna', max_length=256, blank=True, null=True)
-    rl = models.CharField(verbose_name='Rl', max_length=256, blank=True, null=True)
-    cp_rl = models.CharField(verbose_name='Cp rl', max_length=256, blank=True, null=True)
+    colonna_cp_colonna = models.CharField(verbose_name='Colonna', max_length=256, blank=True, null=True)
+    rl_cp_rl = models.CharField(verbose_name='Rl', max_length=256, blank=True, null=True)
     secondaria = models.CharField(verbose_name='Secondaria', max_length=256, blank=True, null=True)    
     derivato = models.IntegerField(verbose_name='Derivato', default=0, blank=True, null=True)
     presa = models.CharField(verbose_name='Presa', max_length=256, blank=True, null=True)
@@ -456,3 +454,10 @@ class UploadedFileSielte(models.Model):
     name = models.CharField(max_length=128)
     file = models.FileField(upload_to ='file_uploads_sielte')
 
+class MvmExport(models.Model):
+    name = models.CharField(max_length=128)
+    file = models.FileField(upload_to ='mvm_export')
+
+class SielteExport(models.Model):
+    name = models.CharField(max_length=128)
+    file = models.FileField(upload_to ='sielte_export')

@@ -359,19 +359,15 @@ function generate_tipo_linea_form(){
 		$("#rete-rigida-form").append("<option value=\"NO\">NO</option>");
 		$("#rete-rigida-form").append("</select>");
 		$("#tipo-linea-dynamic-group").append("<br><div class=\"form-group\"><label class=\"col-form-label\"><b>CAVO/CP-CAVO: </b></label><div class=\"col-lg-10\"><input id=\"cavo\" type=\"text\" class=\"form-control\" name=\"cavo\"></div></div>");
-		$("#tipo-linea-dynamic-group").append("<br><div class=\"form-group\"><label class=\"col-form-label\"><b>COLONNA: </b></label><div class=\"col-lg-10\"><input id=\"colonna\" type=\"text\" class=\"form-control\" name=\"colonna\"></div></div>");
-		$("#tipo-linea-dynamic-group").append("<br><div class=\"form-group\"><label class=\"col-form-label\"><b>CP COLONNA: </b></label><div class=\"col-lg-10\"><input id=\"cp-colonna\" type=\"text\" class=\"form-control\" name=\"cp-colonna\"></div></div>");
-		$("#tipo-linea-dynamic-group").append("<br><div class=\"form-group\"><label class=\"col-form-label\"><b>RL: </b></label><div class=\"col-lg-10\"><input id=\"rl\" type=\"text\" class=\"form-control\" name=\"rl\"></div></div>");
-		$("#tipo-linea-dynamic-group").append("<br><div class=\"form-group\"><label class=\"col-form-label\"><b>CP RL: </b></label><div class=\"col-lg-10\"><input id=\"cp-rl\" type=\"text\" class=\"form-control\" name=\"cp-rl\"></div></div>");
+		$("#tipo-linea-dynamic-group").append("<br><div class=\"form-group\"><label class=\"col-form-label\"><b>COLONNA/CP-COLONNA: </b></label><div class=\"col-lg-10\"><input id=\"colonna\" type=\"text\" class=\"form-control\" name=\"colonna\"></div></div>");
+		$("#tipo-linea-dynamic-group").append("<br><div class=\"form-group\"><label class=\"col-form-label\"><b>RL/CP-RL: </b></label><div class=\"col-lg-10\"><input id=\"rl\" type=\"text\" class=\"form-control\" name=\"rl\"></div></div>");
 
 
 		$("#tipo-linea-dynamic-group-resume").append("<br><b>MSAN: </b>&nbsp;{% if mvm.msan %}{{ mvm.msan }}{% endif %}");
 		$("#tipo-linea-dynamic-group-resume").append("<br><b>RETE RIGIDA:</b>&nbsp;{% if mvm.rete_rigida %}{{ mvm.rete_rigida }}{% endif %}");
-		$("#tipo-linea-dynamic-group-resume").append("<br><b>CAVO/CP-CAVO: </b>&nbsp;{% if mvm.cp_cavo %}{{ mvm.cavo_cp_cavo }}{% endif %}");
-		$("#tipo-linea-dynamic-group-resume").append("<br><b>COLONNA: </b>&nbsp;{% if mvm.colonna %}{{ mvm.colonna }}{% endif %}");
-		$("#tipo-linea-dynamic-group-resume").append("<br><b>CP COLONNA: </b>&nbsp;{% if mvm.cp_col %}{{ mvm.cp_col }}{% endif %}");
-		$("#tipo-linea-dynamic-group-resume").append("<br><b>RL: </b>&nbsp;{% if mvm.rl %}{{ mvm.rl }}{% endif %}");
-		$("#tipo-linea-dynamic-group-resume").append("<br><b>CP RL: </b>&nbsp;{% if mvm.cp_rl %}{{ mvm.cp_rl }}{% endif %}");
+		$("#tipo-linea-dynamic-group-resume").append("<br><b>CAVO/CP-CAVO: </b>&nbsp;{% if mvm.cavo_cp_cavo %}{{ mvm.cavo_cp_cavo }}{% endif %}");
+		$("#tipo-linea-dynamic-group-resume").append("<br><b>COLONNA/CP-COLONNA: </b>&nbsp;{% if mvm.colonna_cp_colonna %}{{ mvm.colonna_cp_colonna }}{% endif %}");
+		$("#tipo-linea-dynamic-group-resume").append("<br><b>RL/CP-RL: </b>&nbsp;{% if mvm.rl_cp_rl %}{{ mvm.rl_cp_rl }}{% endif %}");
 
 	}else if (data == 'FIBRA') {
 		$("#tipo-linea-dynamic-group").append("<br><div class=\"form-group\"><label class=\"col-form-label\"><b>RL: </b></label><div class=\"col-lg-10\"><input id=\"rl\" type=\"text\" class=\"form-control\" name=\"rl\"></div></div>");
@@ -405,14 +401,11 @@ $(function() {
     generate_tipo_linea_form();
 		generate_stato_lavoro_form();
 		$("#ko-form").val("{{mvm.ko_reason}}");
-		$("#cavo").val("{{mvm.cavo}}");
+		$("#cavo").val("{{mvm.cavo_cp_cavo}}");
 		$("#msan").val("{{mvm.msan}}");
 		$("#rete-rigida-form select").val("{{mvm.rete_rigida}}");
-		$("#cp-cavo").val("{{mvm.cp_cavo}}");
-		$("#colonna").val("{{mvm.colonna}}");
-		$("#cp-colonna").val("{{mvm.cp_col}}");
-		$("#rl").val("{{mvm.rl}}");
-		$("#cp-rl").val("{{mvm.cp_rl}}");
+		$("#colonna").val("{{mvm.colonna_cp_colonna}}");
+		$("#rl").val("{{mvm.rl_cp_rl}}");
 		$("#porta").val("{{mvm.porta}}");
 
 
