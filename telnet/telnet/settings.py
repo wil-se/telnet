@@ -26,7 +26,7 @@ SECRET_KEY = '49mfu#v90%s8$ek*=*+s^yw#tl!t4mp%%$#5u+0thkiiyu(+yy'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1',]
+ALLOWED_HOSTS = ['127.0.0.1', '5.196.23.27']
 LOGIN_REDIRECT_URL = '/dashboard'
 
 # Application definition
