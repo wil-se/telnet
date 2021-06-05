@@ -27,7 +27,7 @@ SECRET_KEY = '49mfu#v90%s8$ek*=*+s^yw#tl!t4mp%%$#5u+0thkiiyu(+yy'
 DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1',]
-
+LOGIN_REDIRECT_URL = '/dashboard'
 
 # Application definition
 

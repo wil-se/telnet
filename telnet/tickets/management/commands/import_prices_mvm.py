@@ -23,6 +23,7 @@ class Command(BaseCommand):
         current = ''
 
         for record in records:
+            print(record.keys())
             if record['x.1'] == '':
                 data[record['x']] = {}
                 current = record['x']

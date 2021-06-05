@@ -5,8 +5,11 @@ from tickets import views as tickets_views
 from notes import views as notes_views
 from django.conf.urls.static import static
 from django.conf import settings
+from django.shortcuts import redirect
 
 urlpatterns = [
+    path('', lambda req: redirect('/dashboard')),
+
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
     path('dashboard', dashboard_views.dashboard, name='dashboard'),
