@@ -2,7 +2,7 @@ from django.core.management.base import BaseCommand, CommandError
 import pandas as pd
 from tickets.models import MvmImport
 import datetime
-from autentication.models import User
+from authentication.models import User
 
 
 # crea utenti a partire da un file excel (static/mansioni-prezzi.xlsx)

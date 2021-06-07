@@ -3,9 +3,9 @@ from django import forms
 
 class Note(models.Model):
     note = models.TextField(max_length=2048, blank=True, null=True)
-    assigned_to = models.ForeignKey('autentication.User', default=None, on_delete=models.SET_DEFAULT, blank=True, null=True, related_name='assigned_to')
+    assigned_to = models.ForeignKey('authentication.User', default=None, on_delete=models.SET_DEFAULT, blank=True, null=True, related_name='assigned_to')
     created_at = models.DateTimeField(auto_now_add=True)
-    created_by = models.ForeignKey('autentication.User', default=None, on_delete=models.SET_DEFAULT, blank=True, null=True, related_name='created_by')
+    created_by = models.ForeignKey('authentication.User', default=None, on_delete=models.SET_DEFAULT, blank=True, null=True, related_name='created_by')
     start_date = models.DateField(max_length=256, blank=True, null=True)
     end_date = models.DateField(max_length=256, blank=True, null=True)
 

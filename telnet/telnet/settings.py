@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'dashboard.apps.DashboardConfig',
-    'autentication.apps.AutenticationConfig',
+    'authentication.apps.AuthenticationConfig',
     'tickets.apps.TicketsConfig',
     'notes.apps.NotesConfig',
 ]
@@ -102,7 +102,7 @@ DATABASES = {
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
-AUTH_USER_MODEL = 'autentication.User'
+AUTH_USER_MODEL = 'authentication.User'
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -137,9 +137,9 @@ USE_TZ = False
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
-STATIC_URL = '/static/'
-STATIC_ROOT = 'static'
-#STATICFILES_DIRS = ( os.path.join('static'),)
+STATIC_URL = 'static/'
+STATIC_ROOT = ''
+STATICFILES_DIRS = ( os.path.join('static'),)
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'

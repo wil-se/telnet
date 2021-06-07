@@ -292,7 +292,7 @@ class MvmImport(models.Model):
 
     # campi oltre quelli importati
     price = models.DecimalField(max_digits=12, decimal_places=2, blank=True, null=True)
-    assigned_to = models.ForeignKey('autentication.User', default=None, on_delete=models.SET_DEFAULT, blank=True, null=True)
+    assigned_to = models.ForeignKey('authentication.User', default=None, on_delete=models.SET_DEFAULT, blank=True, null=True)
     cod_modem = models.CharField(max_length=256, blank=True, null=True)
     note = models.TextField(max_length=2048, blank=True, null=True)
     tipologia_modem = models.CharField(choices=mvm_tipologia_modem_choices, max_length=256, blank=True, null=True)
@@ -368,7 +368,7 @@ class SielteImport(models.Model):
     tipo_telefono_2 = models.CharField(max_length=256, blank=True, null=True)
 
     # campi oltre quelli importati
-    assigned_to = models.ForeignKey('autentication.User', default=None, on_delete=models.SET_DEFAULT, blank=True, null=True)
+    assigned_to = models.ForeignKey('authentication.User', default=None, on_delete=models.SET_DEFAULT, blank=True, null=True)
     status = models.CharField(choices=sielte_status_choices, default='SOSPESO', max_length=256, blank=True, null=True)
     note = models.TextField(max_length=2048, blank=True, null=True)
 

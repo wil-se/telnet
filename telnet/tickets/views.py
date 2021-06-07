@@ -8,7 +8,7 @@ import datetime
 from django.core.files.storage import FileSystemStorage
 from django.core.files import File
 from django.http import HttpResponseRedirect
-from autentication.models import User
+from authentication.models import User
 import pandas as pd
 from PyPDF2 import PdfFileReader, PdfFileWriter
 from tika import parser

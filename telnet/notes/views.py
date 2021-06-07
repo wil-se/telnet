@@ -4,7 +4,7 @@ import datetime
 from tickets.forms import SearchForm
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
-from autentication.models import User
+from authentication.models import User
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.db.models import Q

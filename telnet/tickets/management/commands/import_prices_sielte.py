@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand, CommandError
 import pandas as pd
 from tickets.models import SielteExtraActivity, SielteActivity
-from autentication.models import User
+from authentication.models import User
 
 
 class Command(BaseCommand):
