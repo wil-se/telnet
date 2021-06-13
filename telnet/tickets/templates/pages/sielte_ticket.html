@@ -6,12 +6,10 @@
 <script src="{% static 'global_assets/js/plugins/pickers/pickadate/picker.js' %}"></script>
 <script src="{% static 'global_assets/js/plugins/pickers/pickadate/picker.time.js' %}"></script>
 <script src="{% static 'global_assets/js/demo_pages/picker_date.js' %}"></script>
-
 <script src="{% static 'global_assets/js/plugins/uploaders/fileinput/plugins/purify.min.js' %}"></script>
 <script src="{% static 'global_assets/js/plugins/uploaders/fileinput/plugins/sortable.min.js' %}"></script>
 <script src="{% static 'global_assets/js/plugins/uploaders/fileinput/fileinput.min.js' %}"></script>
 <script src="{% static 'global_assets/js/demo_pages/uploader_bootstrap.js' %}"></script>
-
 {% endblock %}
 
 {% block content %}
@@ -150,8 +148,8 @@
 				</div>
 			</div>
 			<br>
-
-			<div class="col-md-6">
+							<div class="row">
+			<div class="col-md-6" style="padding: 4px 32px 16px 32px">
 				<form method="POST" action="{% url 'save sielte ticket' %}" enctype="multipart/form-data">
 					{% csrf_token %}
 					<div class="form-group">
@@ -228,10 +226,10 @@
 
 						<input id="id" name="id" type="hidden" value="{{ sielte.pk }}">
 					</div>
-					<button class="btn" type="submit"> Salva </button>
+					<button class="bg-teal-400 btn-primary btn" type="submit" style="padding: 0px 0px -16px 0px"> Salva </button>
 				</form>
 			</div>
-
+			</div>
 		</div>
 		<!-- /linked list headers -->
 

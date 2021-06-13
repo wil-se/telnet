@@ -75,6 +75,15 @@
         </li>
 
         <li class="nav-item">
+          <a href="/admin" class="nav-link {% if url_name == 'lista note' or url_name == 'note'  or url_name == 'note edit'%}active{% endif %}">
+            <i class="icon-user"></i>
+            <span>
+              Admin
+            </span>
+          </a>
+        </li>
+
+        <li class="nav-item">
           <a href="/add_user" class="nav-link {% if url_name == 'add_user' %}active{% endif %}">
             <i class="icon-users"></i>
             <span>

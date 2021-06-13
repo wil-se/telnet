@@ -14,6 +14,11 @@ from PyPDF2 import PdfFileReader, PdfFileWriter
 from tika import parser
 import os
 import locale
+import random
+
+SEED = True
+
+
 
 
 @login_required(login_url='/accounts/login/')
@@ -36,7 +41,7 @@ def mvm_ticket(request, id):
     
     uploaded_files = UploadedFileMvm.objects.filter(obj=mvm_ticket)
 
-    return render(request, 'mvm_ticket.html', {'title':'', 'mvm':mvm_ticket,'form': form, 'id':id, 'uploaded_files': uploaded_files})
+    return render(request, 'mvm_ticket.html', {'title':'Ticket Mvm', 'mvm':mvm_ticket,'form': form, 'id':id, 'uploaded_files': uploaded_files})
 
 @login_required(login_url='/accounts/login/')
 def sielte_ticket(request, id):
@@ -646,16 +651,26 @@ def parse_mvm(file):
                 desccent=record['desccent'],
             )
             mvm.price = mvm_price.price
-            # mvm.status = 'SOSPESO'
-            mvm.status = 'OK'
+            mvm.status = 'SOSPESO'
             
             repeat = MvmImport.objects.filter(codicent=record['codicent'], des_indi=record['des_indi'])
-            print('REPEAT: '+str(len(repeat)))
-            print(mvm)
+            #print('REPEAT: '+str(len(repeat)))
+            # print(mvm)
             mvm.occorrenze = len(repeat)+1
             for r in repeat:
                 r.occorrenze = len(repeat)+1
                 r.save()
+
+
+            if SEED:
+                print("AOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO")
+                mvm.status = random.choice(["OK", "KO", "SOSPESO", "ANNULLATO"])
+                print(mvm.status)
+                emails = list(User.objects.all().values_list('email'))
+                print(random.choice(emails)[0])
+                mvm.assigned_to = User.objects.get(email=random.choice(emails)[0])
+
+
 
             mvm.save()
             result[row] = '{} caricato correttamente'.format(record['cod_wrid'])
@@ -750,6 +765,16 @@ def parse_sielte(file):
                 r.occorrenze = len(repeat)+1
                 r.save()
             print('\n\n\n\n\n\n\n\n')
+
+            if SEED:
+                print("AOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO")
+                sielte.status = random.choice(["OK", "KO", "SOSPESO", "ANNULLATO"])
+                print(sielte.status)
+                emails = list(User.objects.all().values_list('email'))
+                print(random.choice(emails)[0])
+                sielte.assigned_to = User.objects.get(email=random.choice(emails)[0])
+
+
             sielte.save()
             result[row] = '{} caricato correttamente'.format(record['Cod. WR Committente'])
         except:

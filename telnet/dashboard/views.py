@@ -21,12 +21,14 @@ def dashboard(request):
         tickets = get_tickets(start_date, end_date)
         tot_mvm = str(get_guadagno_mvm(tickets['mvm'])).replace(',', '.')
         tot_sielte = str(get_guadagno_sielte(tickets['sielte'])).replace(',', '.')
-
+        print("CIAOCIAOCIAOCIOA")
+        print(tot_mvm)
+        print(tot_sielte)
 
         mvm_earning = split_ticket_mvm(tickets['mvm'])
         sielte_earning = split_ticket_sielte(tickets['sielte'])
-        print(tickets['mvm'])
-        print(tickets['sielte'])
+        # print(tickets['mvm'])
+        # print(tickets['sielte'])
 
         mvm_data_bar = []
         sielte_data_bar = []
@@ -73,6 +75,8 @@ def dashboard(request):
         tickets = list(chain(tickets['mvm'], tickets['sielte']))
 
         height = len(names)*50
+        print(tot_mvm)
+        print(tot_sielte)
         
         return render(request, 'dashboard_manager.html', {'title':'Dashboard', 'note_form': note_form, 'date': date,
         'tot_mvm': tot_mvm, 'tot_sielte': tot_sielte,
@@ -95,14 +99,16 @@ def get_dashboard_data(request):
         end_date = datetime.datetime.strptime(date.split(' - ')[1], '%m/%d/%Y')
 
         tickets = get_tickets(start_date, end_date)
+        print("TICKET RESULT")
+        print(tickets)
+        print(tickets['mvm'])
         tot_mvm = str(get_guadagno_mvm(tickets['mvm'])).replace(',', '.')
         tot_sielte = str(get_guadagno_sielte(tickets['sielte'])).replace(',', '.')
 
-
         mvm_earning = split_ticket_mvm(tickets['mvm'])
         sielte_earning = split_ticket_sielte(tickets['sielte'])
-        print(tickets['mvm'])
-        print(tickets['sielte'])
+        # print(tickets['mvm'])
+        # print(tickets['sielte'])
 
         mvm_data_bar = []
         sielte_data_bar = []
@@ -177,13 +183,19 @@ def get_tickets(start_date, end_date):
 
 def get_guadagno_mvm(tickets):
     guadagno_mvm = 0
+
     for mvmt in tickets:
+        
         if mvmt.price:
+            print(mvmt.price)
             guadagno_mvm += mvmt.price
+    print(guadagno_mvm)
     return guadagno_mvm
 
 def get_guadagno_sielte(tickets):
     guadagno_sielte = 0
+    print("SONO DENTRO GUADAGNO SIELTE")
+    print(tickets)
     for slt in tickets:
         if slt.attivita:
             guadagno_sielte += slt.attivita.guadagno
@@ -203,7 +215,7 @@ def split_ticket_mvm(tickets):
     # pp.pprint(users)
     earning = {}
     for user in users:
-        earning[user.first_name+' '+user.last_name] = get_guadagno_mvm(users[user])
+        earning[user.email] = get_guadagno_mvm(users[user])
 
     return earning
 
@@ -220,7 +232,7 @@ def split_ticket_sielte(tickets):
     # pp.pprint(users)
     earning = {}
     for user in users:
-        earning[user.first_name+' '+user.last_name] = get_guadagno_sielte(users[user])
+        earning[user.email] = get_guadagno_sielte(users[user])
 
     return earning
 
