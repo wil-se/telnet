@@ -646,8 +646,9 @@ def parse_mvm(file):
                 desccent=record['desccent'],
             )
             mvm.price = mvm_price.price
-            mvm.status = 'SOSPESO'
-
+            # mvm.status = 'SOSPESO'
+            mvm.status = 'OK'
+            
             repeat = MvmImport.objects.filter(codicent=record['codicent'], des_indi=record['des_indi'])
             print('REPEAT: '+str(len(repeat)))
             print(mvm)
@@ -716,7 +717,7 @@ def parse_sielte(file):
             sielte.tipo_cliente = record['Tipo Cliente']
             sielte.tipo_telefono_1 = record['Tipo Telefono 1']
             sielte.tipo_telefono_2 = record['Tipo Telefono 2']
-            sielte.status = 'SOSPESO'
+            sielte.status = 'OK'
 
             # print(record['Tecnico Pratica'])
             # qui mi tocca fare una cafonata perché nell'export a volte

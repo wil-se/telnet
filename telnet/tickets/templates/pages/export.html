@@ -26,7 +26,12 @@
       {% for mvm in mvm_exports %}
       <ul class="media-list media-list-linked media-list-bordered">
 				<li class="media bg-light py-2">
-          <a href="media/{{ mvm.file }}">{{ mvm.name }}</a></a> &nbsp; <a href="/export-mvm-delete/{{mvm.pk}}"> elimina </a>
+					<div style="margin-right: auto;">	
+         			<a href="media/{{ mvm.file }}">{{ mvm.name }}</a>
+					</div>
+					<div style="margin-left: auto;">		
+					<a class="btn btn-danger" href="/export-mvm-delete/{{mvm.pk}}"> elimina </a>
+					</div>
 				</li>
 			</ul>
       {% endfor %}
@@ -46,9 +51,14 @@
 			</div>
 
       {% for sielte in sielte_exports %}
-      <ul class="media-list media-list-linked media-list-bordered">
+      		<ul class="media-list media-list-linked media-list-bordered">
 				<li class="media bg-light py-2">
-          <a href="media/{{ sielte.file }}">{{ sielte.name }}</a> &nbsp; <a href="/export-sielte-delete/{{sielte.pk}}"> elimina </a>
+          			<div style="margin-right: auto;">	
+					<a href="media/{{ sielte.file }}">{{ sielte.name }}</a>
+					</div>
+					<div style="margin-left: auto;">	
+		  			<a class="btn btn-danger" href="/export-sielte-delete/{{sielte.pk}}"> elimina </a>
+					</div>
 				</li>
 			</ul>
       {% endfor %}

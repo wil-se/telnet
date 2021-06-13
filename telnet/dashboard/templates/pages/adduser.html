@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}<title>TelNet | {{ title }}</title>{% endblock %}
+{% load filters %}
+{% block import %}
+	<script src="{% static 'global_assets/js/plugins/extensions/jquery_ui/interactions.min.js' %}"></script>
+	<script src="{% static 'global_assets/js/plugins/forms/selects/select2.min.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<!-- Registration form -->
+				<form class="flex-fill">
+					<div class="row">
+						<div class="col-lg-6 offset-lg-3">
+							<div class="card mb-0">
+								<div class="card-body">
+									<div class="text-center mb-3">
+										<i class="icon-plus3 icon-2x text-success border-success border-3 rounded-round p-3 mb-3 mt-1"></i>
+										<h5 class="mb-0">Crea nuovo account</h5>
+										<span class="d-block text-muted">Sono richiesti tutti i campi</span>
+									</div>
+
+									<div class="form-group form-group-feedback form-group-feedback-right">
+										<input type="text" class="form-control" placeholder="Nome utente" name="username" id="username">
+										<div class="form-control-feedback">
+											<i class="icon-user-plus text-muted"></i>
+										</div>
+									</div>
+
+									<div class="row">
+										<div class="col-md-6">
+											<div class="form-group form-group-feedback form-group-feedback-right">
+												<input type="text" class="form-control" placeholder="Nome" name="name" id="name">
+												<div class="form-control-feedback">
+													<i class="icon-user-check text-muted"></i>
+												</div>
+											</div>
+										</div>
+
+										<div class="col-md-6">
+											<div class="form-group form-group-feedback form-group-feedback-right">
+												<input type="text" class="form-control" placeholder="Cognome" name="lastname" id="lastname">
+												<div class="form-control-feedback">
+													<i class="icon-user-check text-muted"></i>
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<div class="row">
+										<div class="col-md-6">
+											<div class="form-group form-group-feedback form-group-feedback-right">
+												<input type="password" class="form-control" placeholder="Inserisci password" name="password" id="password">
+												<div class="form-control-feedback">
+													<i class="icon-user-lock text-muted"></i>
+												</div>
+											</div>
+										</div>
+
+										<div class="col-md-6">
+											<div class="form-group form-group-feedback form-group-feedback-right">
+												<input type="password" class="form-control" placeholder="Ripeti password" name="password_two" id="password_two">
+												<div class="form-control-feedback">
+													<i class="icon-user-lock text-muted"></i>
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<div class="row">
+										<div class="col-md-6">
+											<div class="form-group form-group-feedback form-group-feedback-right">
+												<input type="email" class="form-control" placeholder="Email" name="email" id="email">
+												<div class="form-control-feedback">
+													<i class="icon-mention text-muted"></i>
+												</div>
+											</div>
+										</div>
+
+										<div class="col-md-6">
+											<div class="form-group form-group-feedback form-group-feedback-right">
+												<input type="email" class="form-control" placeholder="Ripeti email" name="email" id="email_two">
+												<div class="form-control-feedback">
+													<i class="icon-mention text-muted"></i>
+												</div>
+											</div>
+										</div>
+
+									
+									
+									</div>
+
+
+										<div class="form-group">
+									<label>Ruolo utente</label>
+									<select id="role" class="form-control select" data-fouc>
+											<option value="AZ">Admin</option>
+											<option value="CO">Manager</option>
+											<option value="ID">Backoffice</option>
+											<option value="WY">Tecnico</option>
+									</select>
+								</div>
+
+									<button id="submit" class="btn bg-teal-400 btn-labeled btn-labeled-right"><b><i class="icon-plus3"></i></b> Crea account</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</form>
+
+<script>
+	$('#submit').click(
+	function(){
+		console.log('bella');
+		var role = document.getElementById("role");
+		$.ajax({
+            headers: {'X-CSRFToken': '{{ csrf_token }}'},
+            type: "POST",
+            url: "/save_user/",
+            data: {
+				'username': document.getElementById("username").value,
+			 	'name': document.getElementById("name").value,
+				'last_name': document.getElementById("lastname").value,
+				'password': document.getElementById("password").value,
+				'password_two': document.getElementById("password_two").value,
+				'email': document.getElementById("email").value,
+				'email_two': document.getElementById("email_two").value,
+				'role': role.options[role.selectedIndex].text,
+			 },
+            success: function(data){
+                console.log('success');
+								location.href = '/dashboard';
+            },
+            failure: function(data){
+                console.log("FAIL");
+                console.log(data);
+            },
+        });
+	}
+	)
+	</script>
+
+
+{% endblock %}

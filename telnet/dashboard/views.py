@@ -5,6 +5,9 @@ import datetime
 from tickets.models import MvmImport, SielteImport 
 from django.db.models import Q
 from itertools import chain
+from django.http import HttpResponseRedirect
+from django.http import JsonResponse
+from authentication.models import User
 
 
 @login_required(login_url='/accounts/login/')
@@ -220,3 +223,65 @@ def split_ticket_sielte(tickets):
         earning[user.first_name+' '+user.last_name] = get_guadagno_sielte(users[user])
 
     return earning
+
+def add_user(request):
+    if (request.user.role < 3):
+        return render(request, 'adduser.html', {})
+
+def save_user(request):
+    if (request.user.role < 3):
+        username = request.POST.get('username', '')
+        name = request.POST.get('name', '')
+        last_name = request.POST.get('last_name', '')
+        password = request.POST.get('password', '')
+        password_two = request.POST.get('password_two', '')
+        email = request.POST.get('email', '')
+        email_two = request.POST.get('email_two', '')
+        role = request.POST.get('role', '')
+
+        print(name)
+        print(last_name)
+        print(password)
+        print(password_two)
+        print(email)
+        print(email_two)
+        print(role)
+        
+        if not username or not name or not last_name or not password_two or not password_two or not email or not email_two:
+            print("check 0")
+            return JsonResponse({'success': False, 'message': "Sono richiesti tutti i campi"})    
+
+
+        # controlla password uguali
+        if password != password_two:
+            print("check 1")
+            return JsonResponse({'success': False, 'message': "Le password non coincidono"})    
+
+        # controlla email uguali
+        if email != email_two:
+            print("check 2")
+            return JsonResponse({'success': False, 'message': "Le email non coincidono"})    
+            
+        # controlla email già esistente
+        if User.objects.filter(email=email).exists():
+            print("email già presente")
+            return JsonResponse({'success': False, 'message': "Email già presente"})    
+        
+
+        newuser = User.objects.create_user(username, email, password)
+        newuser.first_name = name
+        newuser.last_name = last_name
+
+        if role == "Admin":
+            newuser.role = 0
+        if role == "Manager":
+            newuser.role = 1
+        if role == "Backoffide":
+            newuser.role = 2
+        if role == "Tecnico":
+            newuser.role = 3
+
+        newuser.save()
+
+
+        return JsonResponse({'success': True})

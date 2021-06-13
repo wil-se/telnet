@@ -39,7 +39,7 @@
             <input id="daterange" name="date" type="text" class="form-control daterange-basic"
                 value="{{ date }}">
         </div>
-        <button id="search" class="btn" type="submit"> Cerca </button>
+        <button id="search" class="bg-teal-400 btn-primary btn" type="submit" style="margin-left: 15px"> Cerca </button>
 
         </form>
 
@@ -48,7 +48,7 @@
 <!-- /filter toolbar -->
 
 <div class="row">
-    <div class="card col-xl-6">
+    <div class="card col-xl-6" style="">
         <div class="card-header header-elements-inline">
             <h5 class="card-title">Fatturato</h5>
         </div>
@@ -80,7 +80,7 @@
             <br>
             {{ note_form.note|addclass:'form-control' }}
             <br>
-            <button class="btn" id="note-submit"> Salva </button>
+            <button class="bg-teal-400 btn-primary btn" id="note-submit"> Crea nota </button>
         </div>
     </div>
 
@@ -110,7 +110,7 @@
 <div class="row">
 
     <!-- Task manager table -->
-    <div class="card">
+    <div class="card" style="width:100%;">
       <div class="card-header bg-transparent header-elements-inline">
         <h6 class="card-title">Task manager</h6>
       </div>
@@ -236,10 +236,21 @@
 	            dom: '<"datatable-header"fl><"datatable-scroll-lg"t><"datatable-footer"ip>',
 	            language: {
 	                search: '<span>Filtra:</span> _INPUT_',
-	                searchPlaceholder: 'Cerca...',
-	                lengthMenu: '',
-	                paginate: { 'first': 'First', 'last': 'Last', 'next': $('html').attr('dir') == 'rtl' ? '&larr;' : '&rarr;', 'previous': $('html').attr('dir') == 'rtl' ? '&rarr;' : '&larr;' }
-	            },
+                    zeroRecords: 'Nessun dato disponibile',
+                    searchPlaceholder: 'Cerca...',
+	                paginate: { 'first': 'First', 'last': 'Last', 'next': $('html').attr('dir') == 'rtl' ? '&larr;' : '&rarr;', 'previous': $('html').attr('dir') == 'rtl' ? '&rarr;' : '&larr;' },
+                    
+                    decimal: "",
+                    emptyTable: "Nesun dato disponibile",
+                    info: "Da _START_ a _END_ di _TOTAL_ righe totali",
+                    infoEmpty: "Da 0 a 0 di 0 righe totali",
+                    infoFiltered: "(filtrate da _MAX_ righe totali)",
+                    infoPostFix: "",
+                    thousands: ",",
+                    lengthMenu: "Mostra _MENU_ righe",
+                    loadingRecords: "Caricamento...",
+                    processing: "Processamento...",
+                },
 	            lengthMenu: [ 15, 25, 50, 75, 100 ],
 	            displayLength: 25,
 	            drawCallback: function (settings) {

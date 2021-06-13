@@ -6,6 +6,8 @@ from notes import views as notes_views
 from django.conf.urls.static import static
 from django.conf import settings
 from django.shortcuts import redirect
+from dashboard.urls import urlpatterns as dashboard_urls
+
 
 urlpatterns = [
     path('', lambda req: redirect('/dashboard')),
@@ -40,5 +42,7 @@ urlpatterns = [
     path('save-mod-note', notes_views.save_mod_note, name='save mod note'),
     path('delete-note', notes_views.delete_note, name='delete note'),
     path('search-notes', notes_views.search_notes, name='search notes'),
+
+    path('', include('dashboard.urls'))
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

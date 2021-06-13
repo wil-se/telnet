@@ -23,7 +23,7 @@
 
               <ul class="media-list media-list-linked media-list-bordered">
                 <li class="media bg-light py-2">
-                  <span style="float: left;"><span class="font-weight-semibold">CREATO DA: &nbsp;</span>{{ form.created_by }} </span>
+                  <span style="float: left;"><span class="font-weight-semibold">CREATO DA: &nbsp;</span>{{ form.created_by|addclass:'form-control' }} </span>
                 </li>
               </ul>
 
@@ -58,8 +58,8 @@
               <input id="id" name="id" type="hidden" value="{{ note.pk }}">
 
 
-              <button class="btn" type="submit"> Salva </button>
-							<button class="btn" id="delete"> Elimina </button>
+              <button class="btn btn-primary" type="submit" style="margin: 16px 8px 16px 16px;"> Salva </button>
+							<button class="btn btn-danger" id="delete" style="margin: 16px 16px 16px 8px;"> Elimina </button>
 
               </form>
 
