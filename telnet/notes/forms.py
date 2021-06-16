@@ -1,5 +1,6 @@
 from django import forms
 from .models import Note
+from datetime import datetime
 
 class NoteForm(forms.ModelForm):
 

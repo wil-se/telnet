@@ -15,8 +15,8 @@ def dashboard(request):
     if request.user.role < 3:
         note_form = NoteForm(request.POST or None, request.FILES or None, initial={})
 
-        start_date = datetime.datetime.now() - datetime.timedelta(60)
-        end_date = datetime.datetime.now() + datetime.timedelta(60)
+        start_date = datetime.datetime.now() - datetime.timedelta(30)
+        end_date = datetime.datetime.now() + datetime.timedelta(30)
         print(start_date.strftime('%d/%m/%Y'))
         date = '{} - {}'.format(start_date.strftime('%d/%m/%Y'), end_date.strftime('%d/%m/%Y'))
         tickets = get_tickets(start_date, end_date)
@@ -100,14 +100,18 @@ def get_dashboard_data(request):
         end_date = datetime.datetime.strptime(date.split(' - ')[1], '%d/%m/%Y')
 
         tickets = get_tickets(start_date, end_date)
-        print("TICKET RESULT")
-        print(tickets)
-        print(tickets['mvm'])
+        # print("TICKET RESULT")
+        # print(tickets)
+        # print(tickets['mvm'])
         tot_mvm = str(get_guadagno_mvm(tickets['mvm'])).replace(',', '.')
         tot_sielte = str(get_guadagno_sielte(tickets['sielte'])).replace(',', '.')
 
+
         mvm_earning = split_ticket_mvm(tickets['mvm'])
         sielte_earning = split_ticket_sielte(tickets['sielte'])
+
+        print(mvm_earning)
+        print(sielte_earning)
         # print(tickets['mvm'])
         # print(tickets['sielte'])
 
@@ -195,8 +199,8 @@ def get_guadagno_mvm(tickets):
 
 def get_guadagno_sielte(tickets):
     guadagno_sielte = 0
-    print("SONO DENTRO GUADAGNO SIELTE")
-    print(tickets)
+    # print("SONO DENTRO GUADAGNO SIELTE")
+    # print(tickets)
     for slt in tickets:
         if slt.attivita:
             guadagno_sielte += slt.attivita.guadagno
@@ -207,15 +211,18 @@ def get_guadagno_sielte(tickets):
 def split_ticket_mvm(tickets):
     users = {}
     for ticket in tickets:
-        if ticket.assigned_to not in users.keys():
-            users[ticket.assigned_to] = [ticket]
-        else:
-            tkts = users[ticket.assigned_to]
-            tkts.append(ticket)
-            users[ticket.assigned_to] = tkts
+        if ticket.assigned_to:
+            if ticket.assigned_to not in users.keys():
+                users[ticket.assigned_to] = [ticket]
+            else:
+                tkts = users[ticket.assigned_to]
+                tkts.append(ticket)
+                users[ticket.assigned_to] = tkts
     # pp.pprint(users)
     earning = {}
+    print(users)
     for user in users:
+        print(user)
         earning[user.email] = get_guadagno_mvm(users[user])
 
     return earning
@@ -224,17 +231,19 @@ def split_ticket_mvm(tickets):
 def split_ticket_sielte(tickets):
     users = {}
     for ticket in tickets:
-        if ticket.assigned_to not in users.keys():
-            users[ticket.assigned_to] = [ticket]
-        else:
-            tkts = users[ticket.assigned_to]
-            tkts.append(ticket)
-            users[ticket.assigned_to] = tkts
+        if ticket.assigned_to:
+            if ticket.assigned_to not in users.keys():
+                users[ticket.assigned_to] = [ticket]
+            else:
+                tkts = users[ticket.assigned_to]
+                tkts.append(ticket)
+                users[ticket.assigned_to] = tkts
     # pp.pprint(users)
     earning = {}
     for user in users:
+        # print(user)
         earning[user.email] = get_guadagno_sielte(users[user])
-
+        
     return earning
 
 def add_user(request):

@@ -764,16 +764,7 @@ def parse_sielte(file):
                 print(r)
                 r.occorrenze = len(repeat)+1
                 r.save()
-            print('\n\n\n\n\n\n\n\n')
-
-            if SEED:
-                print("AOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO")
-                sielte.status = random.choice(["OK", "KO", "SOSPESO", "ANNULLATO"])
-                print(sielte.status)
-                emails = list(User.objects.all().values_list('email'))
-                print(random.choice(emails)[0])
-                sielte.assigned_to = User.objects.get(email=random.choice(emails)[0])
-
+            print('\n\n\n\n')
 
             sielte.save()
             result[row] = '{} caricato correttamente'.format(record['Cod. WR Committente'])

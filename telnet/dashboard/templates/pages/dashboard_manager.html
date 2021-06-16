@@ -9,7 +9,6 @@
 
 <script src="{% static 'global_assets/js/plugins/ui/moment/moment.min.js' %}"></script>
 <script src="{% static 'global_assets/js/plugins/pickers/daterangepicker.js' %}"></script>
-<script src="{% static 'global_assets/js/demo_pages/picker_date.js' %}"></script>
 
 <script src="{% static 'global_assets/js/plugins/extensions/jquery_ui/widgets.min.js' %}"></script>
 <script src="{% static 'global_assets/js/plugins/tables/datatables/datatables.min.js' %}"></script>
@@ -39,7 +38,7 @@
             <span class="input-group-prepend">
                 <span class="input-group-text"><i class="icon-calendar22"></i></span>
             </span>
-            <input id="daterange" name="date" type="text" class="form-control" value="01/01/2021">
+            <input id="daterange" name="date" type="text" class="form-control">
         </div>
         <button id="search" class="bg-teal-400 btn-primary btn" type="submit" style="margin-left: 15px"> Cerca </button>
 
@@ -155,8 +154,6 @@
 
   <!-- /content area -->
 
-
-    <a id="noty_warning"></a>
 
 </div>
 
@@ -635,17 +632,30 @@ $(function(){
     }
   });
 
-
   $(function() {
+    var datestart = new Date();
+    var dateend = new Date();
+    
+    datestart.setDate(dateend.getDate() - 30); 
+    
+    dateend.setDate(dateend.getDate() + 30);
+
+
+    console.log(datestart.getUTCFullYear() +"/"+ datestart.getUTCMonth() +"/"+ datestart.getUTCDate());
+    console.log(dateend.getUTCFullYear() +"/"+ dateend.getUTCMonth() +"/"+ dateend.getUTCDate());
+    
+
     $("#daterange").daterangepicker(
         {
+            startDate: datestart,
+            endDate: dateend    ,
             locale: {
                 format: "DD/MM/YYYY",
                 separator: " - ",
-                applyLabel: "Apply",
-                cancelLabel: "Cancel",
-                fromLabel: "From",
-                toLabel: "To",
+                applyLabel: "Applica",
+                cancelLabel: "Cancella",
+                fromLabel: "Da",
+                toLabel: "A",
                 customRangeLabel: "Custom",
                 daysOfWeek: [
                     "Do",

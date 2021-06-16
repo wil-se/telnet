@@ -19,17 +19,13 @@ class Command(BaseCommand):
         records = sheet.to_dict(orient='records')
 
         for record in records:
-            user = User()
-            user.username = record['MATRICOLA LUL']
-            user.matricola = record['MATRICOLA LUL']
+            user = User.objects.create_user(record['MATRICOLA LUL'], record['MAIL'], 'password')
             user.first_name = record['NOME'].lower().capitalize()
             user.last_name = record['COGNOME'].lower().capitalize()
-            user.email = record['MAIL']
-            user.password = 'satana'
+            user.residenza = record['RESIDENZA']
             user.is_staff = True
             user.is_active = True
-            user.residenza = record['RESIDENZA']
-
+            
             if record['MANSIONE'] == 'Admin':
                 user.role = 0
             if record['MANSIONE'] == 'Manager':

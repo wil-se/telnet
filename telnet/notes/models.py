@@ -1,5 +1,6 @@
 from django.db import models
 from django import forms
+from django.utils import timezone
 
 class Note(models.Model):
     note = models.TextField(max_length=2048, blank=True, null=True)

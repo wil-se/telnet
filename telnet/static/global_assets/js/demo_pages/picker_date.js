@@ -29,7 +29,7 @@ var DateTimePickers = function() {
             "locale": {
                 "format": "DD/MM/YYYY",
                 "separator": " - ",
-                "applyLabel": "Apply",
+                "applyLabel": "Applica",
                 "cancelLabel": "Cancel",
                 "fromLabel": "From",
                 "toLabel": "To",
