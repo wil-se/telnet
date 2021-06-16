@@ -13,7 +13,7 @@ class NoteForm(forms.ModelForm):
         'end_date'
         ]
         widgets = {
-        'start_date': forms.DateInput(format=('%m/%d/%Y'), attrs={'class':'form-control', 'placeholder':'Seleziona data', 'type':'date'}),
-        'end_date': forms.DateInput(format=('%m/%d/%Y'), attrs={'class':'form-control', 'placeholder':'Seleziona data', 'type':'date'}),
+        'start_date': forms.DateInput(format=('%d/%m/%Y'), attrs={'class':'form-control', 'placeholder':'Seleziona data', 'type':'date', }),
+        'end_date': forms.DateInput(format=('%d/%m/%Y'), attrs={'class':'form-control', 'placeholder':'Seleziona data', 'type':'date'}),
 
     }

@@ -17,7 +17,8 @@ def dashboard(request):
 
         start_date = datetime.datetime.now() - datetime.timedelta(60)
         end_date = datetime.datetime.now() + datetime.timedelta(60)
-        date = '{} - {}'.format(start_date.strftime('%m/%d/%Y'), end_date.strftime('%m/%d/%Y'))
+        print(start_date.strftime('%d/%m/%Y'))
+        date = '{} - {}'.format(start_date.strftime('%d/%m/%Y'), end_date.strftime('%d/%m/%Y'))
         tickets = get_tickets(start_date, end_date)
         tot_mvm = str(get_guadagno_mvm(tickets['mvm'])).replace(',', '.')
         tot_sielte = str(get_guadagno_sielte(tickets['sielte'])).replace(',', '.')
@@ -95,8 +96,8 @@ def get_dashboard_data(request):
         note_form = NoteForm(request.POST or None, request.FILES or None, initial={})
 
         date = request.GET.get('date','')
-        start_date = datetime.datetime.strptime(date.split(' - ')[0], '%m/%d/%Y')
-        end_date = datetime.datetime.strptime(date.split(' - ')[1], '%m/%d/%Y')
+        start_date = datetime.datetime.strptime(date.split(' - ')[0], '%d/%m/%Y')
+        end_date = datetime.datetime.strptime(date.split(' - ')[1], '%d/%m/%Y')
 
         tickets = get_tickets(start_date, end_date)
         print("TICKET RESULT")

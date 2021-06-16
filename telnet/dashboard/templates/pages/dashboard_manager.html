@@ -36,8 +36,7 @@
             <span class="input-group-prepend">
                 <span class="input-group-text"><i class="icon-calendar22"></i></span>
             </span>
-            <input id="daterange" name="date" type="text" class="form-control daterange-basic"
-                value="{{ date }}">
+            <input id="daterange" name="date" type="text" class="form-control" value="01/01/2021">
         </div>
         <button id="search" class="bg-teal-400 btn-primary btn" type="submit" style="margin-left: 15px"> Cerca </button>
 
@@ -608,6 +607,47 @@ $(function(){
             },
         });
   });
+
+
+  $(function() {
+    $("#daterange").daterangepicker(
+        {
+            locale: {
+                format: "DD/MM/YYYY",
+                separator: " - ",
+                applyLabel: "Apply",
+                cancelLabel: "Cancel",
+                fromLabel: "From",
+                toLabel: "To",
+                customRangeLabel: "Custom",
+                daysOfWeek: [
+                    "Do",
+                    "Lu",
+                    "Ma",
+                    "Me",
+                    "Gi",
+                    "Ve",
+                    "Sa"
+                ],
+                monthNames: [
+                    "Gennaio",
+                    "Febbraio",
+                    "Marzo",
+                    "Aprile",
+                    "Maggio",
+                    "Giugno",
+                    "Luglio",
+                    "Agosto",
+                    "Settembre",
+                    "Ottobre",
+                    "Novembre",
+                    "Dicembre"
+                ],
+                firstDay: 1
+            }
+        }
+    );
+});
 </script>
 
 
