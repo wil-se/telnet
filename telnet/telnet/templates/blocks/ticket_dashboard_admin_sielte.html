@@ -9,5 +9,17 @@
   	<td>{{ ticket.data_inizio_appuntamento|default_if_none:"" }}</td>
 	<td>{{ ticket.data_scadenza|default_if_none:"" }}</td>
 	<td>{{ ticket.descrizione_tipologia_pratica|default_if_none:"" }}</td>
-	<td>{{ ticket.status|default_if_none:"" }}</td>
+
+	{% if ticket.status == 'OK' %}
+    <td><a class="badge bg-success-400 align-top">OK</a></td>
+    {% endif %}
+    {% if ticket.status == 'KO' %}
+    <td><a class="badge bg-warning-400 align-top">KO</a></td>
+    {% endif %}
+    {% if ticket.status == 'SOSPESO' %}
+    <td><a class="badge bg-grey-400 align-top">SOSPESO</a></td>
+    {% endif %}
+    {% if ticket.status == 'ANNULLATO' %}
+    <td><a class="badge bg-danger-400 align-top">ANNULLATO</a></td>
+    {% endif %}
 </tr>

@@ -89,7 +89,7 @@ def ticket_list(request):
 
     start_date = datetime.datetime.now() - datetime.timedelta(60)
     end_date = datetime.datetime.now() + datetime.timedelta(60)
-    date = '{} - {}'.format(start_date.strftime('%m/%d/%Y'), end_date.strftime('%m/%d/%Y'))
+    date = '{} - {}'.format(start_date.strftime('%d/%m/%Y'), end_date.strftime('%d/%m/%Y'))
     
     return render(request, 'ticket_list.html', {'title':'Lista ticket', 'tickets': tickets, 'form': form, 'date': date})
 

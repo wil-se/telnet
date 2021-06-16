@@ -15,6 +15,9 @@
 <script src="{% static 'global_assets/js/plugins/tables/datatables/datatables.min.js' %}"></script>
 <script src="{% static 'global_assets/js/plugins/tables/datatables/extensions/natural_sort.js' %}"></script>
 <script src="{% static 'global_assets/js/plugins/forms/selects/select2.min.js' %}"></script>
+<script src="{% static 'global_assets/js/plugins/notifications/jgrowl.min.js' %}"></script>
+<script src="{% static 'global_assets/js/plugins/notifications/noty.min.js' %}"></script>
+
 {% endblock %}
 
 {% block content %}
@@ -152,6 +155,8 @@
 
   <!-- /content area -->
 
+
+    <a id="noty_warning"></a>
 
 </div>
 
@@ -586,12 +591,29 @@ $(function(){
 
 
 <script>
+
+
   $('#note-submit').click( function(){
     assigned_to = $('#id_assigned_to option:selected').text();
     note = $('#id_note').val();
     start_date = $('#id_start_date').val()
     end_date = $('#id_end_date').val()
-    $.ajax({
+    Noty.overrideDefaults({
+            theme: 'limitless',
+            layout: 'topRight',
+            type: 'alert',
+            timeout: 2500
+        });
+    
+    if($('#id_start_date').val() == "" || $('#id_end_date').val() == "" || $('#id_assigned_to').val() == "" ){
+        console.log("error!");
+        new Noty({
+                text: 'Completa tutti i campi prima di inserire una nota',
+                type: 'warning'
+            }).show();
+    }
+    else{
+        $.ajax({
             headers: {'X-CSRFToken': '{{ csrf_token }}'},
             type: "POST",
             url: "/save-note",
@@ -600,12 +622,17 @@ $(function(){
                 console.log('success');
                 $('#id_assigned_to option:contains("----")').prop('selected',true);
                 $('#id_note').val('');
+                new Noty({
+                text: 'Nota salvata con successo',
+                type: 'success'
+            }).show();
             },
             failure: function(data){
                 console.log("FAIL");
                 console.log(data);
             },
         });
+    }
   });
 
 
