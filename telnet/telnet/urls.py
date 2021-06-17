@@ -7,6 +7,8 @@ from django.conf.urls.static import static
 from django.conf import settings
 from django.shortcuts import redirect
 from dashboard.urls import urlpatterns as dashboard_urls
+from authentication.urls import urlpatterns as authentication_urls
+
 
 
 urlpatterns = [
@@ -41,6 +43,7 @@ urlpatterns = [
     path('delete-note', notes_views.delete_note, name='delete note'),
     path('search-notes', notes_views.search_notes, name='search notes'),
 
-    path('', include('dashboard.urls'))
+    path('', include('dashboard.urls')),
+    path('', include('authentication.urls'))
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
