@@ -172,6 +172,7 @@ def get_tickets(start_date, end_date):
     Q(status='OK')
     )
     mvm_tickets = MvmImport.objects.filter(mvm_queryset).distinct()
+    print(mvm_tickets)
 
     sielte_queryset = (
     Q(inizio_lavorazione_prevista__gte=start_date)&
@@ -203,8 +204,10 @@ def get_guadagno_sielte(tickets):
     # print(tickets)
     for slt in tickets:
         if slt.attivita:
-            guadagno_sielte += slt.attivita.guadagno
-            guadagno_sielte += slt.attivita_aggiuntiva.guadagno * slt.numero_agg
+            if slt.attivita.guadagno:
+                guadagno_sielte += slt.attivita.guadagno
+            if slt.attivita_aggiuntiva and slt.attivita_aggiuntiva.guadagno:
+                guadagno_sielte += slt.attivita_aggiuntiva.guadagno * slt.numero_agg
     return guadagno_sielte
 
 

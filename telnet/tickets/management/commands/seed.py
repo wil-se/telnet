@@ -1,7 +1,8 @@
 from django.core.management.base import BaseCommand, CommandError
-from tickets.models import MvmImport, SielteImport
+from tickets.models import MvmImport, SielteImport, SielteActivity
 import random
 from authentication.models import User
+from datetime import datetime
 
 class Command(BaseCommand):
 
@@ -17,6 +18,8 @@ class Command(BaseCommand):
             mvm.status = random.choice(["OK", "KO", "SOSPESO", "ANNULLATO"])
             emails = list(User.objects.all().values_list('email'))
             mvm.assigned_to = User.objects.get(email=random.choice(emails)[0])
+            mvm.datainiz = datetime.now()
+            mvm.price = 100
             mvm.save()
         
 
@@ -24,5 +27,8 @@ class Command(BaseCommand):
             sielte.status = random.choice(["OK", "KO", "SOSPESO", "ANNULLATO"])
             emails = list(User.objects.all().values_list('email'))
             sielte.assigned_to = User.objects.get(email=random.choice(emails)[0])
+            sielte.attivita = SielteActivity.objects.get(servizio="ADSL A + router")
+            sielte.inizio_lavorazione_prevista = datetime.now()
+            
             sielte.save()
     
