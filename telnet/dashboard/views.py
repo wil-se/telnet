@@ -10,177 +10,25 @@ from django.http import JsonResponse
 from authentication.models import User
 
 
-@login_required(login_url='/accounts/login/')
-def dashboard(request):
-    if request.user.role < 3:
-        note_form = NoteForm(request.POST or None, request.FILES or None, initial={})
-
-        start_date = datetime.datetime.now() - datetime.timedelta(30)
-        end_date = datetime.datetime.now() + datetime.timedelta(30)
-
-        date = '{} - {}'.format(start_date.strftime('%d/%m/%Y'), end_date.strftime('%d/%m/%Y'))
-        tickets = get_tickets(start_date, end_date)
-        tot_mvm = str(get_guadagno_mvm(tickets['mvm'])).replace(',', '.')
-        tot_sielte = str(get_guadagno_sielte(tickets['sielte'])).replace(',', '.')
-        print("CIAOCIAOCIAOCIOA")
-        print(tot_mvm)
-        print(tot_sielte)
-
-        mvm_earning = split_ticket_mvm(tickets['mvm'])
-        sielte_earning = split_ticket_sielte(tickets['sielte'])
-        # print(tickets['mvm'])
-        # print(tickets['sielte'])
-
-        mvm_data_bar = []
-        sielte_data_bar = []
-
-        total = {}
-        for user in mvm_earning:
-            # print(user)
-            price = mvm_earning[user]
-            # print(price)
-            # print(mvm_earning[user])
-            if user in sielte_earning.keys():
-                price += sielte_earning[user]
-                # print(sielte_earning[user])
-            
-            total[user] = price
-            # print()
-
-        for user in sielte_earning:
-            price = sielte_earning[user]
-            if user in total.keys():
-                price += total[user]
-            else:
-                total[user] = price
-
-
-        total = sorted(total.items(), key=lambda x: x[1], reverse=True)
-        # print(total)
-        names = []
-        for tot in total:
-            names.append('{}\n {}'.format(tot[0], str(tot[1])))
-
-        # print('TOTALSS')
-        for user in total:
-            if user[0] in mvm_earning.keys():
-                mvm_data_bar.append(float(mvm_earning[user[0]]))
-                if user[0] in sielte_earning.keys():
-                    sielte_data_bar.append(float(sielte_earning[user[0]]))
-                else:
-                    sielte_data_bar.append('')
-            elif user[0] in sielte_earning.keys():
-                sielte_data_bar.append(float(sielte_earning[user[0]]))
-                mvm_data_bar.append('')
-
-        tickets = list(chain(tickets['mvm'], tickets['sielte']))
-
-        height = len(names)*50
-        print(tot_mvm)
-        print(tot_sielte)
-        
-        return render(request, 'dashboard_manager.html', {'title':'Dashboard', 'note_form': note_form, 'date': date, 'start_date': start_date.strftime('%d/%m/%Y'), 'end_date': end_date.strftime('%d/%m/%Y'),
-        'tot_mvm': tot_mvm, 'tot_sielte': tot_sielte,
-        'names':names, 'sielte_data_bar':sielte_data_bar, 'mvm_data_bar': mvm_data_bar, 'tickets': tickets, 'height':height})
-    
-    elif request.user.role == 3:
-        mvm_tickets = MvmImport.objects.filter(assigned_to=request.user)
-        sielte_tickets = SielteImport.objects.filter(assigned_to=request.user)
-        tickets = list(chain(mvm_tickets, sielte_tickets))
-        return render(request, 'dashboard_tecnico.html', {'title':'Dashboard', 'tickets':tickets})
-
 
 @login_required(login_url='/accounts/login/')
 def dash(request):
-    return render(request, 'dash.html', {'title':'Dashboard',})
 
-
-
-@login_required(login_url='/accounts/login/')
-def get_dashboard_data(request):
-    if request.user.role < 3:
-
-        note_form = NoteForm(request.POST or None, request.FILES or None, initial={})
-
+    if request.GET.get('date',''):
         date = request.GET.get('date','')
         start_date = datetime.datetime.strptime(date.split(' - ')[0], '%d/%m/%Y')
         end_date = datetime.datetime.strptime(date.split(' - ')[1], '%d/%m/%Y')
-        date = '{} - {}'.format(start_date.strftime('%d/%m/%Y'), end_date.strftime('%d/%m/%Y'))
-        tickets = get_tickets(start_date, end_date)
-        # print("TICKET RESULT")
-        # print(tickets)
-        # print(tickets['mvm'])
-        tot_mvm = str(get_guadagno_mvm(tickets['mvm'])).replace(',', '.')
-        tot_sielte = str(get_guadagno_sielte(tickets['sielte'])).replace(',', '.')
+    else:
+        start_date = datetime.datetime.now() - datetime.timedelta(30)
+        end_date = datetime.datetime.now() + datetime.timedelta(30)
 
-
-        mvm_earning = split_ticket_mvm(tickets['mvm'])
-        sielte_earning = split_ticket_sielte(tickets['sielte'])
-
-        print(mvm_earning)
-        print(sielte_earning)
-        # print(tickets['mvm'])
-        # print(tickets['sielte'])
-
-        mvm_data_bar = []
-        sielte_data_bar = []
-
-        total = {}
-        for user in mvm_earning:
-            # print(user)
-            price = mvm_earning[user]
-            # print(price)
-            # print(mvm_earning[user])
-            if user in sielte_earning.keys():
-                price += sielte_earning[user]
-                # print(sielte_earning[user])
-            
-            total[user] = price
-            # print()
-
-        for user in sielte_earning:
-            price = sielte_earning[user]
-            if user in total.keys():
-                price += total[user]
-            else:
-                total[user] = price
-
-
-        total = sorted(total.items(), key=lambda x: x[1], reverse=True)
-        # print(total)
-        names = []
-        for tot in total:
-            names.append('{}\n {}'.format(tot[0], str(tot[1])))
-
-        # print('TOTALSS')
-        for user in total:
-            if user[0] in mvm_earning.keys():
-                mvm_data_bar.append(float(mvm_earning[user[0]]))
-                if user[0] in sielte_earning.keys():
-                    sielte_data_bar.append(float(sielte_earning[user[0]]))
-                else:
-                    sielte_data_bar.append('')
-            elif user[0] in sielte_earning.keys():
-                sielte_data_bar.append(float(sielte_earning[user[0]]))
-                mvm_data_bar.append('')
-
-        tickets = list(chain(tickets['mvm'], tickets['sielte']))
-        height = len(names)*50
-
-        return render(request, 'dashboard_manager.html', {'title':'Dashboard', 'note_form': note_form, 'date': date, 'start_date': start_date.strftime('%d/%m/%Y'), 'end_date': end_date.strftime('%d/%m/%Y'),
-        'tot_mvm': tot_mvm, 'tot_sielte': tot_sielte,
-        'names':names, 'sielte_data_bar':sielte_data_bar, 'mvm_data_bar': mvm_data_bar, 'tickets': tickets, 'height': height})
-
-
-def get_tickets(start_date, end_date):
     mvm_queryset = (
     Q(datainiz__gte=start_date)&
     Q(datainiz__lte=end_date)&
     Q(status='OK')
     )
     mvm_tickets = MvmImport.objects.filter(mvm_queryset).distinct()
-    print(mvm_tickets)
-
+    
     sielte_queryset = (
     Q(inizio_lavorazione_prevista__gte=start_date)&
     Q(inizio_lavorazione_prevista__lte=end_date)&
@@ -188,10 +36,21 @@ def get_tickets(start_date, end_date):
     )
     sielte_tickets = SielteImport.objects.filter(sielte_queryset).distinct()
 
-    return {
-        'mvm': mvm_tickets,
-        'sielte': sielte_tickets,
-    }
+    tickets = list(chain(mvm_tickets, sielte_tickets))
+
+
+    return render(request, 'dash.html', {
+        'title':'Dashboard', 
+        'subtext': 'Panoramica',
+        'start_date': start_date.strftime('%d/%m/%Y'),
+        'end_date': end_date.strftime('%d/%m/%Y'),
+        'tot_mvm': get_guadagno_mvm(mvm_tickets),
+        'tot_sielte': get_guadagno_sielte(sielte_tickets),
+        'note_form': NoteForm(request.POST or None, request.FILES or None, initial={}),
+        'tickets': tickets,
+        })
+
+
 
 
 def get_guadagno_mvm(tickets):
@@ -258,7 +117,7 @@ def split_ticket_sielte(tickets):
 
 def add_user(request):
     if (request.user.role < 3):
-        return render(request, 'adduser.html', {})
+        return render(request, 'adduser.html', {'title': 'Aggiungi utente', 'subtext': 'Gestione account',})
 
 def save_user(request):
     if (request.user.role < 3):

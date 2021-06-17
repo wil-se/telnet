@@ -14,8 +14,6 @@ urlpatterns = [
 
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
-    path('dashboard', dashboard_views.dashboard, name='dashboard'),
-    path('get-dashboard-data', dashboard_views.get_dashboard_data, name='get dashboard data'),
 
     path('mvm-ticket/<int:id>', tickets_views.mvm_ticket, name='mvm ticket'),
     path('sielte-ticket/<int:id>', tickets_views.sielte_ticket, name='sielte ticket'),

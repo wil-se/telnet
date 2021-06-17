@@ -6,6 +6,6 @@ from .views import add_user, save_user, dash
 urlpatterns = [
     path('add_user/', add_user, name='add_user' ),
     path('save_user/', save_user, name='save_user' ),
-    path('dash/', dash, name='dash' ),
+    path('dashboard/', dash, name='dashboard' ),
     
 ]

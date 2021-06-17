@@ -22,7 +22,14 @@ def note_list(request):
         end_date = datetime.now() + timedelta(60)
 
         form = SearchForm(request.GET or None, request.FILES or None, initial=form_fields)
-        return render(request, 'note_list.html', {'title':'Lista note', 'notes': notes, 'form': form, 'start_date': start_date.strftime('%d/%m/%Y'), 'end_date': end_date.strftime('%d/%m/%Y')})
+        return render(request, 'note_list.html', {
+            'title':'Lista note',
+            'subtext': 'Note',
+            'notes': notes,
+            'form': form,
+            'start_date': start_date.strftime('%d/%m/%Y'),
+            'end_date': end_date.strftime('%d/%m/%Y')
+            })
     return HttpResponseRedirect('/dashboard')
 
 @login_required(login_url='/accounts/login/')

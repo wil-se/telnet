@@ -91,7 +91,15 @@ def ticket_list(request):
     end_date = datetime.datetime.now() + datetime.timedelta(60)
     date = '{} - {}'.format(start_date.strftime('%d/%m/%Y'), end_date.strftime('%d/%m/%Y'))
     
-    return render(request, 'ticket_list.html', {'title':'Lista ticket', 'tickets': tickets, 'form': form, 'date': date, 'start_date': start_date.strftime('%d/%m/%Y'), 'end_date': end_date.strftime('%d/%m/%Y')})
+    return render(request, 'ticket_list.html', {
+        'title':'Lista ticket',
+        'subtext': 'Tickets',
+        'tickets': tickets,
+        'form': form,
+        'date': date,
+        'start_date': start_date.strftime('%d/%m/%Y'),
+        'end_date': end_date.strftime('%d/%m/%Y')
+        })
 
 @login_required(login_url='/accounts/login/')
 def search_tickets(request):
@@ -394,7 +402,7 @@ def save_sielte_ticket(request):
 
 @login_required(login_url='/accounts/login/')
 def import_page(request):
-    return render(request, 'import.html', {'title':'Import'})
+    return render(request, 'import.html', {'title':'Import', 'subtext': 'Importa file di export',})
 
 def clean(value):
     value = value.replace('_x000D_', '').replace('\'', '').strip()
@@ -870,7 +878,7 @@ def file_sielte_delete(request, ticket, id):
 def export(request):
     mvm_exports = MvmExport.objects.all()
     sielte_exports = SielteExport.objects.all()
-    return render(request, 'export.html', {'title':'Export', 'mvm_exports': mvm_exports, 'sielte_exports': sielte_exports})
+    return render(request, 'export.html', {'title':'Export','subtext': 'Risultati export', 'mvm_exports': mvm_exports, 'sielte_exports': sielte_exports})
 
 @login_required(login_url='/accounts/login/')
 def export_mvm_delete(request, id):

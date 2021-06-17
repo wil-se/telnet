@@ -23,8 +23,6 @@ var CKEditor = function() {
             console.warn('Warning - ckeditor.js is not loaded.');
             return;
         }
-        
-
         // Full featured editor
         // ------------------------------
 
@@ -32,7 +30,6 @@ var CKEditor = function() {
         CKEDITOR.replace('editor-full', {
             height: 400
         });
-
 
         // Readonly editor
         // ------------------------------
@@ -122,7 +119,8 @@ var CKEditor = function() {
             extraAllowedContent: 'a(documentation);abbr[title];code',
             removePlugins: 'stylescombo'
         });
-    };
+                
+    };  
 
     // Select2
     var _componentSelect2 = function() {
@@ -156,4 +154,5 @@ var CKEditor = function() {
 
 document.addEventListener('DOMContentLoaded', function() {
     CKEditor.init();
+    
 });
