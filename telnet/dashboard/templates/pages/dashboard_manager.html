@@ -30,9 +30,9 @@
         </button>
     </div>
 
-    <div class="navbar-collapse collapse" id="navbar-filter" style="padding: 20px;">
+    <div class="navbar-collapse collapse" id="navbar-filter" style="padding: 20px 20px 20px 20px;">
 
-        <form method="GET" action="{% url 'get dashboard data' %}" class="w-100">
+        <form method="GET" action="{% url 'get dashboard data' %}" class="w-100 form-inline">
 
         <div class="input-group col-md-4 d-flex flex-column">
         <a><b>Data:</b></a>
@@ -44,10 +44,7 @@
         </div>
         </div>
 
-        <div class="form-group row justify-content-end">
-        <button id="search" class="bg-teal-400 btn-primary btn" type="submit" style="margin-top: 15px"> Cerca </button>
-        </div>
-        
+        <button id="search" class="bg-teal-400 btn-primary btn" type="submit" style="margin: 15px 0px 0px auto"> Cerca </button>
         </form>
 
     </div>
@@ -769,11 +766,22 @@ $(function(){
     .content{
       padding: 0px; !important
     }
+
+    #DataTables_Table_0_filter {
+      text-align: left;
+    }
+
+    #DataTables_Table_0_length {
+        text-align: left;
+        display: flex;
+    }
   }
 
   .row{
       margin: 0px;
   }
+
+  
 </style>
 
 {% endblock %}

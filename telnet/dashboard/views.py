@@ -89,6 +89,13 @@ def dashboard(request):
         tickets = list(chain(mvm_tickets, sielte_tickets))
         return render(request, 'dashboard_tecnico.html', {'title':'Dashboard', 'tickets':tickets})
 
+
+@login_required(login_url='/accounts/login/')
+def dash(request):
+    return render(request, 'dash.html', {'title':'Dashboard',})
+
+
+
 @login_required(login_url='/accounts/login/')
 def get_dashboard_data(request):
     if request.user.role < 3:
