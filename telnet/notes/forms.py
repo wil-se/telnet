@@ -13,8 +13,4 @@ class NoteForm(forms.ModelForm):
         'start_date',
         'end_date'
         ]
-        widgets = {
-        'start_date': forms.DateInput(format=('%d/%m/%Y'), attrs={'class':'form-control', 'placeholder':'Seleziona data', 'type':'date', }),
-        'end_date': forms.DateInput(format=('%d/%m/%Y'), attrs={'class':'form-control', 'placeholder':'Seleziona data', 'type':'date'}),
 
-    }

@@ -8,6 +8,7 @@ from authentication.models import User
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.db.models import Q
+from datetime import datetime, timedelta
 
 @login_required(login_url='/accounts/login/')
 def note_list(request):
@@ -17,8 +18,8 @@ def note_list(request):
         form_fields = {}
         form_fields['text'] = ''
         form_fields['user'] = ''
-        start_date = datetime.datetime.now() - datetime.timedelta(60)
-        end_date = datetime.datetime.now() + datetime.timedelta(60)
+        start_date = datetime.now() - timedelta(60)
+        end_date = datetime.now() + timedelta(60)
 
         form = SearchForm(request.GET or None, request.FILES or None, initial=form_fields)
         return render(request, 'note_list.html', {'title':'Lista note', 'notes': notes, 'form': form, 'start_date': start_date.strftime('%d/%m/%Y'), 'end_date': end_date.strftime('%d/%m/%Y')})
@@ -42,8 +43,8 @@ def save_note(request):
     note.assigned_to = user_assigned
     note.note = txt
     note.created_by = User.objects.get(pk=user_created_by)
-    note.start_date = start_date
-    note.end_date = end_date
+    note.start_date = datetime.strptime(start_date, '%d/%m/%Y')
+    note.end_date = datetime.strptime(end_date, '%d/%m/%Y')
     note.save()
 
     return JsonResponse({'success': True})
@@ -72,7 +73,7 @@ def note_edit(request, id):
         if form.is_valid():
             form.save()
 
-        return render(request, 'note_edit.html', {'title':'Modifica nota', 'form': form, 'note': note})
+        return render(request, 'note_edit.html', {'title':'Modifica nota', 'form': form, 'note': note, 'start_date': note.start_date.strftime('%d/%m/%Y'), 'end_date': note.end_date.strftime('%d/%m/%Y')})
     return HttpResponseRedirect('/dashboard')
 
 
@@ -99,11 +100,11 @@ def save_mod_note(request):
     note.assigned_to = user_assigned
     note.note = txt
     note.created_by = user_created_by
-    note.start_date = start_date
-    note.end_date = end_date
+    note.start_date = datetime.strptime(start_date, '%d/%m/%Y')
+    note.end_date = datetime.strptime(end_date, '%d/%m/%Y')
     note.save()
 
-    return HttpResponseRedirect('/nota/'+id)
+    return JsonResponse({'success': True})
 
 
 @login_required(login_url='/accounts/login/')
@@ -148,16 +149,18 @@ def search_notes(request):
         notequeryset &= (Q(assigned_to=user))
 
     if date:
-        start_date = datetime.datetime.strptime(date.split(' - ')[0], '%m/%d/%Y')
-        end_date = datetime.datetime.strptime(date.split(' - ')[1], '%m/%d/%Y')
+        start_date = datetime.strptime(date.split(' - ')[0], '%d/%m/%Y')
+        end_date = datetime.strptime(date.split(' - ')[1], '%d/%m/%Y')
         notequeryset &= (
         Q(start_date__gte=start_date)&
         Q(start_date__lte=end_date)
         )
 
+    start_date = datetime.strptime(date.split(' - ')[0], '%d/%m/%Y')
+    end_date = datetime.strptime(date.split(' - ')[1], '%d/%m/%Y')
 
     notes = Note.objects.filter(notequeryset).distinct()
     # for ticket in tickets:
     #     print(ticket)
 
-    return render(request, 'note_list.html', {'title':'Lista note', 'notes': notes, 'form': form})
+    return render(request, 'note_list.html', {'title':'Lista note', 'notes': notes, 'form': form, 'start_date': start_date.strftime('%d/%m/%Y'), 'end_date': end_date.strftime('%d/%m/%Y')})
