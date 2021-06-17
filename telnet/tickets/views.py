@@ -15,6 +15,7 @@ from tika import parser
 import os
 import locale
 import random
+from django.core.paginator import Paginator
 
 SEED = True
 
@@ -70,14 +71,26 @@ def sielte_ticket(request, id):
 
 
 @login_required(login_url='/accounts/login/')
-def ticket_list(request):
+def ticket_list(request, page):
     if request.user.role < 3:
         mvm_tickets = MvmImport.objects.all()
         sielte_tickets = SielteImport.objects.all()
     if request.user.role == 3:
         mvm_tickets = MvmImport.objects.filter(assigned_to=request.user)
         sielte_tickets = SielteImport.objects.filter(assigned_to=request.user)
+
+    
     tickets = list(chain(mvm_tickets, sielte_tickets))
+    paginator = Paginator(tickets, 10)
+    print(paginator.count)
+    print(paginator.num_pages)
+    if page <1:
+        return HttpResponseRedirect('/lista-ticket/1')
+    if page >= paginator.num_pages:
+        return HttpResponseRedirect('/lista-ticket/'+paginator.numpages)
+
+    tickets = paginator.page(page)
+
     form_fields = {}
     form_fields['text'] = ''
     form_fields['status'] = ''
@@ -98,7 +111,9 @@ def ticket_list(request):
         'form': form,
         'date': date,
         'start_date': start_date.strftime('%d/%m/%Y'),
-        'end_date': end_date.strftime('%d/%m/%Y')
+        'end_date': end_date.strftime('%d/%m/%Y'),
+        'pages': [ x for x in range(page, page+4)],
+        'page_current': page,
         })
 
 @login_required(login_url='/accounts/login/')

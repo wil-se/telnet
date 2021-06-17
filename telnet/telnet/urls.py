@@ -8,6 +8,7 @@ from django.conf import settings
 from django.shortcuts import redirect
 from dashboard.urls import urlpatterns as dashboard_urls
 from authentication.urls import urlpatterns as authentication_urls
+from tickets.urls import urlpatterns as tickets_urls
 
 
 
@@ -44,6 +45,8 @@ urlpatterns = [
     path('search-notes', notes_views.search_notes, name='search notes'),
 
     path('', include('dashboard.urls')),
-    path('', include('authentication.urls'))
+    path('', include('authentication.urls')),
+    path('', include('tickets.urls')),
+    
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

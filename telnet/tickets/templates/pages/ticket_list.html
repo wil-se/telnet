@@ -56,9 +56,15 @@
 
   				</div>
   				<!-- /inner container -->
-
-
-
+        
+        <ul class="pagination align-self-center" style="margin: 0px auto;">
+								<li class="page-item"><a href="/lista-ticket/{{ page_current|add:"-1"}}" class="page-link">&larr; &nbsp; Indietro</a></li>
+								{% for page in pages%}
+                <li class="page-item{% if page == page_current %} active{% endif %}"><a href="/lista-ticket/{{page}}" class="page-link">{{ page }}</a></li>
+                {% endfor %}
+								<li class="page-item"><a href="/lista-ticket/{{ page_current|add:"1"}}" class="page-link">Avanti &nbsp; &rarr;</a></li>
+							</ul>
+        </div>
 </div>
 
 {% endblock %}
