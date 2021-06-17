@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load filters %}
 {% block title %}<title>TelNet</title>{% endblock %}
 {% block import %}
 <script src="{% static 'global_assets/js/plugins/ui/moment/moment.min.js' %}"></script>
@@ -7,8 +8,10 @@
 <script src="{% static 'global_assets/js/plugins/notifications/jgrowl.min.js' %}"></script>
 <script src="{% static 'global_assets/js/plugins/notifications/noty.min.js' %}"></script>
 
+<script src="{% static 'global_assets/js/plugins/editors/ckeditor/ckeditor.js' %}"></script>
+<script src="{% static 'global_assets/js/plugins/forms/selects/select2.min.js' %}"></script>
 {% endblock %}
-{% load filters %}
+
 {% block content %}
 <div class="row">
 	<div class="col">
@@ -52,12 +55,8 @@
                 <li class="media bg-light py-2">
                   <span class="font-weight-semibold">NOTA: &nbsp;</span>
                 </li>
-                <li class="media bg-light py-2" style="border-top: transparent;">
-                  <p >{{ form.note|addclass:'form-control' }}</p>
-
-                  </li>
               </ul>
-
+              {{ form.note|addid:'editor-full' }}
               <div style="display: flex;"> 
               <button class="btn btn-primary" id="note-submit" style="margin: 16px 8px 16px 16px;"> Salva </button>
 							<button class="btn btn-danger" style="margin: 16px 16px 16px 8px;" data-toggle="modal" data-target="#modal_theme_danger"> Elimina </button>
@@ -99,7 +98,7 @@
   $('#note-submit').click( function(){
     console.log("aoo")
     assigned_to = $('#id_assigned_to option:selected').val();
-    note = $('#id_note').val();
+    note = CKEDITOR.instances['editor-full'].getData();
     start_date = $('#start_date').val()
     end_date = $('#end_date').val()
     created_by = $('#id_created_by option:selected').val();
@@ -235,5 +234,49 @@
 
 
 	</script>
+
+
+
+<script>
+var CKEditor = function() {
+    var _componentCKEditor = function() {
+        
+        if (typeof CKEDITOR == 'undefined') {
+            console.warn('Warning - ckeditor.js is not loaded.');
+            return;
+        }
+        CKEDITOR.replace('editor-full', {
+            height: 200
+        });
+        CKEDITOR.config.language = 'it';
+        CKEDITOR.config.toolbar = [
+            ['Bold','Italic','Underline','StrikeThrough','-','Undo','Redo','-','Cut','Copy','Paste'],
+            [ 'Styles', 'Format', 'Font', 'FontSize' ]
+        ];            
+    };  
+    var _componentSelect2 = function() {
+        if (!$().select2) {
+            console.warn('Warning - select2.min.js is not loaded.');
+            return;
+        };
+        $('.form-control-select2').select2({
+            minimumResultsForSearch: Infinity
+        });
+    };
+    return {
+        init: function() {
+            _componentCKEditor();
+            _componentSelect2();
+        }
+    }
+}();
+document.addEventListener('DOMContentLoaded', function() {
+    CKEditor.init();
+    
+});
+
+
+
+</script>
 
 {% endblock %}
