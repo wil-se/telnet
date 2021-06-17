@@ -7,7 +7,7 @@
 
         <div>
           <h6><a href="/nota/{{ note.pk }}">{{ note.assigned_to }}</a></h6>
-          <p class="mb-3">{{ note.note|truncatewords:32 }}</p>
+          <p class="mb-3">{{ note.plain_text|truncatewords:32 }}</p>
         </div>
 
       </div>

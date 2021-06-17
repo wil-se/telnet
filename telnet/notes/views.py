@@ -21,6 +21,9 @@ def note_list(request):
         start_date = datetime.now() - timedelta(60)
         end_date = datetime.now() + timedelta(60)
 
+        for note in notes:
+            print(note.plain_text)
+
         form = SearchForm(request.GET or None, request.FILES or None, initial=form_fields)
         return render(request, 'note_list.html', {
             'title':'Lista note',
