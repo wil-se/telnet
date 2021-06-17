@@ -5,6 +5,8 @@
 {% block import %}
 <script src="{% static 'global_assets/js/plugins/forms/styling/switchery.min.js' %}"></script>
 <script src="{% static 'global_assets/js/demo_pages/task_manager_grid.js' %}"></script>
+<script src="{% static 'global_assets/js/plugins/ui/moment/moment.min.js' %}"></script>
+<script src="{% static 'global_assets/js/plugins/pickers/daterangepicker.js' %}"></script>
 {% endblock %}
 
 {% block content %}
@@ -47,4 +49,52 @@
 
 
 </div>
+
+
+<script>
+
+  $(function() {
+
+    $("#daterange").daterangepicker(
+        {
+            startDate: "{{ start_date }}",
+            endDate: "{{ end_date }}",
+            locale: {
+                format: "DD/MM/YYYY",
+                separator: " - ",
+                applyLabel: "Applica",
+                cancelLabel: "Cancella",
+                fromLabel: "Da",
+                toLabel: "A",
+                customRangeLabel: "Custom",
+                daysOfWeek: [
+                    "Do",
+                    "Lu",
+                    "Ma",
+                    "Me",
+                    "Gi",
+                    "Ve",
+                    "Sa"
+                ],
+                monthNames: [
+                    "Gennaio",
+                    "Febbraio",
+                    "Marzo",
+                    "Aprile",
+                    "Maggio",
+                    "Giugno",
+                    "Luglio",
+                    "Agosto",
+                    "Settembre",
+                    "Ottobre",
+                    "Novembre",
+                    "Dicembre"
+                ],
+                firstDay: 1
+            }
+        }
+    );
+});
+</script>
+
 {% endblock %}

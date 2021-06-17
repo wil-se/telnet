@@ -17,7 +17,7 @@ def dashboard(request):
 
         start_date = datetime.datetime.now() - datetime.timedelta(30)
         end_date = datetime.datetime.now() + datetime.timedelta(30)
-        print(start_date.strftime('%d/%m/%Y'))
+
         date = '{} - {}'.format(start_date.strftime('%d/%m/%Y'), end_date.strftime('%d/%m/%Y'))
         tickets = get_tickets(start_date, end_date)
         tot_mvm = str(get_guadagno_mvm(tickets['mvm'])).replace(',', '.')
@@ -79,7 +79,7 @@ def dashboard(request):
         print(tot_mvm)
         print(tot_sielte)
         
-        return render(request, 'dashboard_manager.html', {'title':'Dashboard', 'note_form': note_form, 'date': date,
+        return render(request, 'dashboard_manager.html', {'title':'Dashboard', 'note_form': note_form, 'date': date, 'start_date': start_date.strftime('%d/%m/%Y'), 'end_date': end_date.strftime('%d/%m/%Y'),
         'tot_mvm': tot_mvm, 'tot_sielte': tot_sielte,
         'names':names, 'sielte_data_bar':sielte_data_bar, 'mvm_data_bar': mvm_data_bar, 'tickets': tickets, 'height':height})
     
@@ -98,7 +98,7 @@ def get_dashboard_data(request):
         date = request.GET.get('date','')
         start_date = datetime.datetime.strptime(date.split(' - ')[0], '%d/%m/%Y')
         end_date = datetime.datetime.strptime(date.split(' - ')[1], '%d/%m/%Y')
-
+        date = '{} - {}'.format(start_date.strftime('%d/%m/%Y'), end_date.strftime('%d/%m/%Y'))
         tickets = get_tickets(start_date, end_date)
         # print("TICKET RESULT")
         # print(tickets)
@@ -160,7 +160,7 @@ def get_dashboard_data(request):
         tickets = list(chain(tickets['mvm'], tickets['sielte']))
         height = len(names)*50
 
-        return render(request, 'dashboard_manager.html', {'title':'Dashboard', 'note_form': note_form, 'date': date,
+        return render(request, 'dashboard_manager.html', {'title':'Dashboard', 'note_form': note_form, 'date': date, 'start_date': start_date.strftime('%d/%m/%Y'), 'end_date': end_date.strftime('%d/%m/%Y'),
         'tot_mvm': tot_mvm, 'tot_sielte': tot_sielte,
         'names':names, 'sielte_data_bar':sielte_data_bar, 'mvm_data_bar': mvm_data_bar, 'tickets': tickets, 'height': height})
 

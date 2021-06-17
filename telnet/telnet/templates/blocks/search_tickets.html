@@ -90,22 +90,10 @@ $('#export').click(function(){
 
 
  $(function() {
-    var datestart = new Date();
-    var dateend = new Date();
-    
-    datestart.setDate(dateend.getDate() - 30); 
-    
-    dateend.setDate(dateend.getDate() + 30);
-
-
-    console.log(datestart.getUTCFullYear() +"/"+ datestart.getUTCMonth() +"/"+ datestart.getUTCDate());
-    console.log(dateend.getUTCFullYear() +"/"+ dateend.getUTCMonth() +"/"+ dateend.getUTCDate());
-    
-
     $("#daterange").daterangepicker(
         {
-            startDate: datestart,
-            endDate: dateend    ,
+            startDate: "{{ start_date }}",
+            endDate: "{{ end_date }}",
             locale: {
                 format: "DD/MM/YYYY",
                 separator: " - ",

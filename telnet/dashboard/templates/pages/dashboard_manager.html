@@ -49,7 +49,7 @@
 <!-- /filter toolbar -->
 
 <div class="row">
-    <div class="card col-xl-4" style="">
+    <div class="card col-xl-6" style="">
         <div class="card-header header-elements-inline">
             <h5 class="card-title">Fatturato</h5>
         </div>
@@ -63,7 +63,7 @@
     </div>
 
 
-    <div class="card col-xl-8">
+    <div class="card col-xl-6">
         <div class="card-header header-elements-inline">
             <h5 class="card-title">Note</h5>
         </div>
@@ -633,22 +633,11 @@ $(function(){
   });
 
   $(function() {
-    var datestart = new Date();
-    var dateend = new Date();
-    
-    datestart.setDate(dateend.getDate() - 30); 
-    
-    dateend.setDate(dateend.getDate() + 30);
-
-
-    console.log(datestart.getUTCFullYear() +"/"+ datestart.getUTCMonth() +"/"+ datestart.getUTCDate());
-    console.log(dateend.getUTCFullYear() +"/"+ dateend.getUTCMonth() +"/"+ dateend.getUTCDate());
-    
 
     $("#daterange").daterangepicker(
         {
-            startDate: datestart,
-            endDate: dateend    ,
+            startDate: "{{ start_date }}",
+            endDate: "{{ end_date }}",
             locale: {
                 format: "DD/MM/YYYY",
                 separator: " - ",

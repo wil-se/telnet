@@ -91,7 +91,7 @@ def ticket_list(request):
     end_date = datetime.datetime.now() + datetime.timedelta(60)
     date = '{} - {}'.format(start_date.strftime('%d/%m/%Y'), end_date.strftime('%d/%m/%Y'))
     
-    return render(request, 'ticket_list.html', {'title':'Lista ticket', 'tickets': tickets, 'form': form, 'date': date})
+    return render(request, 'ticket_list.html', {'title':'Lista ticket', 'tickets': tickets, 'form': form, 'date': date, 'start_date': start_date.strftime('%d/%m/%Y'), 'end_date': end_date.strftime('%d/%m/%Y')})
 
 @login_required(login_url='/accounts/login/')
 def search_tickets(request):
@@ -144,8 +144,8 @@ def search_tickets(request):
             sielte_queryset &= (Q(status=status))
 
     if date:
-        start_date = datetime.datetime.strptime(date.split(' - ')[0], '%m/%d/%Y')
-        end_date = datetime.datetime.strptime(date.split(' - ')[1], '%m/%d/%Y')
+        start_date = datetime.datetime.strptime(date.split(' - ')[0], '%d/%m/%Y')
+        end_date = datetime.datetime.strptime(date.split(' - ')[1], '%d/%m/%Y')
         mvm_queryset &= (
         Q(datainiz__gte=start_date)&
         Q(datainiz__lte=end_date)
@@ -166,11 +166,13 @@ def search_tickets(request):
     elif company == 'SIELTE':
         tickets = SielteImport.objects.filter(sielte_queryset).distinct()
 
+    start_date = datetime.datetime.strptime(date.split(' - ')[0], '%d/%m/%Y')
+    end_date = datetime.datetime.strptime(date.split(' - ')[1], '%d/%m/%Y')
     
     # for ticket in tickets:
     #     print(ticket)
     # print(tickets)
-    return render(request, 'ticket_list.html', {'title':'Lista ticket', 'tickets': tickets, 'form':form, 'date': date})
+    return render(request, 'ticket_list.html', {'title':'Lista ticket', 'tickets': tickets, 'form':form, 'date': date, 'start_date': start_date.strftime('%d/%m/%Y'), 'end_date': end_date.strftime('%d/%m/%Y')})
 
 @login_required(login_url='/accounts/login/')
 def save_mvm_ticket(request):
