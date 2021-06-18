@@ -71,7 +71,7 @@ def sielte_ticket(request, id):
 
 
 @login_required(login_url='/accounts/login/')
-def ticket_list(request, page):
+def ticket_list(request, page=1):
     if request.user.role < 3:
         mvm_tickets = MvmImport.objects.all()
         sielte_tickets = SielteImport.objects.all()

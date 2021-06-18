@@ -115,12 +115,12 @@
 <div class="row">
 <div class="col-xl-12" >
     <!-- Task manager table -->
-    <div class="card" style="width:100%;">
+    <div class="card">
       <div class="card-header bg-transparent header-elements-inline">
         <h6 class="card-title">Task manager</h6>
       </div>
 
-      <table class="table tasks-list table-lg" style="width: 100%;  ">
+      <table class="table table-striped table-bordered" id="datatable">
         <thead>
           <tr>
             <th>#</th>
@@ -178,7 +178,7 @@
 
 
 	        // Initialize data table
-	        $('.tasks-list').DataTable({
+	        $('#datatable').DataTable({
 	            autoWidth: false,
 							"scrollX": true,
 	            columnDefs: [
