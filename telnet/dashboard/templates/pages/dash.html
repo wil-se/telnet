@@ -49,7 +49,7 @@
         </div>
         </div>
 
-        <button id="search" class="bg-teal-400 btn-primary btn" type="submit" style="margin: 15px 0px 0px auto"> Cerca </button>
+        <button id="search" class="bg-teal-400 btn-primary btn" type="submit" style="margin: 30px 0px 0px auto"> Cerca </button>
         </form>
 
     </div>
@@ -58,15 +58,16 @@
 
 <!-- Main charts -->
 				<div class="row">
-					<div class="col-xl-6" >
+					<div class="col-xl-6 " >
 
 						<!-- Traffic sources -->
-						<div class="card" style="padding: 0px 0px 0px 0px">
+						<div class="card h-100" style="padding: 0px 0px 0px 0px;">
 							<div class="card-header header-elements-inline">
 								<h6 class="card-title">Guadagno</h6>
-							</div>  
+                                
+                            </div>  
 
-							<div class="card-body py-0" style="margin: -75px 0px 0px 0px">
+                            <div class="card-body" style="margin: -40px 0px 0px 0px">
 									<div class="chart has-fixed-height" id="pie_basic"></div>
 
 							</div>
@@ -74,7 +75,22 @@
 						</div>
 						<!-- /traffic sources -->
                     </div>
+                    <div class="col-xl-6">
+                         <div class="card  h-100" style="padding: 0px 0px 0px 0px">
+							<div class="card-header header-elements-inline">
+								<h6 class="card-title">Mappa</h6>
+							</div>  
 
+							<div class="card-body py-0" >
+									 <div class="chart has-fixed-height" id="mapid" style="margin-bottom: 15px;"></div>
+
+							</div>
+
+						</div>
+                    </div>
+                    </div>
+                    <br>
+                    <div class="row">
 
 					<div class="col-xl-12">
 
@@ -162,6 +178,18 @@
 
 </div>
 
+<script>
+var mymap = L.map('mapid').setView([41.741656445699434, 12.999929477885503], 10);
+L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=sk.eyJ1Ijoid2lsLWUiLCJhIjoiY2txMW5lY29qMGdrMjJvcXJkMnE0ampxaSJ9.LOfIK04z2cMqa8XSI_nQCA', {
+    attribution: '',
+    maxZoom: 20,
+    id: 'mapbox/streets-v11',
+    tileSize: 512,
+    zoomOffset: -1,
+    accessToken: 'your.mapbox.access.token'
+}).addTo(mymap);
+
+</script>
 
 <script>
 
@@ -617,14 +645,16 @@ a.cke_button{
       padding: 0px; !important
     }
 
-    #DataTables_Table_0_filter {
+
+    #datatable_filter {
       text-align: left;
     }
 
-    #DataTables_Table_0_length {
+    #datatable_length {
         text-align: left;
         display: flex;
     }
+
   }
 </style>
 

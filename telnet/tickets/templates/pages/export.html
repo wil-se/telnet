@@ -26,12 +26,12 @@
       {% for mvm in mvm_exports %}
       <ul class="media-list media-list-linked media-list-bordered">
 				<li class="media bg-light py-2">
-					<div style="margin-right: auto;">	
-         			<a>{{ mvm.name }}</a>
+					<div style="text-align: left; margin: 10px 0px 0px 0px;" >	
+         			<a style="font-size: 16px;">{{ mvm.name }}</a>
 					</div>
-					<div style="margin-left: auto;">
-					<a class="btn btn-danger" href="/export-mvm-delete/{{mvm.pk}}"> Elimina </a>
-					<a href="media/{{ mvm.file }}" class="bg-teal-400 btn-primary btn"> Scarica </a>
+					<div style="text-align: right;" class="w-100 justify-content-xl-end">
+					<a class="btn btn-danger" href="/export-mvm-delete/{{mvm.pk}}" style="margin: 10px 0px 0px 10px"> Elimina </a>
+					<a href="media/{{ mvm.file }}" class="bg-teal-400 btn-primary btn" style="margin: 10px 0px 0px 10px"> Scarica </a>
 					</div>
 				</li>
 			</ul>
@@ -54,12 +54,12 @@
       {% for sielte in sielte_exports %}
       		<ul class="media-list media-list-linked media-list-bordered">
 				<li class="media bg-light py-2">
-          			<div style="margin-right: auto;">	
-					<a>{{ sielte.name }}</a>
+          			<div style="text-align: left;margin: 10px 0px 0px 0px;">	
+					<a style="font-size: 16px;">{{ sielte.name }}</a>
 					</div>
-					<div style="margin-left: auto;">
-					<a class="btn btn-danger" href="/export-sielte-delete/{{sielte.pk}}"> Elimina </a>
-					<a href="media/{{ sielte.file }}" class="bg-teal-400 btn-primary btn"> Scarica </a>
+					<div style="text-align: right;"  class="w-100 justify-content-xl-end">
+					<a class="btn btn-danger" href="/export-sielte-delete/{{sielte.pk}}" style="margin: 10px 0px 0px 10px"> Elimina </a>
+					<a href="media/{{ sielte.file }}" class="bg-teal-400 btn-primary btn" style="margin: 10px 0px 0px 10px"> Scarica </a>
 					</div>
 				</li>
 			</ul>
