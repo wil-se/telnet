@@ -24,7 +24,6 @@
 <script src="{% static 'global_assets/js/plugins/visualization/d3/d3.min.js' %}"></script>
 <script src="{% static 'global_assets/js/plugins/visualization/d3/d3_tooltip.js' %}"></script>
 
-
 {% endblock %}
 
 {% block content %}
@@ -134,7 +133,7 @@
 
 <!-- Main charts -->
 				<div class="row">
-					<div class="col-xl-6 " id="pie">
+					<div class="col-xl-3 " id="pie">
 
 						<!-- Traffic sources -->
 						<div class="card h-100" style="padding: 0px 0px 0px 0px;">
@@ -151,17 +150,31 @@
 						</div>
 						<!-- /traffic sources -->
                     </div>
-                    <div class="col-xl-6">
-                         <div class="card  h-100" style="padding: 0px 0px 0px 0px">
+                    <div class="col-xl-9">
+                         <div class="card  h-100" style="padding: 10px 10px 0px 10px">
 							<div class="card-header header-elements-inline">
 								<h6 class="card-title">Report</h6>
 							</div>  
+                            
 
-				</div>
+                            				<!-- Stacked clustered columns -->
 
-							
 
+                        <div class="chartWrapper">
+                            <div class="chartAreaWrapper flex">
+                                <canvas id="columns_clustered" height="400" width="2000"></canvas>
+                            </div>
+                        </div>
+
+				<!-- /stacked clustered columns -->
+                            
+
+                            
+                        
+                        </div>
                     </div>
+
+
                     </div>
                     <br>
                     <div class="row">
@@ -251,6 +264,251 @@
 
 
 </div>
+
+
+<script>
+
+
+var EchartsColumnsStackedClusteredLight = function() {
+
+
+    var _columnsStackedClusteredLightExample = function() {
+        if (typeof echarts == 'undefined') {
+            console.warn('Warning - echarts.min.js is not loaded.');
+            return;
+        }
+
+        var columns_clustered_element = document.getElementById('columns_clustered');
+
+        if (columns_clustered_element) {
+
+            // Initialize chart
+            var columns_clustered = echarts.init(columns_clustered_element);
+
+
+            //
+            // Chart config
+            //
+
+            // Options
+            columns_clustered.setOption({
+
+                // Define colors
+                color: ['#2ec7c9','#b6a2de','#5ab1ef','#ffb980','#d87a80'],
+
+                // Global text styles
+                textStyle: {
+                    fontFamily: 'Roboto, Arial, Verdana, sans-serif',
+                    fontSize: 13
+                },
+
+                // Chart animation duration
+                animationDuration: 750,
+
+                // Setup grid
+                grid: {
+                    left: 0,
+                    right: 5,
+                    top: 55,
+                    bottom: 0,
+                    containLabel: true,
+
+                },
+
+                // Add legend
+                legend: {
+                    type:'scroll',
+                    
+                    data: [
+                        'Mvm','Sielte','Totale',
+                    ],
+                    itemHeight: 2,
+                    itemGap: 8,
+                    textStyle: {
+                        padding: [0, 10]
+                    }
+                },
+
+                // Add tooltip
+                tooltip: {
+                    trigger: 'axis',
+                    backgroundColor: 'rgba(0,0,0,0.75)',
+                    padding: [10, 15],
+                    textStyle: {
+                        fontSize: 13,
+                        fontFamily: 'Roboto, sans-serif'
+                    }
+                },
+
+                // Horizontal axis
+                xAxis: [
+                    {
+                        type: 'category',
+                        data: ['User','User','User','User','User', 'User','User','User','User','User', 'User','User','User','User','User', 'User','User','User','User','User'],
+                        axisLabel: {
+                            color: '#333'
+                        },
+                        axisLine: {
+                            lineStyle: {
+                                color: '#999'
+                            }
+                        },
+                        splitLine: {
+                            show: true,
+                            lineStyle: {
+                                color: '#eee',
+                                type: 'dashed'
+                            }
+                        }
+                    },
+                    {
+                        type: 'category',
+                        axisLine: {show:false},
+                        axisTick: {show:false},
+                        axisLabel: {show:false},
+                        splitArea: {show:false},
+                        splitLine: {show:false},
+                        data: ['User','User','User','User','User', 'User','User','User','User','User', 'User','User','User','User','User', 'User','User','User','User','User']
+                    }
+                ],
+
+                // Vertical axis
+                yAxis: [{
+                    type: 'value',
+                    axisLabel: {
+                        color: '#333',
+                        formatter: '€ {value}'
+                    },
+                    axisLine: {
+                        lineStyle: {
+                            color: '#999'
+                        }
+                    },
+                    splitLine: {
+                        lineStyle: {
+                            color: ['#eee']
+                        }
+                    },
+                    splitArea: {
+                        show: true,
+                        areaStyle: {
+                            color: ['rgba(250,250,250,0.1)', 'rgba(0,0,0,0.01)']
+                        }
+                    }
+                }],
+
+                // Add series
+                series: [
+                    {
+                        name: 'Mvm',
+                        type: 'bar',
+                        z: 2,
+                        itemStyle: {
+                            normal: {
+                                color: '#F44336',
+                                label: {
+                                    show: true,
+                                    padding: 5,
+                                    position: 'top',
+                                    textStyle: {
+                                        color: '#fff',
+                                        fontSize: 12
+                                    }
+                                }
+                            }
+                        },
+                        data: [247, 187, 95, 175, 270, 123, 123 ,123, 123 ,123, 247, 187, 95, 175, 270, 123, 123 ,123, 123 ,123]
+                    },
+                    {
+                        name: 'Sielte',
+                        type: 'bar',
+                        z: 2,
+                        itemStyle: {
+                            normal: {
+                                color: '#4CAF50',
+                                label: {
+                                    show: true,
+                                    padding: 5,
+                                    position: 'top',
+                                    textStyle: {
+                                        color: '#fff',
+                                        fontSize: 12
+                                    }
+                                }
+                            }
+                        },
+                        data: [488, 415, 405, 340, 328, 123, 123 ,123, 123 ,123, 488, 415, 405, 340, 328, 123, 123 ,123, 123 ,123]
+                    },
+                    {
+                        name: 'Totale',
+                        type: 'bar',
+                        z: 2,
+                        itemStyle: {
+                            normal: {
+                                color: '#2196F3',
+                                label: {
+                                    show: true,
+                                    padding: 5,
+                                    position: 'top',
+                                    textStyle: {
+                                        color:'#fff',
+                                        fontSize: 12
+                                    }
+                                }
+                            }
+                        },
+                        data: [906, 911, 908, 778, 550, 123, 123 ,123, 123 ,123, 906, 911, 908, 778, 550, 123, 123 ,123, 123 ,123]
+                    },
+                ]
+            });
+        }
+
+
+        //
+        // Resize charts
+        //
+
+        // Resize function
+        var triggerChartResize = function() {
+            columns_clustered_element && columns_clustered.resize();
+        };
+
+        // On sidebar width change
+        var sidebarToggle = document.querySelector('.sidebar-control');
+        sidebarToggle && sidebarToggle.addEventListener('click', triggerChartResize);
+
+        // On window resize
+        var resizeCharts;
+        window.addEventListener('resize', function() {
+            clearTimeout(resizeCharts);
+            resizeCharts = setTimeout(function () {
+                triggerChartResize();
+            }, 200);
+        });
+    };
+
+
+    //
+    // Return objects assigned to module
+    //
+
+    return {
+        init: function() {
+            _columnsStackedClusteredLightExample();
+        }
+    }
+}();
+
+
+// Initialize module
+// ------------------------------
+
+document.addEventListener('DOMContentLoaded', function() {
+    EchartsColumnsStackedClusteredLight.init();
+});
+
+
+</script>
 
 <script>
 
@@ -543,6 +801,7 @@ var Pie = function(options) {
     }
     var pie_basic_element = document.getElementById('pie_basic');
     opts = {
+
         color: [
             '#68ACB4', '#81C784'
         ],
@@ -553,7 +812,7 @@ var Pie = function(options) {
         tooltip: {
             trigger: 'item',
             backgroundColor: 'rgba(0,0,0,0.75)',
-            padding: [10, 15],
+            padding: [0, 0],
             textStyle: {
                 fontSize: 13,
                 fontFamily: 'Roboto, sans-serif'
@@ -571,7 +830,7 @@ var Pie = function(options) {
         series: [{
             name: 'guadagno',
             type: 'pie',
-            radius: '70%',
+            radius: '60%',
             center: ['50%', '57.5%'],
             itemStyle: {
                 normal: {
@@ -695,6 +954,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 </script>
 
+
 <style>
 a.cke_button{
     background-color: white;
@@ -725,6 +985,30 @@ a.cke_button{
     }
 
   }
+
+  .echart-wrap {
+        display: inline-block;
+        width: 300px;
+        height: 300px;
+        overflow: scroll;
+        border: 1px solid black;
+      }
+
+      .chartWrapper {
+    position: relative;
+}
+
+.chartWrapper > canvas {
+    position: absolute;
+    left: 0;
+    top: 0;
+    pointer-events:none;
+}
+
+.chartAreaWrapper {
+    width: 100%%;
+    overflow-x: scroll;
+}
 </style>
 
 {% endblock %}
