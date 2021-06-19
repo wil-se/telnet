@@ -22,4 +22,5 @@
     {% if ticket.status == 'ANNULLATO' %}
     <td><a class="badge bg-danger-400 align-top">ANNULLATO</a></td>
     {% endif %}
+    <td>€ {{ ticket.tot_price|default_if_none:"" }}</td>
 </tr>

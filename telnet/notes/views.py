@@ -63,7 +63,7 @@ def save_note(request):
 def note(request, id):
     if request.user.role < 3:
         note = Note.objects.get(pk=id)
-        return render(request, 'note.html', {'title':'Nota', 'note':note,})
+        return render(request, 'note.html', {'title':'Nota', 'subtext': 'Anteprima nota', 'note':note,})
     return HttpResponseRedirect('/dashboard')
 
 @login_required(login_url='/accounts/login/')
@@ -83,7 +83,7 @@ def note_edit(request, id):
         if form.is_valid():
             form.save()
 
-        return render(request, 'note_edit.html', {'title':'Modifica nota', 'form': form, 'note': note, 'start_date': note.start_date.strftime('%d/%m/%Y'), 'end_date': note.end_date.strftime('%d/%m/%Y')})
+        return render(request, 'note_edit.html', {'title':'Modifica nota', 'subtext': 'Modifica nota','form': form, 'note': note, 'start_date': note.start_date.strftime('%d/%m/%Y'), 'end_date': note.end_date.strftime('%d/%m/%Y')})
     return HttpResponseRedirect('/dashboard')
 
 

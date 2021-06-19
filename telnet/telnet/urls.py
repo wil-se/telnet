@@ -22,7 +22,7 @@ urlpatterns = [
     path('sielte-ticket/<int:id>', tickets_views.sielte_ticket, name='sielte ticket'),
     path('lista-ticket', tickets_views.ticket_list, name='lista ticket'),
     path('search-tickets', tickets_views.search_tickets, name='search tickets'),
-    path('save-mvm-ticket', tickets_views.save_mvm_ticket, name='save mvm ticket'),
+    
     path('save-sielte-ticket', tickets_views.save_sielte_ticket, name='save sielte ticket'),
     path('file-mvm-delete/<int:ticket>/<int:id>', tickets_views.file_mvm_delete, name='file mvm delete'),
     path('file-sielte-delete/<int:ticket>/<int:id>', tickets_views.file_sielte_delete, name='file sielte delete'),

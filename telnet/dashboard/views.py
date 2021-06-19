@@ -24,31 +24,65 @@ def dash(request):
 
     mvm_queryset = (
     Q(datainiz__gte=start_date)&
-    Q(datainiz__lte=end_date)&
-    Q(status='OK')
+    Q(datainiz__lte=end_date)
+    # &(status='OK')
     )
     mvm_tickets = MvmImport.objects.filter(mvm_queryset).distinct()
     
     sielte_queryset = (
     Q(inizio_lavorazione_prevista__gte=start_date)&
-    Q(inizio_lavorazione_prevista__lte=end_date)&
-    Q(status='OK')
+    Q(inizio_lavorazione_prevista__lte=end_date)
+    # &Q(status='OK')
     )
     sielte_tickets = SielteImport.objects.filter(sielte_queryset).distinct()
 
     tickets = list(chain(mvm_tickets, sielte_tickets))
 
+    ok = 0
+    ko = 0
+    sospesi = 0
+    annullati = 0
 
-    return render(request, 'dash.html', {
-        'title':'Dashboard', 
-        'subtext': 'Panoramica',
-        'start_date': start_date.strftime('%d/%m/%Y'),
-        'end_date': end_date.strftime('%d/%m/%Y'),
-        'tot_mvm': get_guadagno_mvm(mvm_tickets),
-        'tot_sielte': get_guadagno_sielte(sielte_tickets),
-        'note_form': NoteForm(request.POST or None, request.FILES or None, initial={}),
-        'tickets': tickets,
-        })
+    for ticket in tickets:
+        if ticket.status == 'OK':
+            ok +=1
+        if ticket.status == 'KO':
+            ko +=1
+        if ticket.status == 'SOSPESO':
+            sospesi +=1
+        if ticket.status == 'ANNULLATO':
+            annullati +=1
+        
+
+    if request.user.role < 3:
+        return render(request, 'dash_manager.html', {
+            'title':'Dashboard', 
+            'subtext': 'Panoramica',
+            'start_date': start_date.strftime('%d/%m/%Y'),
+            'end_date': end_date.strftime('%d/%m/%Y'),
+            'tot_mvm': get_guadagno_mvm(mvm_tickets),
+            'tot_sielte': get_guadagno_sielte(sielte_tickets),
+            'note_form': NoteForm(request.POST or None, request.FILES or None, initial={}),
+            'tickets': tickets,
+            'ok': ok,
+            'ko': ko,
+            'sospesi': sospesi,
+            'annullati': annullati,
+            })
+
+    ticket_list = []
+
+    for ticket in tickets:
+        if ticket.assigned_to.pk == request.user.pk:
+            ticket_list.append(ticket)
+    
+    return render(request, 'dash_tecnico.html', {
+            'title':'Dashboard', 
+            'subtext': 'Panoramica',
+            'start_date': start_date.strftime('%d/%m/%Y'),
+            'end_date': end_date.strftime('%d/%m/%Y'),
+            'tickets': ticket_list,
+            })
 
 
 

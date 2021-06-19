@@ -1,0 +1,360 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}<title>TelNet | {{ title }}</title>{% endblock %}
+{% load filters %}
+{% block import %}
+
+<script src="{% static 'global_assets/js/plugins/ui/moment/moment.min.js' %}"></script>
+<script src="{% static 'global_assets/js/plugins/pickers/daterangepicker.js' %}"></script>
+
+<script src="{% static 'global_assets/js/plugins/extensions/jquery_ui/widgets.min.js' %}"></script>
+<script src="{% static 'global_assets/js/plugins/tables/datatables/datatables.min.js' %}"></script>
+<script src="{% static 'global_assets/js/plugins/tables/datatables/extensions/natural_sort.js' %}"></script>
+<script src="{% static 'global_assets/js/plugins/forms/selects/select2.min.js' %}"></script>
+<script src="{% static 'global_assets/js/plugins/notifications/jgrowl.min.js' %}"></script>
+<script src="{% static 'global_assets/js/plugins/notifications/noty.min.js' %}"></script>
+
+<script src="{% static 'global_assets/js/plugins/visualization/echarts/echarts.min.js' %}"></script>
+<script src="{% static 'js/pie.js' %}"></script>
+
+
+<script src="{% static 'global_assets/js/plugins/editors/ckeditor/ckeditor.js' %}"></script>
+<script src="{% static 'global_assets/js/plugins/forms/selects/select2.min.js' %}"></script>
+
+{% endblock %}
+
+{% block content %}
+
+<!-- Filter toolbar -->
+<div class="navbar navbar-expand-lg navbar-light navbar-component rounded" style="width: 100%;">
+    <div class="text-center d-lg-none w-100">
+        <button type="button" class="navbar-toggler dropdown-toggle" data-toggle="collapse"
+            data-target="#navbar-filter">
+            <i class="icon-unfold mr-2"></i>
+            Filtra ricerca
+        </button>
+    </div>
+
+    <div class="navbar-collapse collapse" id="navbar-filter" style="padding: 20px 20px 20px 20px;">
+
+        <form method="GET" action="{% url 'dashboard' %}" class="w-100 form-inline">
+
+        <div class="input-group col-md-4 d-flex flex-column">
+        <a><b>Data:</b></a>
+        <div style="display: flex">
+            <span class="input-group-prepend">
+                <span class="input-group-text"><i class="icon-calendar22"></i></span>
+            </span>
+            <input id="daterange" name="date" type="text" class="form-control">
+        </div>
+        </div>
+
+        <button id="search" class="bg-teal-400 btn-primary btn" type="submit" style="margin: 30px 0px 0px auto"> Cerca </button>
+        </form>
+
+    </div>
+</div>
+<!-- /filter toolbar -->
+
+<!-- Main charts -->
+				
+						<!-- /sales stats -->
+
+
+
+<div class="row">
+<div class="col-xl-12" >
+    <!-- Task manager table -->
+    <div class="card">
+      <div class="card-header bg-transparent header-elements-inline">
+        <h6 class="card-title">Task manager</h6>
+      </div>
+
+      <table class="table table-striped table-bordered" id="datatable">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>TECNICO</th>
+            <th>COD CENTRALE</th>
+            <th>DESC CENTRALE</th>
+            <th>WR</th>
+            <th>TELEFONO</th>
+            <th>NOMINATIVO</th>
+            <th>ORA APPUNTAMENTO</th>
+            <th>SCADENZA</th>
+            <th>TIPO PRATICA</th>
+            <th>STATUS</th>
+           </tr>
+        </thead>
+        <tbody>
+
+
+            {% for item in tickets %}
+
+                {% if item|get_class == 'MvmImport' %}
+                  {% include 'ticket_dashboard_admin_mvm.html' with ticket=item %}
+                {% endif %}
+
+                {% if item|get_class == 'SielteImport' %}
+                  {% include 'ticket_dashboard_admin_sielte.html' with ticket=item %}
+                {% endif %}
+
+            {% endfor %}
+
+        </tbody>
+      </table>
+    </div>
+    <!-- /task manager table -->
+
+  <!-- /content area -->
+
+</div>
+
+</div>
+
+<script>
+
+	var TaskManagerList = function () {
+
+
+
+	    var _componentDatatable = function() {
+	        if (!$().DataTable) {
+	            console.warn('Warning - datatables.min.js is not loaded.');
+	            return;
+	        }
+
+
+
+	        // Initialize data table
+	        $('#datatable').DataTable({
+	            autoWidth: false,
+							"scrollX": true,
+	            columnDefs: [
+	                {
+	                    type: "natural",
+	                    width: 20,
+	                    targets: 0
+	                },
+	                {
+	                    visible: true,
+	                    targets: 1
+	                },
+	                {
+	               //     width: '40%',
+	                    targets: 2
+	                },
+	                {
+	                    width: '10%',
+	                    targets: 3
+	                },
+	                {
+	                    orderDataType: 'dom-text',
+	                    type: 'string',
+	                    targets: 4
+	                },
+	                {
+	                    orderDataType: 'dom-select',
+	                    type: 'string',
+	                    targets: 5
+	                },
+	                {
+	                    width: 100,
+	                    targets: 6
+	                },
+									{
+                      orderable: false,
+	                    orderDataType: 'dom-text',
+	                    type: 'string',
+	                    targets: 7
+	                },
+									{
+                      orderable: false,
+	                    orderDataType: 'dom-text',
+	                    type: 'string',
+	                    targets: 8
+	                },
+									{
+	                    orderDataType: 'dom-text',
+	                    type: 'string',
+	                    targets: 9
+	                },
+									{
+                      orderable: false,
+											orderDataType: 'dom-text',
+											type: 'string',
+											targets: 10
+									},
+
+
+	            ],
+	            order: [[ 0, 'desc' ]],
+	            dom: '<"datatable-header"fl><"datatable-scroll-lg"t><"datatable-footer"ip>',
+	            language: {
+	                search: '<span>Filtra:</span> _INPUT_',
+                    zeroRecords: 'Nessun dato disponibile',
+                    searchPlaceholder: 'Cerca...',
+	                paginate: { 'first': 'First', 'last': 'Last', 'next': $('html').attr('dir') == 'rtl' ? '&larr;' : '&rarr;', 'previous': $('html').attr('dir') == 'rtl' ? '&rarr;' : '&larr;' },
+                    
+                    decimal: "",
+                    emptyTable: "Nesun dato disponibile",
+                    info: "Da _START_ a _END_ di _TOTAL_ righe totali",
+                    infoEmpty: "Da 0 a 0 di 0 righe totali",
+                    infoFiltered: "(filtrate da _MAX_ righe totali)",
+                    infoPostFix: "",
+                    thousands: ",",
+                    lengthMenu: "Mostra _MENU_ righe",
+                    loadingRecords: "Caricamento...",
+                    processing: "Processamento...",
+                },
+	            lengthMenu: [ 15, 25, 50, 75, 100 ],
+	            displayLength: 25,
+	            drawCallback: function (settings) {
+	                var api = this.api();
+	                var rows = api.rows({page:'current'}).nodes();
+	                var last=null;
+
+	                // Initialize components
+	                _componentUiDatepicker();
+	                _componentSelect2();
+	            }
+	        });
+	    };
+
+	    // Datepicker
+	    var _componentUiDatepicker = function() {
+	        if (!$().datepicker) {
+	            console.warn('Warning - jQuery UI components are not loaded.');
+	            return;
+	        }
+
+	        // Initialize
+	        $('.datepicker').datepicker({
+	            showOtherMonths: true,
+	            dateFormat: 'd MM, y'
+	        });
+	    };
+
+	    // Select2
+	    var _componentSelect2 = function() {
+	        if (!$().select2) {
+	            console.warn('Warning - select2.min.js is not loaded.');
+	            return;
+	        }
+
+	        // Initialize
+	        $('.form-control-select2').select2({
+	            minimumResultsForSearch: Infinity
+	        });
+
+	        // Length menu styling
+	        $('.dataTables_length select').select2({
+	            minimumResultsForSearch: Infinity,
+	            dropdownAutoWidth: true,
+	            width: 'auto'
+	        });
+	    };
+
+
+	    //
+	    // Return objects assigned to module
+	    //
+
+	    return {
+	        init: function() {
+	            _componentDatatable();
+	            _componentSelect2();
+	        }
+	    }
+	}();
+
+
+	// Initialize module
+	// ------------------------------
+
+	document.addEventListener('DOMContentLoaded', function() {
+	    TaskManagerList.init();
+	});
+</script>
+
+<script>
+
+  $(function() {
+
+    $("#daterange").daterangepicker(
+        {
+            startDate: "{{ start_date }}",
+            endDate: "{{ end_date }}",
+            locale: {
+                format: "DD/MM/YYYY",
+                separator: " - ",
+                applyLabel: "Applica",
+                cancelLabel: "Cancella",
+                fromLabel: "Da",
+                toLabel: "A",
+                customRangeLabel: "Custom",
+                daysOfWeek: [
+                    "Do",
+                    "Lu",
+                    "Ma",
+                    "Me",
+                    "Gi",
+                    "Ve",
+                    "Sa"
+                ],
+                monthNames: [
+                    "Gennaio",
+                    "Febbraio",
+                    "Marzo",
+                    "Aprile",
+                    "Maggio",
+                    "Giugno",
+                    "Luglio",
+                    "Agosto",
+                    "Settembre",
+                    "Ottobre",
+                    "Novembre",
+                    "Dicembre"
+                ],
+                firstDay: 1
+            }
+        }
+    );
+});
+
+</script>
+
+
+<style>
+a.cke_button{
+    background-color: white;
+}
+
+@media (max-width: 800px) {
+
+    .content{
+      padding: 0px; !important
+    }
+
+
+    #datatable_filter {
+      text-align: left;
+    }
+
+    #datatable_length {
+        text-align: left;
+        display: flex;
+    }
+    
+    .row{
+      margin: 0px;
+    }
+
+    #pie{
+        margin-bottom: 20px;
+    }
+
+  }
+</style>
+
+{% endblock %}

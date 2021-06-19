@@ -17,8 +17,8 @@
 										</a>
 
 										<div class="dropdown-menu dropdown-menu-right">
-											<a href="/admin" class="dropdown-item"><i class="icon-user-lock"></i> Admin</a>
-											<div class="dropdown-divider"></div>
+											{% if request.user.role < 3%}<a href="/admin" class="dropdown-item"><i class="icon-user-lock"></i> Admin</a>
+											<div class="dropdown-divider"></div>{% endif %}
 											<a href="/logout" class="dropdown-item"><i class="icon-logout"></i>Log out</a>
 											
 										</div>

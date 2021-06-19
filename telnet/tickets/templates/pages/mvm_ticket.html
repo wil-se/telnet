@@ -7,6 +7,8 @@
 <script src="{% static 'global_assets/js/plugins/uploaders/fileinput/plugins/sortable.min.js' %}"></script>
 <script src="{% static 'global_assets/js/plugins/uploaders/fileinput/fileinput.min.js' %}"></script>
 <script src="{% static 'global_assets/js/demo_pages/uploader_bootstrap.js' %}"></script>
+<script src="{% static 'global_assets/js/plugins/notifications/jgrowl.min.js' %}"></script>
+<script src="{% static 'global_assets/js/plugins/notifications/noty.min.js' %}"></script>
 {% endblock %}
 {% block content %}
 
@@ -218,9 +220,7 @@
 							<div class="row">
 							
 							<div class="col-xl-6" style="padding: 4px 32px 32px 32px">
-								<form method="POST" action="{% url 'save mvm ticket' %}" enctype="multipart/form-data">
-									{% csrf_token %}
-
+		
 								{% if request.user.role < 3 %}
 								<b>ASSEGNATO A:</b>&nbsp; {{ form.assigned_to|addclass:'form-control' }}<br><br>
 								{% else %}
@@ -297,8 +297,7 @@
 
 									<input id="id" name="id" type="hidden" value="{{ mvm.pk }}">
 								</div>
-								<button class="bg-teal-400 btn-primary btn" type="submit" style="margin: 0px 0px 10px 20px"> Salva </button>
-							</form>
+								<button class="bg-teal-400 btn-primary btn" id="ticket-submit" style="margin: 0px 0px 10px 20px"> Salva </button>
 						</div>
 
 
@@ -308,6 +307,78 @@
 </div>
 
 <script>
+
+  $('#ticket-submit').click( function(){
+    status = $('#id_status option:selected').val();
+	tipo_linea = $('#id_tipo_linea option:selected').val();
+	secondaria = $('#id_secondaria').val();
+	derivato = $('#id_derivato').val();
+	cavetto = $('#id_cavetto option:selected').val();
+
+    Noty.overrideDefaults({
+            theme: 'limitless',
+            layout: 'topRight',
+            type: 'alert',
+            timeout: 2500
+        });
+	
+	console.log(cavetto)
+	console.log(derivato)
+	console.log(secondaria)
+	
+
+	if( cavetto == '' || derivato == 0 || secondaria == '' || tipo_linea == '' || $('#rl').val() == ''){    
+        new Noty({
+            text: 'Inserisci i campi correttamente',
+            type: 'warning'
+        }).show();
+		return;
+	}
+
+
+
+    $.ajax({
+        headers: {'X-CSRFToken': '{{ csrf_token }}'},
+        type: "POST",
+        url: "/save-mvm-ticket",
+        data: {
+			'id': "{{ mvm.pk }}",
+			'assigned_to': $('#id_assigned_to option:selected').val(),
+			'note': $('#id_note').text(),
+			'tipo_linea': tipo_linea,
+			'status': status,
+			'secondaria': secondaria,
+			'derivato': derivato,
+			'presa': $('#id_presa').text(),
+			'cavetto': cavetto,
+			'tipologia_modem': $('#id_tipologia_modem option:selected').text(),
+			'seriale_modem': $('#id_seriale_modem').text(),
+			'motivo_ko': $('#ko-form option:selected').text(),
+			'msan': $('#msan').text(),
+			'rete_rigida': $('#rete-rigida-form option:selected').text(),
+			'cavo': $('#cavo').text(),
+			'colonna': $('#colonna').text(),
+			'rl': $('#rl').text(),
+			'porta': $('#porta').text(),
+
+		},
+        success: function(data){
+            console.log('success');
+            new Noty({
+            text: 'Ticket salvato con successo',
+            type: 'success'
+        }).show();
+        },
+        failure: function(data){
+            console.log("FAIL");
+            console.log(data);
+        },
+    });
+    
+  });
+
+
+
 function generate_tipo_linea_form(){
 	var data= $('#id_tipo_linea').val();
 	console.log(data);

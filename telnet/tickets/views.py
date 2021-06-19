@@ -84,10 +84,10 @@ def ticket_list(request, page=1):
     paginator = Paginator(tickets, 10)
     print(paginator.count)
     print(paginator.num_pages)
-    if page <1:
-        return HttpResponseRedirect('/lista-ticket/1')
-    if page >= paginator.num_pages:
-        return HttpResponseRedirect('/lista-ticket/'+paginator.numpages)
+
+
+    if paginator.num_pages - page < 0 or page > paginator.num_pages or page <= 0:
+        return HttpResponseRedirect('/lista-ticket')
 
     tickets = paginator.page(page)
 
@@ -103,6 +103,12 @@ def ticket_list(request, page=1):
     start_date = datetime.datetime.now() - datetime.timedelta(60)
     end_date = datetime.datetime.now() + datetime.timedelta(60)
     date = '{} - {}'.format(start_date.strftime('%d/%m/%Y'), end_date.strftime('%d/%m/%Y'))
+
+    pages = []
+    if paginator.num_pages < 4:
+        pages = [x for x in range(1, paginator.num_pages+1)]
+    else:
+        pages = [ x for x in range(page, page+4)]
     
     return render(request, 'ticket_list.html', {
         'title':'Lista ticket',
@@ -112,7 +118,7 @@ def ticket_list(request, page=1):
         'date': date,
         'start_date': start_date.strftime('%d/%m/%Y'),
         'end_date': end_date.strftime('%d/%m/%Y'),
-        'pages': [ x for x in range(page, page+4)],
+        'pages': pages,
         'page_current': page,
         })
 
@@ -224,7 +230,12 @@ def save_mvm_ticket(request):
 
     stato_lavoro = request.POST.get('status','')
     if stato_lavoro:
-        mvm_ticket.status = stato_lavoro
+        if mvm_ticket.status != 'OK':
+            mvm_ticket.status = stato_lavoro
+        else:
+            if request.user.role < 3:
+                mvm_ticket.status = stato_lavoro
+        
         print('STATO LAVORO: '+stato_lavoro)
 
     secondaria = request.POST.get('secondaria', '')
@@ -259,7 +270,7 @@ def save_mvm_ticket(request):
 
 
     if stato_lavoro == 'KO':
-        motivo_ko = request.POST.get('motivo-ko', '')
+        motivo_ko = request.POST.get('motivo_ko', '')
         if motivo_ko:
             mvm_ticket.ko_reason = motivo_ko
             print('MOTIVO KO: '+motivo_ko)
@@ -270,7 +281,7 @@ def save_mvm_ticket(request):
             mvm_ticket.msan = msan
             print('MSAN: '+msan)
 
-        rete_rigida = request.POST.get('rete-rigida', '')
+        rete_rigida = request.POST.get('rete_rigida', '')
         if rete_rigida:
             mvm_ticket.rete_rigida = rete_rigida
             print('RETE RIGIDA: '+rete_rigida)
