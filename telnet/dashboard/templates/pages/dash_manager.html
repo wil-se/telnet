@@ -49,10 +49,11 @@
                 <span class="input-group-text"><i class="icon-calendar22"></i></span>
             </span>
             <input id="daterange" name="date" type="text" class="form-control">
+            <button id="search" class="bg-teal-400 btn-primary btn" type="submit" style="margin: 0px 0px 0px 0px"> Cerca </button>
         </div>
         </div>
 
-        <button id="search" class="bg-teal-400 btn-primary btn" type="submit" style="margin: 30px 0px 0px auto"> Cerca </button>
+        
         </form>
 
     </div>
@@ -162,7 +163,7 @@
 
                         <div class="chartWrapper">
                             <div class="chartAreaWrapper flex">
-                                <canvas id="columns_clustered" height="400" width="2000"></canvas>
+                                <canvas id="columns_clustered" height="400" width="{{ bars_width }}"></canvas>
                             </div>
                         </div>
 
@@ -267,10 +268,8 @@
 
 
 <script>
-
-
+        
 var EchartsColumnsStackedClusteredLight = function() {
-
 
     var _columnsStackedClusteredLightExample = function() {
         if (typeof echarts == 'undefined') {
@@ -344,7 +343,7 @@ var EchartsColumnsStackedClusteredLight = function() {
                 xAxis: [
                     {
                         type: 'category',
-                        data: ['User','User','User','User','User', 'User','User','User','User','User', 'User','User','User','User','User', 'User','User','User','User','User'],
+                        data: {{ names|safe }},
                         axisLabel: {
                             color: '#333'
                         },
@@ -368,7 +367,7 @@ var EchartsColumnsStackedClusteredLight = function() {
                         axisLabel: {show:false},
                         splitArea: {show:false},
                         splitLine: {show:false},
-                        data: ['User','User','User','User','User', 'User','User','User','User','User', 'User','User','User','User','User', 'User','User','User','User','User']
+                        data: {{ names|safe }},
                     }
                 ],
 
@@ -417,7 +416,7 @@ var EchartsColumnsStackedClusteredLight = function() {
                                 }
                             }
                         },
-                        data: [247, 187, 95, 175, 270, 123, 123 ,123, 123 ,123, 247, 187, 95, 175, 270, 123, 123 ,123, 123 ,123]
+                        data: {{ series_mvm|safe }},
                     },
                     {
                         name: 'Sielte',
@@ -437,7 +436,7 @@ var EchartsColumnsStackedClusteredLight = function() {
                                 }
                             }
                         },
-                        data: [488, 415, 405, 340, 328, 123, 123 ,123, 123 ,123, 488, 415, 405, 340, 328, 123, 123 ,123, 123 ,123]
+                        data: {{ series_sielte|safe }},
                     },
                     {
                         name: 'Totale',
@@ -457,7 +456,7 @@ var EchartsColumnsStackedClusteredLight = function() {
                                 }
                             }
                         },
-                        data: [906, 911, 908, 778, 550, 123, 123 ,123, 123 ,123, 906, 911, 908, 778, 550, 123, 123 ,123, 123 ,123]
+                        data: {{ series_total|safe }},
                     },
                 ]
             });
@@ -792,7 +791,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     );
 });
-
 
 var Pie = function(options) {
     if (typeof echarts == 'undefined') {

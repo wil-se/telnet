@@ -52,7 +52,48 @@ def dash(request):
             sospesi +=1
         if ticket.status == 'ANNULLATO':
             annullati +=1
+    
+
+
+    users = User.objects.all()
+
+    
+
+    xaxis_names = []
+    series_mvm = []
+    series_sielte = []
+    series_total = []
+
+    for i, user in enumerate(users):
+        xaxis_names.append("{}\n {}".format(user.first_name, user.last_name))
+        mvm_queryset = (
+        Q(datainiz__gte=start_date)&
+        Q(datainiz__lte=end_date)&
+        Q(status='OK')&
+        Q(assigned_to=user)
+        )
+
+        sielte_queryset = (
+        Q(inizio_lavorazione_prevista__gte=start_date)&
+        Q(inizio_lavorazione_prevista__lte=end_date)&
+        Q(status='OK')&
+        Q(assigned_to=user)
+        )
+        series_mvm.append(int(get_guadagno_mvm(MvmImport.objects.filter(mvm_queryset).distinct())))
+        series_sielte.append(int(get_guadagno_sielte(SielteImport.objects.filter(sielte_queryset).distinct())))
+        series_total.append(int(series_mvm[i] + series_sielte[i]))
+
+
+    print(xaxis_names)
+    print(series_mvm)
+    print(series_sielte)
+    print(series_total)
         
+    print(len(xaxis_names))
+    print(len(series_mvm))
+    print(len(series_sielte))
+    print(len(series_total))
+    
 
     if request.user.role < 3:
         return render(request, 'dash_manager.html', {
@@ -68,6 +109,11 @@ def dash(request):
             'ko': ko,
             'sospesi': sospesi,
             'annullati': annullati,
+            'names': xaxis_names,
+            'series_mvm': series_mvm,
+            'series_sielte': series_sielte,
+            'series_total': series_total,
+            'bars_width': len(users)*175
             })
 
     ticket_list = []
@@ -89,13 +135,9 @@ def dash(request):
 
 def get_guadagno_mvm(tickets):
     guadagno_mvm = 0
-
     for mvmt in tickets:
-        
         if mvmt.price:
-            print(mvmt.price)
             guadagno_mvm += mvmt.price
-    print(guadagno_mvm)
     return guadagno_mvm
 
 def get_guadagno_sielte(tickets):
@@ -123,9 +165,7 @@ def split_ticket_mvm(tickets):
                 users[ticket.assigned_to] = tkts
     # pp.pprint(users)
     earning = {}
-    print(users)
     for user in users:
-        print(user)
         earning[user.email] = get_guadagno_mvm(users[user])
 
     return earning
@@ -210,3 +250,4 @@ def save_user(request):
 
 
         return JsonResponse({'success': True})
+
