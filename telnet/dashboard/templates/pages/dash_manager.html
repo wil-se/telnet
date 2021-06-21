@@ -161,8 +161,8 @@
 
 
                         <div class="chartWrapper">
-                            <div class="chartAreaWrapper flex">
-                                <div id="columns_clustered" style="height:400px; width:{{bars_width}}px;"></div>
+                            <div class="chartAreaWrapper flex" style="margin: -35px 0px 0px 0px;">
+                                <div id="columns_clustered" style="height:380px; width:{{bars_width}}px;" ></div>
                             </div>
                         </div>
 
@@ -835,7 +835,7 @@ var Pie = function(options) {
         series: [{
             name: 'guadagno',
             type: 'pie',
-            radius: '60%',
+            radius: '65%',
             center: ['50%', '57.5%'],
             itemStyle: {
                 normal: {
@@ -967,9 +967,6 @@ a.cke_button{
 
 @media (max-width: 800px) {
 
-    .content{
-      padding: 0px; !important
-    }
 
 
     #datatable_filter {
@@ -979,10 +976,6 @@ a.cke_button{
     #datatable_length {
         text-align: left;
         display: flex;
-    }
-    
-    .row{
-      margin: 0px;
     }
 
     #pie{

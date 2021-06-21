@@ -105,11 +105,17 @@ def ticket_list(request, page=1):
     date = '{} - {}'.format(start_date.strftime('%d/%m/%Y'), end_date.strftime('%d/%m/%Y'))
 
     pages = []
-    if paginator.num_pages < 4:
-        pages = [x for x in range(1, paginator.num_pages+1)]
+    if page < 3:
+        print("one")
+        pages = [x for x in range(page, page+4)]
     else:
+        print("two")
         pages = [ x for x in range(page, page+4)]
     
+    print(page)
+    print(pages)
+    
+
     return render(request, 'ticket_list.html', {
         'title':'Lista ticket',
         'subtext': 'Tickets',
