@@ -17,7 +17,6 @@
 <script src="{% static 'global_assets/js/plugins/visualization/echarts/echarts.min.js' %}"></script>
 <script src="{% static 'js/pie.js' %}"></script>
 
-
 <script src="{% static 'global_assets/js/plugins/editors/ckeditor/ckeditor.js' %}"></script>
 <script src="{% static 'global_assets/js/plugins/forms/selects/select2.min.js' %}"></script>
 
@@ -163,7 +162,7 @@
 
                         <div class="chartWrapper">
                             <div class="chartAreaWrapper flex">
-                                <canvas id="columns_clustered" height="400" width="{{ bars_width }}"></canvas>
+                                <div id="columns_clustered" style="height:400px; width:{{bars_width}}px;"></div>
                             </div>
                         </div>
 
