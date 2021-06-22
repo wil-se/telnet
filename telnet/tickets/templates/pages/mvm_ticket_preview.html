@@ -1,0 +1,24 @@
+<div class="col-md-6">
+						<div class="card">
+							<div class="card-header {% if ticket.status == 'OK' %} bg-success {% endif %}
+                                      {% if ticket.status == 'KO' %} bg-danger {% endif %}
+                                      {% if ticket.status == 'SOSPESO' %} bg-secondary {% endif %}
+                                      {% if ticket.status == 'ANNULLATO' %} bg-warning {% endif %}
+                                      
+               text-white header-elements-inline" style="height: 35px;">
+								<h6 class="card-title"> {{ ticket.status }}</h6>
+
+							</div>
+<h5 class="font-weight-semibold mb-1" style="margin: 14px 0px 0px 14px;">
+										<a href="#" class="text-default">{{ ticket.job_type|default_if_none:"" }} {% if ticket.desc_job %} | {% endif %}  {{ ticket.desc_job|default_if_none:"" }}</a>
+									</h5>
+							<div class="card card-body bg-light" style="margin: 10px;">
+								<ul class="list list-unstyled mb-0">
+														<li>Telefono: &nbsp;{{ ticket.numetele|default_if_none:"" }}</li>
+														<li>Cliente: {{ ticket.des_cogn|default_if_none:"" }}</li>
+														<li>INDIRIZZO: {{ ticket.des_indi|default_if_none:"" }}</li>
+         												<li>OCCORRENZE: {{ ticket.occorrenze|default_if_none:"" }}</li>
+													</ul>								
+							</div>
+						</div>
+					</div>

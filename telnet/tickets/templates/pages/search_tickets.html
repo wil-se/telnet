@@ -1,5 +1,8 @@
 {% load filters %}
 
+<div class="card-header bg-dark header-elements-inline">
+  <h6 class="card-title">Filtra ricerca</h6>
+</div>
 <div class="navbar navbar-expand-lg navbar-light navbar-component rounded" >
   <div class="text-center d-lg-none w-100">
     <button type="button" class="navbar-toggler dropdown-toggle" data-toggle="collapse" data-target="#navbar-filter">
@@ -15,7 +18,7 @@
   <div class="w-100">
     <form method="GET" action="{% url 'search tickets' %}" class="form-inline w-100">
   <div class="form-group row w-100">
-      <div class="input-group col-md-4 d-flex flex-column">
+      <div class="input-group col-md-2 d-flex flex-column">
         <a><b>Data:</b></a>
         
         <div style="display: flex">
@@ -26,12 +29,12 @@
         </div>
       </div>
 
-          <div class="input-group col-md-4 d-flex flex-column">
+          <div class="input-group col-md-2 d-flex flex-column">
             <a><b>Cerca parola:</b></a>
             {{ form.text|addclass:'form-control w-100' }}
           </div>
 
-          <div class="input-group col-md-4 d-flex flex-column">
+          <div class="input-group col-md-2 d-flex flex-column">
           {% if request.user.role < 3 %}
           <a><b>Utente:</b></a>
             {{ form.user|addclass:'form-control w-100' }}
@@ -42,12 +45,12 @@
         </div>
 
         <div class="form-group row w-100 " style="padding: 10px 0px 0px 0px;">
-          <div class="input-group col-md-4 d-flex flex-column" >
+          <div class="input-group col-md-2 d-flex flex-column" >
             <a><b>Stato:</b></a>
             {{ form.status|addclass:'form-control w-100' }}
           </div>
 
-          <div class="input-group col-md-4  d-flex flex-column">
+          <div class="input-group col-md-2  d-flex flex-column">
             <a><b>Azienda:</b></a>
             {{ form.company|addclass:'form-control w-100' }}
           </div>

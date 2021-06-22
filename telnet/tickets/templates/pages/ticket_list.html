@@ -21,7 +21,12 @@
 
 
 
-<div class="row" style="margin: 0px 0px 20px 0px"">
+<div class="row" style="margin: 0px 0px 20px 0px">
+
+<div class="pages-container" style="margin: 0px auto;">
+<div class="card">
+<div class="card-body align-self-center">
+
 <ul class="pagination align-self-center" style="margin: 0px auto;">
 								<li class="page-item"><a href="/lista-ticket/{{ page_current|add:"-1"}}" class="page-link">&larr; &nbsp; Indietro</a></li>
 								{% for page in pages%}
@@ -30,7 +35,12 @@
 								<li class="page-item"><a href="/lista-ticket/{{ page_current|add:"1"}}" class="page-link">Avanti &nbsp; &rarr;</a></li>
 							</ul>
 </div>
-<div class="row">
+</div>
+</div>
+</div>
+
+
+<div class="row" style="margin-right: 0px;margin-left: 0px;">
 
   				<!-- Inner container -->
   				<div class="d-flex align-items-start flex-column flex-md-row" style="width: 100%">
@@ -65,7 +75,11 @@
           
 
   				</div>
-  				        <ul class="pagination align-self-center" style="margin: 0px auto;">
+  				        <div class="pages-container" style="margin: 0px auto;">
+<div class="card">
+<div class="card-body align-self-center">
+
+<ul class="pagination align-self-center" style="margin: 0px auto;">
 								<li class="page-item"><a href="/lista-ticket/{{ page_current|add:"-1"}}" class="page-link">&larr; &nbsp; Indietro</a></li>
 								{% for page in pages%}
                 <li class="page-item{% if page == page_current %} active{% endif %}"><a href="/lista-ticket/{{page}}" class="page-link">{{ page }}</a></li>
@@ -73,5 +87,28 @@
 								<li class="page-item"><a href="/lista-ticket/{{ page_current|add:"1"}}" class="page-link">Avanti &nbsp; &rarr;</a></li>
 							</ul>
 </div>
+</div>
+</div>
+
+</div>
+
+
+<style>
+
+
+.pages-container{
+    width: 50%;
+}
+
+@media (max-width: 800px) {
+  .pages-container{
+    width: 100%;
+  }
+
+}
+
+
+</style>
+
 
 {% endblock %}
