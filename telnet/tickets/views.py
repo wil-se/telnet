@@ -201,7 +201,8 @@ def ticket_list(request, page=1):
 
 @login_required(login_url='/accounts/login/')
 def save_mvm_ticket(request):
-    pk = request.POST.get('id', '')
+    print(list(request.POST.items()))
+    pk = request.POST.get('pk', '')
     print('PK: '+pk)
 
     mvm_ticket = MvmImport.objects.get(pk=pk)
@@ -310,9 +311,12 @@ def save_mvm_ticket(request):
             mvm_ticket.porta = porta
             print('PORTA: '+porta)
 
-    files = request.FILES.getlist('mvm-upload')
+    files = request.FILES.getlist('files')
+    print("FILES")
+    print(files)
     if files:
         for f in files:
+            print("UNF ILEE")
             cwd = os.getcwd()
             os.chdir('media')
             fs = FileSystemStorage()

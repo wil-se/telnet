@@ -290,7 +290,7 @@
 										<div class="form-group row">
 											<label class="col-lg-2 col-form-label font-weight-semibold">CARICA FILE:</label>
 											<div class="col-lg-10">
-												<input multiple="multiple" name="mvm-upload" type="file" class="file-input" data-fouc>
+												<input multiple="multiple" name="mvm-upload"  data-show-upload="false" type="file" class="file-input" id="file-input" data-fouc>
 											</div>
 										</div>
 
@@ -308,8 +308,11 @@
 
 <script>
 
+
   $('#ticket-submit').click( function(){
-    status = $('#id_status option:selected').val();
+    console.log("FILES: "+$('#file-input').prop('files'));
+	files = $('#file-input').prop('files');
+	status = $('#id_status option:selected').val();
 	tipo_linea = $('#id_tipo_linea option:selected').val();
 	secondaria = $('#id_secondaria').val();
 	derivato = $('#id_derivato').val();
@@ -335,14 +338,14 @@
 		return;
 	}
 
-
+	console.log(files);
 
     $.ajax({
         headers: {'X-CSRFToken': '{{ csrf_token }}'},
         type: "POST",
         url: "/save-mvm-ticket",
         data: {
-			'id': "{{ mvm.pk }}",
+			'pk': "{{ mvm.pk }}",
 			'assigned_to': $('#id_assigned_to option:selected').val(),
 			'note': $('#id_note').text(),
 			'tipo_linea': tipo_linea,
@@ -360,12 +363,11 @@
 			'colonna': $('#colonna').text(),
 			'rl': $('#rl').text(),
 			'porta': $('#porta').text(),
-
 		},
         success: function(data){
             console.log('success');
             new Noty({
-            text: 'Ticket salvato con successo',
+            text: 'Ticket salvato',
             type: 'success'
         }).show();
         },
@@ -374,6 +376,8 @@
             console.log(data);
         },
     });
+
+
     
   });
 
