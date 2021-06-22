@@ -72,64 +72,7 @@ def sielte_ticket(request, id):
 
 @login_required(login_url='/accounts/login/')
 def ticket_list(request, page=1):
-    if request.user.role < 3:
-        mvm_tickets = MvmImport.objects.all()
-        sielte_tickets = SielteImport.objects.all()
-    if request.user.role == 3:
-        mvm_tickets = MvmImport.objects.filter(assigned_to=request.user)
-        sielte_tickets = SielteImport.objects.filter(assigned_to=request.user)
 
-    
-    tickets = list(chain(mvm_tickets, sielte_tickets))
-    paginator = Paginator(tickets, 10)
-    print(paginator.count)
-    print(paginator.num_pages)
-
-
-    if paginator.num_pages - page < 0 or page > paginator.num_pages or page <= 0:
-        return HttpResponseRedirect('/lista-ticket')
-
-    tickets = paginator.page(page)
-
-    form_fields = {}
-    form_fields['text'] = ''
-    form_fields['status'] = ''
-    form_fields['user'] = ''
-    form_fields['end_date'] = ''
-    form_fields['start_date'] = ''
-    form_fields['company'] = ''
-    form = SearchForm(request.GET or None, request.FILES or None, initial=form_fields)
-
-    start_date = datetime.datetime.now() - datetime.timedelta(60)
-    end_date = datetime.datetime.now() + datetime.timedelta(60)
-    date = '{} - {}'.format(start_date.strftime('%d/%m/%Y'), end_date.strftime('%d/%m/%Y'))
-
-    pages = []
-    if page < 3:
-        print("one")
-        pages = [x for x in range(page, page+4)]
-    else:
-        print("two")
-        pages = [ x for x in range(page, page+4)]
-    
-    print(page)
-    print(pages)
-    
-
-    return render(request, 'ticket_list.html', {
-        'title':'Lista ticket',
-        'subtext': 'Tickets',
-        'tickets': tickets,
-        'form': form,
-        'date': date,
-        'start_date': start_date.strftime('%d/%m/%Y'),
-        'end_date': end_date.strftime('%d/%m/%Y'),
-        'pages': pages,
-        'page_current': page,
-        })
-
-@login_required(login_url='/accounts/login/')
-def search_tickets(request):
     form_fields = {}
     form_fields['text'] = ''
     form_fields['status'] = ''
@@ -193,7 +136,7 @@ def search_tickets(request):
 
     mvm_tickets = MvmImport.objects.filter(mvm_queryset).distinct()
     sielte_tickets = SielteImport.objects.filter(sielte_queryset).distinct()
-    
+
     if company == 'TUTTI':
         tickets = list(chain(mvm_tickets, sielte_tickets))    
     elif company == 'MVM':
@@ -201,13 +144,60 @@ def search_tickets(request):
     elif company == 'SIELTE':
         tickets = SielteImport.objects.filter(sielte_queryset).distinct()
 
-    start_date = datetime.datetime.strptime(date.split(' - ')[0], '%d/%m/%Y')
-    end_date = datetime.datetime.strptime(date.split(' - ')[1], '%d/%m/%Y')
+    if len(mvm_queryset) + len(sielte_queryset) == 0:
+        tickets = list(chain(MvmImport.objects.all(), SielteImport.objects.all()))
+
+
+
+    paginator = Paginator(tickets, 10)
+
+    if paginator.num_pages - page < 0 or page > paginator.num_pages or page <= 0:
+        return HttpResponseRedirect('/lista-ticket')
+
+    tickets = paginator.page(page)
+
+    form_fields = {}
+    form_fields['text'] = ''
+    form_fields['status'] = ''
+    form_fields['user'] = ''
+    form_fields['end_date'] = ''
+    form_fields['start_date'] = ''
+    form_fields['company'] = ''
+    form = SearchForm(request.GET or None, request.FILES or None, initial=form_fields)
+
+    start_date = datetime.datetime.now() - datetime.timedelta(60)
+    end_date = datetime.datetime.now() + datetime.timedelta(60)
+    date = '{} - {}'.format(start_date.strftime('%d/%m/%Y'), end_date.strftime('%d/%m/%Y'))
+
+    pages = []
+
+    if paginator.num_pages <= 4:
+        pages = [ x for x in range(1, paginator.num_pages)]
     
-    # for ticket in tickets:
-    #     print(ticket)
-    # print(tickets)
-    return render(request, 'ticket_list.html', {'title':'Lista ticket', 'tickets': tickets, 'form':form, 'date': date, 'start_date': start_date.strftime('%d/%m/%Y'), 'end_date': end_date.strftime('%d/%m/%Y')})
+    else:
+        left = paginator.num_pages - page
+        if left > 3:
+            if page <= 2:
+                pages = [ x for x in range(1, 6)]
+            else:
+                pages = [ x for x in range(page-2, page+3)]
+        else:
+            pages = [ x for x in range(paginator.num_pages-4, page+left+1)]
+
+
+    return render(request, 'ticket_list.html', {
+        'title':'Lista ticket',
+        'subtext': 'Tickets',
+        'tickets': tickets,
+        'form': form,
+        'date': date,
+        'start_date': start_date.strftime('%d/%m/%Y'),
+        'end_date': end_date.strftime('%d/%m/%Y'),
+        'pages': pages,
+        'page_current': page,
+        'pages_total': paginator.num_pages
+        })
+
 
 @login_required(login_url='/accounts/login/')
 def save_mvm_ticket(request):

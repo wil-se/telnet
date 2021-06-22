@@ -29,12 +29,13 @@
 <div class="card-body align-self-center">
 
 <ul class="pagination align-self-center" style="margin: 0px auto;">
-								<li class="page-item"><a href="/lista-ticket/{{ page_current|add:"-1"}}" class="page-link">&larr; &nbsp; Indietro</a></li>
-								{% for page in pages%}
-                <li class="page-item{% if page == page_current %} active{% endif %}"><a href="/lista-ticket/{{page}}" class="page-link">{{ page }}</a></li>
-                {% endfor %}
-								<li class="page-item"><a href="/lista-ticket/{{ page_current|add:"1"}}" class="page-link">Avanti &nbsp; &rarr;</a></li>
-							</ul>
+	<li class="page-item"><a href="#" class="page-link prev">&larr; &nbsp; Indietro</a></li>
+	{% for page in pages%}
+  <li class="page-item{% if page == page_current %} active{% endif %}"><a  href="#" onclick="getPage({{page}})" class="page-link">{{ page }}</a></li>
+  {% endfor %}
+	<li class="page-item"><a href="#" class="page-link next">Avanti&nbsp; &rarr;</a></li>
+</ul>
+
 </div>
 </div>
 </div>
@@ -81,17 +82,52 @@
 <div class="card-body align-self-center">
 
 <ul class="pagination align-self-center" style="margin: 0px auto;">
-								<li class="page-item"><a href="/lista-ticket/{{ page_current|add:"-1"}}" class="page-link">&larr; &nbsp; Indietro</a></li>
+								<li class="page-item previous"><a class="page-link prev">&larr; &nbsp; Indietro</a></li>
 								{% for page in pages%}
-                <li class="page-item{% if page == page_current %} active{% endif %}"><a href="/lista-ticket/{{page}}" class="page-link">{{ page }}</a></li>
+                <li class="page-item{% if page == page_current %} active{% endif %}"><a href="#" onclick="getPage({{page}})" class="page-link">{{ page }}</a></li>
                 {% endfor %}
-								<li class="page-item"><a href="/lista-ticket/{{ page_current|add:"1"}}" class="page-link">Avanti &nbsp; &rarr;</a></li>
+								<li class="page-item next"><a  class="page-link next">Avanti &nbsp; &rarr;</a></li>
 							</ul>
 </div>
 </div>
 </div>
 
 </div>
+
+<script>
+
+$('.next').on('click', function(){
+  var pcurr = {{ page_current | add:"1"}};
+  var pages = {{ pages_total }};
+
+  console.log(pcurr);
+  console.log(pages);
+
+  if (pcurr <= pages ){
+    window.location.href = "/lista-ticket/"+{{ page_current | add:"1"}}+location.search ;
+  }
+});
+
+$('.prev').on('click', function(){
+  var pcurr = {{ page_current | add:"-1"}};
+  console.log(pcurr)
+  if (pcurr > 0 ){
+    window.location.href = "/lista-ticket/"+{{ page_current | add:"-1"}}+location.search ;
+  }
+});
+
+function getPage(page){
+  var pcurr = {{ page_current | add:"1"}};
+  var pages = {{ pages_total }}
+  console.log("AO pcurr "+pcurr+"PAGES "+pages)
+
+  if (pcurr > 0 && pcurr <= pages+1){
+    window.location.href = "/lista-ticket/"+page+location.search ;
+  }
+}
+
+
+</script>
 
 
 <style>

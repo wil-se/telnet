@@ -17,20 +17,7 @@ urlpatterns = [
 
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
-
-    path('mvm-ticket/<int:id>', tickets_views.mvm_ticket, name='mvm ticket'),
-    path('sielte-ticket/<int:id>', tickets_views.sielte_ticket, name='sielte ticket'),
-    path('lista-ticket', tickets_views.ticket_list, name='lista ticket'),
-    path('search-tickets', tickets_views.search_tickets, name='search tickets'),
     
-    path('save-sielte-ticket', tickets_views.save_sielte_ticket, name='save sielte ticket'),
-    path('file-mvm-delete/<int:ticket>/<int:id>', tickets_views.file_mvm_delete, name='file mvm delete'),
-    path('file-sielte-delete/<int:ticket>/<int:id>', tickets_views.file_sielte_delete, name='file sielte delete'),
-    path('export-tickets', tickets_views.export_tickets, name='export tickets'),
-    path('export', tickets_views.export, name='export'),
-    path('export-mvm-delete/<int:id>', tickets_views.export_mvm_delete, name='export mvm delete'),
-    path('export-sielte-delete/<int:id>', tickets_views.export_sielte_delete, name='export sielte delete'),
-
     path('import', tickets_views    .import_page, name='import'),
     path('upload-mvm', tickets_views.upload_mvm, name='upload mvm'),
     path('upload-sielte', tickets_views.upload_sielte, name='upload sielte'),
