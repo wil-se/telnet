@@ -10,30 +10,21 @@
 		<a href="#" class="text-default" style="margin: 0px 0px 0px 10px;">{{ ticket.job_type|default_if_none:"" }} {% if ticket.desc_job %} | {% endif %}  {{ ticket.desc_job|default_if_none:"" }}</a>
 		</h5>
 
-			
+			<div class="btn-group" style="width:35px; height: 35px; position: absolute; right: 4px;">
+			<button type="button" class="btn bg-slate dropdown-toggle" data-toggle="dropdown"></button>
+			<div class="dropdown-menu dropdown-menu-right">
+				<a href="/mvm-ticket/{{ ticket.pk }}" class="dropdown-item"><i class="icon-eye"></i> Apri</a>
+			</div>
+		</div>
+
 		<div class="card card-body bg-light" style="margin: 10px;" >
 			<div>
 
-			<div style="position: absolute; right: 15px;" class="float-right">
-								<ul class="fab-menu fab-menu-top" data-fab-toggle="hover" style="z-index: 1002;">
-									<li>
-										<button type="button" class="fab-menu-btn btn btn-light btn-float rounded-round btn-icon">
-											<i class="fab-icon-open icon-reply"></i>
-											<i class="fab-icon-close icon-redo2"></i>
-										</button>
 
-										<ul class="fab-menu-inner">
-											<li>
-												<div data-fab-label="Visualizza">
-													<a href="/mvm-ticket/{{ ticket.pk }}" class="btn btn-light rounded-round btn-icon btn-float">
-														<i class="icon-file-eye2"></i>
-													</a>
-												</div>
-											</li>
-										</ul>
-									</li>
-								</ul>
-							</div>
+
+
+
+							
 			</div>
 
 			<ul class="list list-unstyled mb-0">
@@ -44,7 +35,25 @@
 				<li><b>DATA: </b>{{ ticket.datainiz|default_if_none:"" }}</li>
 				<li><b>TEMPO OBBIETTIVO: </b>{{ ticket.tempobbi|default_if_none:"" }}</li>
 			</ul>								
+		
+		
+
+
+
+		
+
+
+
+
+
+
+
+
 		</div>
 		
+		
 	</div>
+
+
+								
 </div>

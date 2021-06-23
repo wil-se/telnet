@@ -29,11 +29,11 @@
 <div class="card-body align-self-center">
 
 <ul class="pagination align-self-center" style="margin: 0px auto;">
-	<li class="page-item"><a href="#" class="page-link prev">&larr; &nbsp; Indietro</a></li>
+	<li class="page-item"><a href="#" class="page-link prev">&larr;</a></li>
 	{% for page in pages%}
   <li class="page-item{% if page == page_current %} active{% endif %}"><a  href="#" onclick="getPage({{page}})" class="page-link">{{ page }}</a></li>
   {% endfor %}
-	<li class="page-item"><a href="#" class="page-link next">Avanti&nbsp; &rarr;</a></li>
+	<li class="page-item"><a href="#" class="page-link next">&rarr;</a></li>
 </ul>
 
 </div>
@@ -82,11 +82,11 @@
 <div class="card-body align-self-center">
 
 <ul class="pagination align-self-center" style="margin: 0px auto;">
-								<li class="page-item previous"><a class="page-link prev">&larr; &nbsp; Indietro</a></li>
+								<li class="page-item previous"><a class="page-link prev">&larr;</a></li>
 								{% for page in pages%}
                 <li class="page-item{% if page == page_current %} active{% endif %}"><a href="#" onclick="getPage({{page}})" class="page-link">{{ page }}</a></li>
                 {% endfor %}
-								<li class="page-item next"><a  class="page-link next">Avanti &nbsp; &rarr;</a></li>
+								<li class="page-item next"><a  class="page-link next">&rarr;</a></li>
 							</ul>
 </div>
 </div>

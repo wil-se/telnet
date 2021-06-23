@@ -403,14 +403,17 @@ def save_sielte_ticket(request):
     print(files)
     if files:
         for f in files:
+            print("FILE")
+            print(f)
             fs = FileSystemStorage()
             filename = fs.save(f.name, f)
             print(filename)
             uploaded_file_url = fs.url(filename)
-            file = open('media/'+filename, 'rb')
+            print(uploaded_file_url)
+            # file = open("/media/{}".format(filename), 'rb')
             fileupload = UploadedFileSielte()
             fileupload.name = filename
-            fileupload.file = File(file)
+            fileupload.file = File(f)
             fileupload.obj = sielte_ticket
             fileupload.save()
 

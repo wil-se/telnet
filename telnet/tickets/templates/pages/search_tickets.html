@@ -42,10 +42,7 @@
           {% endif %}
           </div>
 
-        </div>
-
-        <div class="form-group row w-100 " style="padding: 10px 0px 0px 0px;">
-          <div class="input-group col-md-2 d-flex flex-column" >
+           <div class="input-group col-md-2 d-flex flex-column" >
             <a><b>Stato:</b></a>
             {{ form.status|addclass:'form-control w-100' }}
           </div>
@@ -55,19 +52,17 @@
             {{ form.company|addclass:'form-control w-100' }}
           </div>
 
-          
+        </div>
 
-            </div>
-          
           
           <div class="form-group row w-100 justify-content-end">
           <div class="input-group col-xs-1 justify-content-end">
             {% if request.user.role < 3 %}
-          <button type="button" class="btn btn-secondary" id="export" style="margin: 10px 0px 0px 10px">Export</button>
+          <button type="button" class="btn btn-secondary" id="export" style="margin: 10px 10px 0px 10px">Export</button>
           {% endif %}
           </div>
           <div class="input-group col-xs-1 justify-content-end">
-            <button class="bg-teal-400 btn-primary btn" type="submit" style="margin: 10px 10px 0px 10px"> Cerca </button>
+            <button class="bg-teal-400 btn-primary btn" type="submit" style="margin: 10px 10px 0px 0px"> Cerca </button>
           </div>
           </div>
     </form>

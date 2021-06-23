@@ -401,6 +401,8 @@ class SielteImport(models.Model):
 
         self.tot_price = gain
 
+        print("saving Sielte import, tot price {}".format(gain))
+
         super(SielteImport, self).save(*args, **kwargs)
 
 
