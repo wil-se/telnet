@@ -701,16 +701,6 @@ def parse_mvm(file):
                 r.save()
 
 
-            if SEED:
-                print("AOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO")
-                mvm.status = random.choice(["OK", "KO", "SOSPESO", "ANNULLATO"])
-                print(mvm.status)
-                emails = list(User.objects.all().values_list('email'))
-                print(random.choice(emails)[0])
-                mvm.assigned_to = User.objects.get(email=random.choice(emails)[0])
-
-
-
             mvm.save()
             result[row] = '{} caricato correttamente'.format(record['cod_wrid'])
         except:
@@ -1077,6 +1067,7 @@ def export_tickets(request):
         sielte_ora_inizio = []
         sielte_status = []
         sielte_compilazione = []
+        sielte_guadagno = []
         
         for sielte in sielte_tickets:
             sielte_assigned_to.append(sielte.assigned_to) if sielte.assigned_to else sielte_assigned_to.append('')
@@ -1090,6 +1081,7 @@ def export_tickets(request):
             sielte_data_inizio.append(sielte.data_inizio_appuntamento) if sielte.data_inizio_appuntamento else sielte_data_inizio.append('')
             sielte_ora_inizio.append(sielte.ora_inizio_appuntamento) if sielte.ora_inizio_appuntamento else sielte_ora_inizio.append('')
             sielte_status.append(sielte.status) if sielte.status else sielte_status.append('')
+            sielte_guadagno.append(sielte.tot_price) if sielte.tot_price else sielte_guadagno.append('')
 
             compilazione = ''
             if sielte.note:
@@ -1119,7 +1111,8 @@ def export_tickets(request):
             'data inizio': sielte_data_inizio,
             'ora inizio': sielte_ora_inizio,
             'status': sielte_status,
-            'compilazione': sielte_compilazione
+            'compilazione': sielte_compilazione,
+            'prezzo': sielte_guadagno
         })
 
         sielte_filename = 'sielte-export-{}.xlsx'.format(datetime.datetime.now())
