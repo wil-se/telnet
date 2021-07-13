@@ -1134,7 +1134,10 @@ def export_tickets(request):
             sielte_data_inizio.append(sielte.data_inizio_appuntamento) if sielte.data_inizio_appuntamento else sielte_data_inizio.append('')
             sielte_ora_inizio.append(sielte.ora_inizio_appuntamento) if sielte.ora_inizio_appuntamento else sielte_ora_inizio.append('')
             sielte_status.append(sielte.status) if sielte.status else sielte_status.append('')
-            sielte_guadagno.append(sielte.tot_price) if sielte.tot_price else sielte_guadagno.append('')
+            if sielte.status == 'OK':
+                sielte_guadagno.append(sielte.tot_price) if sielte.tot_price else sielte_guadagno.append('')
+            else:
+                sielte_guadagno.append('')
 
             compilazione = ''
             if sielte.note:
