@@ -102,18 +102,19 @@ def dash(request):
             })
 
     else:
+        users = User.objects.get(pk=request.user.pk)
 
         mvm_queryset = (
         Q(datainiz__gte=start_date)&
         Q(datainiz__lte=end_date)&
-        Q(assigned_to=request.user.pk)
+        Q(assigned_to=user)
         )
         mvm_tickets = MvmImport.objects.filter(mvm_queryset).distinct()
 
         sielte_queryset = (
         Q(inizio_lavorazione_prevista__gte=start_date)&
         Q(inizio_lavorazione_prevista__lte=end_date)&
-        Q(assigned_to=request.user.pk)
+        Q(assigned_to=user)
         )
         sielte_tickets = SielteImport.objects.filter(sielte_queryset).distinct()
 
