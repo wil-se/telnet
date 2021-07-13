@@ -10,6 +10,7 @@
 	<td>{{ ticket.tempobbi|default_if_none:"" }}</td>
 	<td>{{ ticket.job_type|default_if_none:"" }}</td>
 
+
 	{% if ticket.status == 'OK' %}
     <td><a class="badge bg-success-400 align-top">OK</a></td>
     {% endif %}
@@ -21,6 +22,9 @@
     {% endif %}
     {% if ticket.status == 'ANNULLATO' %}
     <td><a class="badge bg-danger-400 align-top">ANNULLATO</a></td>
+    {% endif %}
+    {% if ticket.status == 'DA LAVORARE' %}
+    <td><a class="badge bg-info align-top">ANNULLATO</a></td>
     {% endif %}
     {% if request.user.role < 3 %}<td>€ {{ ticket.price|default_if_none:"" }}</td>{% endif %}
 

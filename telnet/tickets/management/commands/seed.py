@@ -28,7 +28,7 @@ class Command(BaseCommand):
             emails = list(User.objects.all().values_list('email'))
             sielte.assigned_to = User.objects.get(email=random.choice(emails)[0])
             sielte.attivita = SielteActivity.objects.get(servizio="ADSL A + router")
-            sielte.data_inizio_appuntamento = datetime.now()
+            sielte.inizio_lavorazione_prevista = datetime.now()
             
             sielte.save()
     
