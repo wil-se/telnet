@@ -80,6 +80,7 @@ sielte_status_choices = (
     ('KO', 'KO'),
     ('SOSPESO', 'SOSPESO'),
     ('ANNULLATO', 'ANNULLATO'),
+    ('DA LAVORARE', 'DA LAVORARE'),
 )
 
 mvm_ko_choices = (
@@ -401,7 +402,7 @@ class SielteImport(models.Model):
 
         self.tot_price = gain
 
-        print("saving Sielte import, tot price {}".format(gain))
+        # print("saving Sielte import, tot price {}".format(gain))
 
         super(SielteImport, self).save(*args, **kwargs)
 

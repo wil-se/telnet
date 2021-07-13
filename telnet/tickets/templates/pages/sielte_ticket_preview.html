@@ -1,41 +1,30 @@
 <div class="col-md-6">
+
 	<div class="card">
-		<div class="card-header {% if ticket.status == 'OK' %} bg-success {% endif %}
+
+		<div class="card-header
+			{% if ticket.status == 'OK' %} bg-success {% endif %}
       		{% if ticket.status == 'KO' %} bg-danger {% endif %}
       		{% if ticket.status == 'SOSPESO' %} bg-secondary {% endif %}
-      		{% if ticket.status == 'ANNULLATO' %} bg-warning {% endif %} text-white header-elements-inline" style="height: 35px;">
+      		{% if ticket.status == 'ANNULLATO' %} bg-warning {% endif %}
+			{% if ticket.status == 'DA LAVORARE' %} bg-info {% endif %}
+			
+			  text-white header-elements-inline" style="height: 35px;">
 			<h6 class="card-title"> {{ ticket.status }}</h6>
 		</div>
+
 		<h5 class="font-weight-semibold mb-1" style="margin: 14px 0px 0px 14px;">
-		<a href="#" class="text-default" style="margin: 0px 0px 0px 10px;">{{ ticket.attivita|default_if_none:"" }} {% if ticket.descrizione_tipologia_pratica|default_if_none:"" %} | {% endif %}  {{ ticket.descrizione_tipologia_pratica|default_if_none:""|default_if_none:"" }}</a>
+		<a href="/sielte-ticket/{{ ticket.pk }}" class="text-default" style="margin: 0px 0px 0px 10px;">{{ ticket.attivita|default_if_none:"" }} {% if ticket.descrizione_tipologia_pratica|default_if_none:"" %} | {% endif %}  {{ ticket.descrizione_tipologia_pratica|default_if_none:""|default_if_none:"" }}</a>
 		</h5>
 
-			
-		<div class="card card-body bg-light" style="margin: 10px;" >
-			<div>
-
-			<div style="position: absolute; right: 15px;" class="float-right">
-								<ul class="fab-menu fab-menu-top" data-fab-toggle="hover" style="z-index: 1002;">
-									<li>
-										<button type="button" class="fab-menu-btn btn btn-light btn-float rounded-round btn-icon">
-											<i class="fab-icon-open icon-reply"></i>
-											<i class="fab-icon-close icon-redo2"></i>
-										</button>
-
-										<ul class="fab-menu-inner">
-											<li>
-												<div data-fab-label="Visualizza">
-													<a href="/sielte-ticket/{{ ticket.pk }}" class="btn btn-light rounded-round btn-icon btn-float">
-														<i class="icon-file-eye2"></i>
-													</a>
-												</div>
-											</li>
-										</ul>
-									</li>
-								</ul>
-							</div>
+		<div class="btn-group" style="position: absolute; right: 0px;">
+			<button type="button" class="btn bg-white dropdown-toggle" data-toggle="dropdown"></button>
+			<div class="dropdown-menu dropdown-menu-right">
+				<a href="/sielte-ticket/{{ ticket.pk }}" class="dropdown-item"><i class="icon-eye"></i> Apri</a>
 			</div>
+		</div>
 
+		<div class="card card-body bg-light" style="margin: 10px;" >
 			<ul class="list list-unstyled mb-0">
 				<li><b>Telefono: </b> &nbsp; {% if ticket.telefono_cliente_1 %}{{ ticket.telefono_cliente_1|default_if_none:"" }}{% endif %} {% if not ticket.telefono_cliente_1 and ticket.telefono_cliente_2 %}{{ ticket.telefono_cliente_2|default_if_none:"" }}{% endif %}</li>
 				<li><b>Cliente: </b>{{ ticket.nome|default_if_none:"" }}</li>
@@ -45,6 +34,7 @@
 				<li><b>SCADENZA: </b>{{ ticket.data_scadenza|default_if_none:"" }}</li>
 			</ul>								
 		</div>
-		
+
 	</div>
+	
 </div>

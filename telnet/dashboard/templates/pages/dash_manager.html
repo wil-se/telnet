@@ -68,7 +68,6 @@
 	<!-- Simple statistics -->
 
 				<div class="row">
-
                     <div class="col-sm-6 col-xl-3">
 						<div class="card card-body bg-success-400 has-bg-image">
 							<div class="media">
@@ -250,11 +249,11 @@
             {% for item in tickets %}
 
                 {% if item|get_class == 'MvmImport' %}
-                  {% include 'ticket_dashboard_admin_mvm.html' with ticket=item %}
+                  {% include 'ticket_dashboard_mvm.html' with ticket=item %}
                 {% endif %}
 
                 {% if item|get_class == 'SielteImport' %}
-                  {% include 'ticket_dashboard_admin_sielte.html' with ticket=item %}
+                  {% include 'ticket_dashboard_sielte.html' with ticket=item %}
                 {% endif %}
 
             {% endfor %}

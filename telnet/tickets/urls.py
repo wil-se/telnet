@@ -20,4 +20,10 @@ urlpatterns = [
     path('export-mvm-delete/<int:id>', export_mvm_delete, name='export mvm delete'),
     path('export-sielte-delete/<int:id>', export_sielte_delete, name='export sielte delete'),
 
+    path('import', import_page, name='import'),
+    path('upload-mvm', upload_mvm, name='upload mvm'),
+    path('upload-sielte', upload_sielte, name='upload sielte'),
+    path('upload-mvm-pdf', upload_mvm_pdf, name='upload mvm pdf'),
+
+    
 ]

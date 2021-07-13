@@ -6,7 +6,7 @@
 	<td>{{ ticket.cod_wrid|default_if_none:"" }}</td>
   	<td>{{ ticket.numetele|default_if_none:"" }}</td>
   	<td>{{ ticket.des_cogn|default_if_none:"" }}</td>
-  	<td>{{ ticket.appualle|default_if_none:"" }}</td>
+  	<td>{{ ticket.datainiz|default_if_none:"" }}</td>
 	<td>{{ ticket.tempobbi|default_if_none:"" }}</td>
 	<td>{{ ticket.job_type|default_if_none:"" }}</td>
 
@@ -22,6 +22,6 @@
     {% if ticket.status == 'ANNULLATO' %}
     <td><a class="badge bg-danger-400 align-top">ANNULLATO</a></td>
     {% endif %}
-    <td>€ {{ ticket.price|default_if_none:"" }}</td>
+    {% if request.user.role < 3 %}<td>€ {{ ticket.price|default_if_none:"" }}</td>{% endif %}
 
 </tr>

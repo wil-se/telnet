@@ -22,80 +22,65 @@ def dash(request):
         start_date = datetime.datetime.now() - datetime.timedelta(30)
         end_date = datetime.datetime.now() + datetime.timedelta(30)
 
-    mvm_queryset = (
-    Q(datainiz__gte=start_date)&
-    Q(datainiz__lte=end_date)
-    # &(status='OK')
-    )
-    mvm_tickets = MvmImport.objects.filter(mvm_queryset).distinct()
     
-    sielte_queryset = (
-    Q(inizio_lavorazione_prevista__gte=start_date)&
-    Q(inizio_lavorazione_prevista__lte=end_date)
-    # &Q(status='OK')
-    )
-    sielte_tickets = SielteImport.objects.filter(sielte_queryset).distinct()
+    if request.user.role < 3:
 
-    tickets = list(chain(mvm_tickets, sielte_tickets))
-
-    ok = 0
-    ko = 0
-    sospesi = 0
-    annullati = 0
-
-    for ticket in tickets:
-        if ticket.status == 'OK':
-            ok +=1
-        if ticket.status == 'KO':
-            ko +=1
-        if ticket.status == 'SOSPESO':
-            sospesi +=1
-        if ticket.status == 'ANNULLATO':
-            annullati +=1
-    
-
-
-    users = User.objects.all()
-
-    
-
-    xaxis_names = []
-    series_mvm = []
-    series_sielte = []
-    series_total = []
-
-    for i, user in enumerate(users):
-        xaxis_names.append("{}\n {}".format(user.first_name, user.last_name))
         mvm_queryset = (
         Q(datainiz__gte=start_date)&
-        Q(datainiz__lte=end_date)&
-        Q(status='OK')&
-        Q(assigned_to=user)
+        Q(datainiz__lte=end_date)
         )
+        mvm_tickets = MvmImport.objects.filter(mvm_queryset).distinct()
 
         sielte_queryset = (
         Q(inizio_lavorazione_prevista__gte=start_date)&
-        Q(inizio_lavorazione_prevista__lte=end_date)&
-        Q(status='OK')&
-        Q(assigned_to=user)
+        Q(inizio_lavorazione_prevista__lte=end_date)
         )
-        series_mvm.append(int(get_guadagno_mvm(MvmImport.objects.filter(mvm_queryset).distinct())))
-        series_sielte.append(int(get_guadagno_sielte(SielteImport.objects.filter(sielte_queryset).distinct())))
-        series_total.append(int(series_mvm[i] + series_sielte[i]))
+        sielte_tickets = SielteImport.objects.filter(sielte_queryset).distinct()
+
+        tickets = list(chain(mvm_tickets, sielte_tickets))
+
+        ok = 0
+        ko = 0
+        sospesi = 0
+        annullati = 0
+
+        for ticket in tickets:
+            if ticket.status == 'OK':
+                ok +=1
+            if ticket.status == 'KO':
+                ko +=1
+            if ticket.status == 'SOSPESO':
+                sospesi +=1
+            if ticket.status == 'ANNULLATO':
+                annullati +=1
 
 
-    print(xaxis_names)
-    print(series_mvm)
-    print(series_sielte)
-    print(series_total)
-        
-    print(len(xaxis_names))
-    print(len(series_mvm))
-    print(len(series_sielte))
-    print(len(series_total))
-    
+        users = User.objects.all()
 
-    if request.user.role < 3:
+        xaxis_names = []
+        series_mvm = []
+        series_sielte = []
+        series_total = []
+
+        for i, user in enumerate(users):
+            xaxis_names.append("{}\n {}".format(user.first_name, user.last_name))
+            mvm_queryset = (
+            Q(datainiz__gte=start_date)&
+            Q(datainiz__lte=end_date)&
+            Q(status='OK')&
+            Q(assigned_to=user)
+            )
+
+            sielte_queryset = (
+            Q(inizio_lavorazione_prevista__gte=start_date)&
+            Q(inizio_lavorazione_prevista__lte=end_date)&
+            Q(status='OK')&
+            Q(assigned_to=user)
+            )
+            series_mvm.append(int(get_guadagno_mvm(MvmImport.objects.filter(mvm_queryset).distinct())))
+            series_sielte.append(int(get_guadagno_sielte(SielteImport.objects.filter(sielte_queryset).distinct())))
+            series_total.append(int(series_mvm[i] + series_sielte[i]))
+
         return render(request, 'dash_manager.html', {
             'title':'Dashboard', 
             'subtext': 'Panoramica',
@@ -116,20 +101,56 @@ def dash(request):
             'bars_width': len(users)*175
             })
 
-    ticket_list = []
+    else:
 
-    for ticket in tickets:
-        if ticket.assigned_to.pk == request.user.pk:
-            ticket_list.append(ticket)
+        mvm_queryset = (
+        Q(datainiz__gte=start_date)&
+        Q(datainiz__lte=end_date)&
+        Q(assigned_to=request.user.pk)
+        )
+        mvm_tickets = MvmImport.objects.filter(mvm_queryset).distinct()
+
+        sielte_queryset = (
+        Q(inizio_lavorazione_prevista__gte=start_date)&
+        Q(inizio_lavorazione_prevista__lte=end_date)&
+        Q(assigned_to=request.user.pk)
+        )
+        sielte_tickets = SielteImport.objects.filter(sielte_queryset).distinct()
+
+        tickets = list(chain(mvm_tickets, sielte_tickets))
+
+        ticket_list = []
     
-    return render(request, 'dash_tecnico.html', {
-            'title':'Dashboard', 
-            'subtext': 'Panoramica',
-            'start_date': start_date.strftime('%d/%m/%Y'),
-            'end_date': end_date.strftime('%d/%m/%Y'),
-            'tickets': ticket_list,
-            })
+        for ticket in tickets:
+            if ticket.assigned_to.pk == request.user.pk:
+                ticket_list.append(ticket)
 
+        ok = 0
+        ko = 0
+        sospesi = 0
+        annullati = 0
+
+        for ticket in tickets:
+            if ticket.status == 'OK':
+                ok +=1
+            if ticket.status == 'KO':
+                ko +=1
+            if ticket.status == 'SOSPESO':
+                sospesi +=1
+            if ticket.status == 'ANNULLATO':
+                annullati +=1
+        
+        return render(request, 'dash_tecnico.html', {
+                'title':'Dashboard', 
+                'subtext': 'Panoramica',
+                'start_date': start_date.strftime('%d/%m/%Y'),
+                'end_date': end_date.strftime('%d/%m/%Y'),
+                'tickets': ticket_list,
+                'ok': ok,
+                'ko': ko,
+                'sospesi': sospesi,
+                'annullati': annullati,
+                })
 
 
 
@@ -142,8 +163,6 @@ def get_guadagno_mvm(tickets):
 
 def get_guadagno_sielte(tickets):
     guadagno_sielte = 0
-    # print("SONO DENTRO GUADAGNO SIELTE")
-    # print(tickets)
     for slt in tickets:
         if slt.attivita:
             if slt.attivita.guadagno:
@@ -152,42 +171,6 @@ def get_guadagno_sielte(tickets):
                 guadagno_sielte += slt.attivita_aggiuntiva.guadagno * slt.numero_agg
     return guadagno_sielte
 
-
-def split_ticket_mvm(tickets):
-    users = {}
-    for ticket in tickets:
-        if ticket.assigned_to:
-            if ticket.assigned_to not in users.keys():
-                users[ticket.assigned_to] = [ticket]
-            else:
-                tkts = users[ticket.assigned_to]
-                tkts.append(ticket)
-                users[ticket.assigned_to] = tkts
-    # pp.pprint(users)
-    earning = {}
-    for user in users:
-        earning[user.email] = get_guadagno_mvm(users[user])
-
-    return earning
-
-
-def split_ticket_sielte(tickets):
-    users = {}
-    for ticket in tickets:
-        if ticket.assigned_to:
-            if ticket.assigned_to not in users.keys():
-                users[ticket.assigned_to] = [ticket]
-            else:
-                tkts = users[ticket.assigned_to]
-                tkts.append(ticket)
-                users[ticket.assigned_to] = tkts
-    # pp.pprint(users)
-    earning = {}
-    for user in users:
-        # print(user)
-        earning[user.email] = get_guadagno_sielte(users[user])
-        
-    return earning
 
 def add_user(request):
     if (request.user.role < 3):
@@ -203,14 +186,6 @@ def save_user(request):
         email = request.POST.get('email', '')
         email_two = request.POST.get('email_two', '')
         role = request.POST.get('role', '')
-
-        print(name)
-        print(last_name)
-        print(password)
-        print(password_two)
-        print(email)
-        print(email_two)
-        print(role)
         
         if not username or not name or not last_name or not password_two or not password_two or not email or not email_two:
             print("check 0")

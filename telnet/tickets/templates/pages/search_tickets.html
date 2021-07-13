@@ -34,14 +34,6 @@
             {{ form.text|addclass:'form-control w-100' }}
           </div>
 
-          <div class="input-group col-md-2 d-flex flex-column">
-          {% if request.user.role < 3 %}
-          <a><b>Utente:</b></a>
-            {{ form.user|addclass:'form-control w-100' }}
-          
-          {% endif %}
-          </div>
-
            <div class="input-group col-md-2 d-flex flex-column" >
             <a><b>Stato:</b></a>
             {{ form.status|addclass:'form-control w-100' }}
@@ -50,6 +42,14 @@
           <div class="input-group col-md-2  d-flex flex-column">
             <a><b>Azienda:</b></a>
             {{ form.company|addclass:'form-control w-100' }}
+          </div>
+
+          <div class="input-group col-md-2 d-flex flex-column">
+          {% if request.user.role < 3 %}
+          <a><b>Utente:</b></a>
+            {{ form.user|addclass:'form-control w-100' }}
+          
+          {% endif %}
           </div>
 
         </div>

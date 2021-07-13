@@ -73,140 +73,242 @@ def sielte_ticket(request, id):
 @login_required(login_url='/accounts/login/')
 def ticket_list(request, page=1):
 
-    form_fields = {}
-    form_fields['text'] = ''
-    form_fields['status'] = ''
-    form_fields['user'] = ''
-    form_fields['company'] = ''
+    if request.user.role < 3:
+        text = request.GET.get('text','')
+        userpk = request.GET.get('user', '')
+        status = request.GET.get('status', '')
+        date = request.GET.get('date', '')
+        company = request.GET.get('company', '')
 
-    form = SearchForm(request.GET or None, request.FILES or None, initial=form_fields)
+        mvm_queryset = Q()
+        sielte_queryset = Q()
 
-    text = request.GET.get('text','')
-    userpk = request.GET.get('user', '')
-    status = request.GET.get('status', '')
-    date = request.GET.get('date', '')
-    company = request.GET.get('company', '')
+        if text:
+            print("TEXT: " +text)
+            mvm_queryset &= (Q(cod_wrid__icontains=text)|
+            Q(numetele__icontains=text)|
+            Q(des_cogn__icontains=text)|
+            Q(des_indi__icontains=text))
+            sielte_queryset &= (
+            Q(cod_wr_committente__icontains=text)|
+            Q(nr__icontains=text)|
+            Q(nome__icontains=text)|
+            Q(indirizzo__icontains=text)
+            )
 
-    mvm_queryset = Q()
-    sielte_queryset = Q()
+        if userpk:
+            user = User.objects.get(pk=userpk)
+            print(user)
+            mvm_queryset &= (Q(assigned_to=user))
+            sielte_queryset &= (Q(assigned_to=user))
 
-    if text:
-        print("TEXT: " +text)
-        mvm_queryset &= (Q(cod_wrid__icontains=text)|
-        Q(numetele__icontains=text)|
-        Q(des_cogn__icontains=text)|
-        Q(des_indi__icontains=text))
-        sielte_queryset &= (
-        Q(cod_wr_committente__icontains=text)|
-        Q(nr__icontains=text)|
-        Q(nome__icontains=text)|
-        Q(indirizzo__icontains=text)
-        )
+        if status:
+            print(status)
+            if status != 'TUTTI':
+                mvm_queryset &= (Q(status=status))
+                sielte_queryset &= (Q(status=status))
 
-    if userpk:
-        user = User.objects.get(pk=userpk)
-        print(user)
-        mvm_queryset &= (Q(assigned_to=user))
-        sielte_queryset &= (Q(assigned_to=user))
+        start_date = ''
+        end_date = ''
 
-    if request.user.role == 3:
-        user = User.objects.get(pk=request.user.pk)
-        print(user)
-        mvm_queryset &= (Q(assigned_to=user))
-        sielte_queryset &= (Q(assigned_to=user))
+        if date:
+            start_date = datetime.datetime.strptime(date.split(' - ')[0], '%d/%m/%Y')
+            end_date = datetime.datetime.strptime(date.split(' - ')[1], '%d/%m/%Y')
+            mvm_queryset &= (
+            Q(datainiz__gte=start_date)&
+            Q(datainiz__lte=end_date)
+            )
 
-    if status:
-        print(status)
-        if status != 'TUTTI':
-            mvm_queryset &= (Q(status=status))
-            sielte_queryset &= (Q(status=status))
-
-    if date:
-        start_date = datetime.datetime.strptime(date.split(' - ')[0], '%d/%m/%Y')
-        end_date = datetime.datetime.strptime(date.split(' - ')[1], '%d/%m/%Y')
-        mvm_queryset &= (
-        Q(datainiz__gte=start_date)&
-        Q(datainiz__lte=end_date)
-        )
-
-        sielte_queryset &= (
-        Q(data_inizio_appuntamento__gte=start_date)&
-        Q(data_inizio_appuntamento__lte=end_date)
-        )
-
-    mvm_tickets = MvmImport.objects.filter(mvm_queryset).distinct()
-    sielte_tickets = SielteImport.objects.filter(sielte_queryset).distinct()
-
-    if company == 'TUTTI':
-        tickets = list(chain(mvm_tickets, sielte_tickets))    
-    elif company == 'MVM':
-        tickets = MvmImport.objects.filter(mvm_queryset).distinct()
-    elif company == 'SIELTE':
-        tickets = SielteImport.objects.filter(sielte_queryset).distinct()
-
-    if len(mvm_queryset) + len(sielte_queryset) == 0:
-        tickets = list(chain(MvmImport.objects.all(), SielteImport.objects.all()))
-
-
-
-    paginator = Paginator(tickets, 10)
-
-    if paginator.num_pages - page < 0 or page > paginator.num_pages or page <= 0:
-        return HttpResponseRedirect('/lista-ticket')
-
-    tickets = paginator.page(page)
-
-    form_fields = {}
-    form_fields['text'] = ''
-    form_fields['status'] = ''
-    form_fields['user'] = ''
-    form_fields['end_date'] = ''
-    form_fields['start_date'] = ''
-    form_fields['company'] = ''
-    form = SearchForm(request.GET or None, request.FILES or None, initial=form_fields)
-
-    start_date = datetime.datetime.now() - datetime.timedelta(60)
-    end_date = datetime.datetime.now() + datetime.timedelta(60)
-    date = '{} - {}'.format(start_date.strftime('%d/%m/%Y'), end_date.strftime('%d/%m/%Y'))
-
-    pages = []
-
-    if paginator.num_pages <= 4:
-        pages = [ x for x in range(1, paginator.num_pages)]
-    
-    else:
-        left = paginator.num_pages - page
-        if left > 3:
-            if page <= 2:
-                pages = [ x for x in range(1, 6)]
-            else:
-                pages = [ x for x in range(page-2, page+3)]
+            sielte_queryset &= (
+            Q(data_inizio_appuntamento__gte=start_date)&
+            Q(data_inizio_appuntamento__lte=end_date)
+            )
         else:
-            pages = [ x for x in range(paginator.num_pages-4, page+left+1)]
+            start_date = datetime.datetime.now() - datetime.timedelta(60)
+            end_date = datetime.datetime.now() + datetime.timedelta(60)
+
+        if company == 'TUTTI':
+            tickets = list(chain(MvmImport.objects.filter(mvm_queryset).distinct(), SielteImport.objects.filter(sielte_queryset).distinct()))    
+        elif company == 'MVM':
+            tickets = MvmImport.objects.filter(mvm_queryset).distinct()
+        elif company == 'SIELTE':
+            tickets = SielteImport.objects.filter(sielte_queryset).distinct()
+
+        if not text and not status and not date and not company and not userpk:
+            tickets = list(chain(MvmImport.objects.filter(datainiz__gte=start_date, datainiz__lte=end_date), SielteImport.objects.filter(data_inizio_appuntamento__gte=start_date, data_inizio_appuntamento__lte=end_date)))
 
 
-    return render(request, 'ticket_list.html', {
-        'title':'Lista ticket',
-        'subtext': 'Tickets',
-        'tickets': tickets,
-        'form': form,
-        'date': date,
-        'start_date': start_date.strftime('%d/%m/%Y'),
-        'end_date': end_date.strftime('%d/%m/%Y'),
-        'pages': pages,
-        'page_current': page,
-        'pages_total': paginator.num_pages
-        })
+
+        paginator = Paginator(tickets, 10)
+
+        if paginator.num_pages - page < 0 or page > paginator.num_pages or page <= 0:
+            return HttpResponseRedirect('/lista-ticket')
+
+        tickets = paginator.page(page)
+
+        form_fields = {}
+        form_fields['text'] = ''
+        form_fields['status'] = ''
+        form_fields['user'] = ''
+        form_fields['end_date'] = ''
+        form_fields['start_date'] = ''
+        form_fields['company'] = ''
+        form = SearchForm(request.GET or None, request.FILES or None, initial=form_fields)
+
+        
+        date = '{} - {}'.format(start_date.strftime('%d/%m/%Y'), end_date.strftime('%d/%m/%Y'))
+
+        pages = []
+
+        if paginator.num_pages <= 4:
+            pages = [ x for x in range(1, paginator.num_pages+1)]
+
+        else:
+            left = paginator.num_pages - page
+            if left > 3:
+                if page <= 2:
+                    pages = [ x for x in range(1, 6)]
+                else:
+                    pages = [ x for x in range(page-2, page+3)]
+            else:
+                pages = [ x for x in range(paginator.num_pages-4, page+left+1)]
+
+
+        return render(request, 'ticket_list.html', {
+            'title':'Lista ticket',
+            'subtext': 'Tickets',
+            'tickets': tickets,
+            'form': form,
+            'date': date,
+            'start_date': start_date.strftime('%d/%m/%Y'),
+            'end_date': end_date.strftime('%d/%m/%Y'),
+            'pages': pages,
+            'page_current': page,
+            'pages_total': paginator.num_pages
+            })
+
+    else:
+        text = request.GET.get('text','')
+        status = request.GET.get('status', '')
+        date = request.GET.get('date', '')
+        company = request.GET.get('company', '')
+
+        mvm_queryset = Q()
+        sielte_queryset = Q()
+
+        if text:
+            print("TEXT: " +text)
+            mvm_queryset &= (Q(cod_wrid__icontains=text)|
+            Q(numetele__icontains=text)|
+            Q(des_cogn__icontains=text)|
+            Q(des_indi__icontains=text))
+            sielte_queryset &= (
+            Q(cod_wr_committente__icontains=text)|
+            Q(nr__icontains=text)|
+            Q(nome__icontains=text)|
+            Q(indirizzo__icontains=text)
+            )
+
+        user = User.objects.get(pk=request.user.pk)
+        mvm_queryset &= (Q(assigned_to=user))
+        sielte_queryset &= (Q(assigned_to=user))
+
+        if status:
+            print(status)
+            if status != 'TUTTI':
+                mvm_queryset &= (Q(status=status))
+                sielte_queryset &= (Q(status=status))
+
+        start_date = ''
+        end_date = ''
+
+        if date:
+            start_date = datetime.datetime.strptime(date.split(' - ')[0], '%d/%m/%Y')
+            end_date = datetime.datetime.strptime(date.split(' - ')[1], '%d/%m/%Y')
+            mvm_queryset &= (
+            Q(datainiz__gte=start_date)&
+            Q(datainiz__lte=end_date)
+            )
+
+            sielte_queryset &= (
+            Q(data_inizio_appuntamento__gte=start_date)&
+            Q(data_inizio_appuntamento__lte=end_date)
+            )
+        else:
+            start_date = datetime.datetime.now() - datetime.timedelta(60)
+            end_date = datetime.datetime.now() + datetime.timedelta(60)
+
+        mvm_tickets = MvmImport.objects.filter(mvm_queryset).distinct()
+        sielte_tickets = SielteImport.objects.filter(sielte_queryset).distinct()
+
+        tickets = ''
+
+        if company == 'TUTTI':
+            tickets = list(chain(mvm_tickets, sielte_tickets))    
+        elif company == 'MVM':
+            tickets = MvmImport.objects.filter(mvm_queryset).distinct()
+        elif company == 'SIELTE':
+            tickets = SielteImport.objects.filter(sielte_queryset).distinct()
+
+        if not text and not status and not date and not company:
+            tickets = list(chain(MvmImport.objects.filter(assigned_to=user), SielteImport.objects.filter(assigned_to=user)))
+
+
+        paginator = Paginator(tickets, 10)
+
+        if paginator.num_pages - page < 0 or page > paginator.num_pages or page <= 0:
+            return HttpResponseRedirect('/lista-ticket')
+
+        tickets = paginator.page(page)
+
+        form_fields = {}
+        form_fields['text'] = ''
+        form_fields['status'] = ''
+        form_fields['end_date'] = ''
+        form_fields['start_date'] = ''
+        form_fields['company'] = ''
+        form = SearchForm(request.GET or None, request.FILES or None, initial=form_fields)
+
+        
+        date = '{} - {}'.format(start_date.strftime('%d/%m/%Y'), end_date.strftime('%d/%m/%Y'))
+
+        pages = []
+
+        if paginator.num_pages <= 4:
+            pages = [ x for x in range(1, paginator.num_pages+1)]
+
+        else:
+            left = paginator.num_pages - page
+            if left > 3:
+                if page <= 2:
+                    pages = [ x for x in range(1, 6)]
+                else:
+                    pages = [ x for x in range(page-2, page+3)]
+            else:
+                pages = [ x for x in range(paginator.num_pages-4, page+left+1)]
+
+
+        return render(request, 'ticket_list.html', {
+            'title':'Lista ticket',
+            'subtext': 'Tickets',
+            'tickets': tickets,
+            'form': form,
+            'date': date,
+            'start_date': start_date.strftime('%d/%m/%Y'),
+            'end_date': end_date.strftime('%d/%m/%Y'),
+            'pages': pages,
+            'page_current': page,
+            'pages_total': paginator.num_pages
+            })
+
+
 
 
 @login_required(login_url='/accounts/login/')
 def save_mvm_ticket(request):
-    print(list(request.POST.items()))
     pk = request.POST.get('pk', '')
-    print('PK: '+pk)
 
     mvm_ticket = MvmImport.objects.get(pk=pk)
-    print(mvm_ticket)
 
     assigned_to = request.POST.get('assigned_to', '')
     if assigned_to:
@@ -218,12 +320,10 @@ def save_mvm_ticket(request):
     note = request.POST.get('note', '')
     if note:
         mvm_ticket.note = note
-        print(note)
 
     tipo_linea = request.POST.get('tipo_linea','')
     if tipo_linea:
         mvm_ticket.tipo_linea = tipo_linea
-        print('TIPO LINEA: '+tipo_linea)
 
     stato_lavoro = request.POST.get('status','')
     if stato_lavoro:
@@ -232,97 +332,75 @@ def save_mvm_ticket(request):
         else:
             if request.user.role < 3:
                 mvm_ticket.status = stato_lavoro
-        
-        print('STATO LAVORO: '+stato_lavoro)
 
     secondaria = request.POST.get('secondaria', '')
     if secondaria:
         mvm_ticket.secondaria = secondaria
-        print('BOX: '+secondaria)
 
     derivato = request.POST.get('derivato', '')
     if derivato:
         mvm_ticket.derivato = derivato
-        print('DERIVATO: '+derivato)
 
     presa = request.POST.get('presa', '')
     if presa:
         mvm_ticket.presa = presa
-        print('PRESA: '+presa)
 
     cavetto = request.POST.get('cavetto', '')
     if cavetto:
         mvm_ticket.cavetto = cavetto
-        print('CAVETTO: '+cavetto)
 
     tipologia_modem = request.POST.get('tipologia_modem', '')
     if tipologia_modem:
         mvm_ticket.tipologia_modem = tipologia_modem
-        print('TIPOLOGIA MODEM: '+tipologia_modem)
 
     seriale_modem = request.POST.get('seriale_modem', '')
     if seriale_modem:
         mvm_ticket.seriale_modem = seriale_modem
-        print('SERIALE MODEM: '+seriale_modem)
 
 
     if stato_lavoro == 'KO':
         motivo_ko = request.POST.get('motivo_ko', '')
         if motivo_ko:
             mvm_ticket.ko_reason = motivo_ko
-            print('MOTIVO KO: '+motivo_ko)
 
     if tipo_linea == 'TRADIZIONALE':
         msan = request.POST.get('msan', '')
         if msan:
             mvm_ticket.msan = msan
-            print('MSAN: '+msan)
 
         rete_rigida = request.POST.get('rete_rigida', '')
         if rete_rigida:
             mvm_ticket.rete_rigida = rete_rigida
-            print('RETE RIGIDA: '+rete_rigida)
 
         cavo = request.POST.get('cavo', '')
         if cavo:
             mvm_ticket.cavo_cp_cavo = cavo
-            print('CAVO: '+cavo)
 
         colonna = request.POST.get('colonna', '')
         if colonna:
             mvm_ticket.colonna_cp_colonna = colonna
-            print('COLONNA: '+colonna)
-
 
         rl_trad = request.POST.get('rl', '')
         if rl_trad:
             mvm_ticket.rl_cp_rl = rl_trad
-            print('RL TRADIZIONALE: '+rl_trad)
-
 
     if tipo_linea == 'FIBRA':
         rl_fibra = request.POST.get('rl', '')
         if rl_fibra:
             mvm_ticket.rl = rl_fibra
-            print('RL FIBRA: '+rl_fibra)
 
         porta = request.POST.get('porta', '')
         if porta:
             mvm_ticket.porta = porta
-            print('PORTA: '+porta)
+
 
     files = request.FILES.getlist('files')
-    print("FILES")
-    print(files)
     if files:
         for f in files:
-            print("UNF ILEE")
             cwd = os.getcwd()
             os.chdir('media')
             fs = FileSystemStorage()
             filename = fs.save(f.name, f)
-            print(filename)
-            uploaded_file_url = fs.url(filename)
             file = open(filename, 'rb')
             fileupload = UploadedFileMvm()
             fileupload.name = filename
@@ -331,10 +409,7 @@ def save_mvm_ticket(request):
             fileupload.save()
             os.chdir(cwd)
 
-
-
     mvm_ticket.save()
-
 
     return HttpResponseRedirect('/mvm-ticket/'+pk)
 
@@ -342,10 +417,8 @@ def save_mvm_ticket(request):
 @login_required(login_url='/accounts/login/')
 def save_sielte_ticket(request):
     pk = request.POST.get('id', '')
-    print('PK: '+pk)
 
     sielte_ticket = SielteImport.objects.get(pk=pk)
-    print(sielte_ticket)
 
 
     assigned_to = request.POST.get('assigned_to', '')
@@ -357,24 +430,20 @@ def save_sielte_ticket(request):
     stato_lavoro = request.POST.get('status','')
     if stato_lavoro:
         sielte_ticket.status = stato_lavoro
-        print('STATO LAVORO: '+stato_lavoro)
 
     if stato_lavoro == 'KO':
         motivo_ko = request.POST.get('motivo-ko', '')
         if motivo_ko:
             sielte_ticket.ko_reason = motivo_ko
-            print('MOTIVO KO: '+motivo_ko)
 
     note = request.POST.get('note', '')
     if note:
         sielte_ticket.note = note
-        print(note)
 
     attivita = request.POST.get('attivita', '')
     if attivita:
         activity = SielteActivity.objects.get(servizio=attivita)
         sielte_ticket.attivita = activity
-        print('ATTIVITA: '+attivita)
 
     attivita_agg = request.POST.get('attivita_aggiuntiva', '')
     if attivita_agg:
@@ -384,33 +453,23 @@ def save_sielte_ticket(request):
             sielte_ticket.numero_agg = numero
         activity_agg.save()
         sielte_ticket.attivita_aggiuntiva = activity_agg
-        print('ATTIVITA AGGIUNTIVA: '+attivita_agg)
 
 
 
     ora_da = request.POST.get('ora_da', '')
     if ora_da:
         sielte_ticket.ora_da = ora_da
-        print('ORA DA: '+ora_da)
 
     ora_a = request.POST.get('ora_a', '')
     if ora_a:
         sielte_ticket.ora_a = ora_a
-        print('ORA A: '+ora_a)
 
 
     files = request.FILES.getlist('sielte-upload')
-    print(files)
     if files:
         for f in files:
-            print("FILE")
-            print(f)
             fs = FileSystemStorage()
             filename = fs.save(f.name, f)
-            print(filename)
-            uploaded_file_url = fs.url(filename)
-            print(uploaded_file_url)
-            # file = open("/media/{}".format(filename), 'rb')
             fileupload = UploadedFileSielte()
             fileupload.name = filename
             fileupload.file = File(f)
@@ -763,6 +822,7 @@ def parse_sielte(file):
             sielte.tipo_telefono_2 = record['Tipo Telefono 2']
             sielte.status = 'OK'
 
+
             # print(record['Tecnico Pratica'])
             # qui mi tocca fare una cafonata perché nell'export a volte
             # c'è scritto nome-cognome altre volte cognome-nome
@@ -780,20 +840,13 @@ def parse_sielte(file):
                 if user:
                     sielte.assigned_to = user
 
-            print(sielte)
-
+            sielte.status = 'DA LAVORARE'
 
             repeat = SielteImport.objects.filter(cod_centrale=record['Cod. Centrale'], indirizzo=record['Indirizzo'])
-            print(repeat)
-            print('REPEAT: '+str(len(repeat)))
             sielte.occorrenze = len(repeat)+1
-            print(sielte)
-            print('OCCURRENCES: ')
             for r in repeat:
-                print(r)
                 r.occorrenze = len(repeat)+1
                 r.save()
-            print('\n\n\n\n')
 
             sielte.save()
             result[row] = '{} caricato correttamente'.format(record['Cod. WR Committente'])
