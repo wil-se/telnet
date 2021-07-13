@@ -24,7 +24,7 @@ class Command(BaseCommand):
         
 
         for sielte in sielte_q:
-            sielte.status = random.choice(["OK", "KO", "SOSPESO", "ANNULLATO"])
+            sielte.status = random.choice(["OK", "KO", "SOSPESO", "ANNULLATO", "DA LAVORARE"])
             emails = list(User.objects.all().values_list('email'))
             sielte.assigned_to = User.objects.get(email=random.choice(emails)[0])
             sielte.attivita = SielteActivity.objects.get(servizio="ADSL A + router")
