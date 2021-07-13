@@ -48,6 +48,6 @@ class UploadFileForm(forms.Form):
 
 class SearchForm(forms.Form):
     text = forms.CharField(label='Cerca', max_length=100, required=False)
-    status = forms.ChoiceField(widget=forms.Select, choices=(('TUTTI', 'TUTTI'), ('OK', 'OK'),('KO', 'KO'), ('SOSPESO','SOSPESO'), ('ANNULLATO','ANNULLATO')), required=False)
+    status = forms.ChoiceField(widget=forms.Select, choices=(('TUTTI', 'TUTTI'), ('OK', 'OK'),('KO', 'KO'), ('SOSPESO','SOSPESO'), ('ANNULLATO','ANNULLATO'), ('DA LAVORARE','DA LAVORARE')), required=False)
     user = forms.ModelChoiceField(queryset=User.objects.all(), required=False)
     company = forms.ChoiceField(widget=forms.Select, choices=(('TUTTI', 'TUTTI'), ('MVM', 'MVM'), ('SIELTE', 'SIELTE'),), required=False)
