@@ -119,12 +119,6 @@ def dash(request):
 
         tickets = list(chain(mvm_tickets, sielte_tickets))
 
-        ticket_list = []
-    
-        for ticket in tickets:
-            if ticket.assigned_to.pk == request.user.pk:
-                ticket_list.append(ticket)
-
         ok = 0
         ko = 0
         sospesi = 0
@@ -145,7 +139,7 @@ def dash(request):
                 'subtext': 'Panoramica',
                 'start_date': start_date.strftime('%d/%m/%Y'),
                 'end_date': end_date.strftime('%d/%m/%Y'),
-                'tickets': ticket_list,
+                'tickets': tickets,
                 'ok': ok,
                 'ko': ko,
                 'sospesi': sospesi,
