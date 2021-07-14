@@ -17,8 +17,6 @@ import locale
 import random
 from django.core.paginator import Paginator
 
-SEED = True
-
 
 
 
@@ -955,12 +953,14 @@ def export(request):
 @login_required(login_url='/accounts/login/')
 def export_mvm_delete(request, id):
     file = MvmExport.objects.get(pk=id)
+    os.remove('media/mvm_export/'+file.name)
     file.delete()
     return HttpResponseRedirect('/export')
 
 @login_required(login_url='/accounts/login/')
 def export_sielte_delete(request, id):
     file = SielteExport.objects.get(pk=id)
+    os.remove('media/sielte_export/'+file.name)
     file.delete()
     return HttpResponseRedirect('/export')
 

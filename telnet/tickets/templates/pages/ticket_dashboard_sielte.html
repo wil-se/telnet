@@ -24,7 +24,7 @@
     <td><a class="badge bg-danger-400 align-top">ANNULLATO</a></td>
     {% endif %}
     {% if ticket.status == 'DA LAVORARE' %}
-    <td><a class="badge bg-info align-top">ANNULLATO</a></td>
+    <td><a class="badge bg-info align-top">DA LAVORARE</a></td>
     {% endif %}
     {% if request.user.role < 3 %}<td>€ {{ ticket.tot_price|default_if_none:"" }}</td>{% endif %}
 </tr>
