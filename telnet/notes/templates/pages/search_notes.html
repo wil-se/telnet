@@ -1,6 +1,6 @@
 {% load filters %}
 
-<div class="card-header bg-dark header-elements-inline">
+<div class="card-header bg-dark header-elements-inline" style="margin: -20px 0px 0px 0px;">
   <h6 class="card-title">Filtra ricerca</h6>
 </div>
 <div class="navbar navbar-expand-lg navbar-light navbar-component rounded" >
@@ -11,12 +11,12 @@
     </button>
   </div>
 
-  <div class="navbar-collapse collapse" id="navbar-filter" style="padding: 20px 0px 0px 20px;">
+  <div class="navbar-collapse collapse" id="navbar-filter" style="padding: 10px 0px 0px 20px;">
 
 
 
     <form method="GET" action="{% url 'search notes' %}" class="w-100">
-      <div class="form-group row w-100">
+      <div class="form-group row w-100" style="margin-bottom: 0px;">
       <div class="input-group col-md-2 d-flex flex-column">
       <a><b>Data:</b></a>
       <div style="display: flex">
