@@ -534,10 +534,11 @@ def upload_sielte(request):
     file = request.FILES['sielte-import']
     fs = FileSystemStorage()
     filename = fs.save(file.name, file)
-    uploaded_file_url = fs.url(filename)
 
     with open('media/'+filename, 'rb+') as file:
         result = parse_sielte(file)
+
+    os.remove('media/'+filename)
 
     return render(request, 'import_result.html', {'title':'Import', 'result':result})
 
@@ -546,10 +547,11 @@ def upload_mvm_pdf(request):
     file = request.FILES['mvm-pdf']
     fs = FileSystemStorage()
     filename = fs.save(file.name, file)
-    uploaded_file_url = fs.url(filename)
 
     with open('media/'+filename, 'rb+') as file:
         result = process_pdf(filename)
+    
+    os.remove('media/'+filename)
 
     return render(request, 'import_pdf_result.html', {'title':'Import', 'result': result})
 
