@@ -773,84 +773,86 @@ def parse_sielte(file):
     result = {}
     row = 0
     for record in records:
-        row += 1
-        try:
-            sielte = SielteImport()
-            sielte.cod_wr_committente = record['Cod. WR Committente']
-            sielte.impianto = record['Impianto']
-            sielte.descrizione_centrale = record['Descrizione Centrale']
-            sielte.nome = record['Nome']
-            sielte.indirizzo = record['Indirizzo']
-            sielte.descrizione_tipologia_pratica = record['Descrizione Tipologia Pratica']
-            sielte.nome_assistente = record['Nome Assistente']
-            sielte.tecnico_pratica = record['Tecnico Pratica']
-            sielte.data_inizio_appuntamento = strp_datetime_sielte(record['Data Inizio/Appuntamento']) if record['Data Inizio/Appuntamento'] else None
-            sielte.ora_inizio_appuntamento = strp_time(record['Ora Inizio Appuntamento']) if record['Ora Inizio Appuntamento'] else None
-            sielte.descrizione_pratica = record['Descrizione Pratica']
-            sielte.nr = record['Nr.']
-            sielte.cod_stato = record['Cod. Stato']
-            sielte.nome_stato = record['Nome Stato']
-            sielte.tempo_di_esecuzione = record['Tempo di Esecuzione']
-            sielte.cod_centrale = record['Cod. Centrale']
-            sielte.codice_progetto = record['Codice Progetto']
-            sielte.citta = record['Città']
-            sielte.provincia = record['Provincia']
-            sielte.data_di_ricezione = strp_datetime_TZ(record['Data di Ricezione']) if record['Data di Ricezione'] else None
-            sielte.aging = record['Aging']
-            # strp_datetime(record['Data Inizio/Appuntamento']) if record['Data Inizio/Appuntamento'] else None
-            sielte.data_scadenza = strp_datetime_sielte(record['Data Scadenza']) if record['Data Scadenza'] else None
-            sielte.data_appuntamento_a = strp_datetime_sielte(record['Data Appuntamento (Al)']) if record['Data Appuntamento (Al)'] else None
-            sielte.ora_fine_appuntamento = strp_time(record['Ora Fine Appuntamento']) if record['Ora Fine Appuntamento'] else None
-            sielte.inizio_lavorazione_prevista = strp_datetime_TZ(record['Inizio Lavorazione Prevista']) if record['Inizio Lavorazione Prevista'] else None
-            sielte.fine_lavorazione_prevista = strp_datetime_TZ(record['Fine Lavorazione Prevista']) if record['Fine Lavorazione Prevista'] else None
-            sielte.data_chiusura = strp_date(record['Data Chiusura']) if record['Data Chiusura'] else None
-            sielte.ora_chiusura = strp_time(record['Ora Chiusura']) if record['Ora Chiusura'] else None
-            sielte.telefono_cliente_1 = record['Telefono Cliente 1']
-            sielte.telefono_cliente_2 = record['Telefono Cliente 2']
-            sielte.riferimento_cliente = record['Riferimento Cliente']
-            sielte.nr_occorrenze = record['Nr. Occorrenze']
-            sielte.e_mail = record['E-mail']
-            sielte.identificativo_cliente = record['Identificativo Cliente']
-            sielte.nome_ubicazione = record['Nome Ubicazione']
-            sielte.pratica_chiusa = record['Pratica Chiusa']
-            sielte.pratica_interna = record['Pratica Interna']
-            sielte.pratica_nuova = record['Pratica Nuova']
-            sielte.tipo_cliente = record['Tipo Cliente']
-            sielte.tipo_telefono_1 = record['Tipo Telefono 1']
-            sielte.tipo_telefono_2 = record['Tipo Telefono 2']
-            sielte.status = 'OK'
+        if len(SielteImport.objects.filter(cod_wr_committente=record['Cod. WR Committente'])) == 0:
+            row += 1
+            try:
+                sielte = SielteImport()
+                sielte.cod_wr_committente = record['Cod. WR Committente']
+                sielte.impianto = record['Impianto']
+                sielte.descrizione_centrale = record['Descrizione Centrale']
+                sielte.nome = record['Nome']
+                sielte.indirizzo = record['Indirizzo']
+                sielte.descrizione_tipologia_pratica = record['Descrizione Tipologia Pratica']
+                sielte.nome_assistente = record['Nome Assistente']
+                sielte.tecnico_pratica = record['Tecnico Pratica']
+                sielte.data_inizio_appuntamento = strp_datetime_sielte(record['Data Inizio/Appuntamento']) if record['Data Inizio/Appuntamento'] else None
+                sielte.ora_inizio_appuntamento = strp_time(record['Ora Inizio Appuntamento']) if record['Ora Inizio Appuntamento'] else None
+                sielte.descrizione_pratica = record['Descrizione Pratica']
+                sielte.nr = record['Nr.']
+                sielte.cod_stato = record['Cod. Stato']
+                sielte.nome_stato = record['Nome Stato']
+                sielte.tempo_di_esecuzione = record['Tempo di Esecuzione']
+                sielte.cod_centrale = record['Cod. Centrale']
+                sielte.codice_progetto = record['Codice Progetto']
+                sielte.citta = record['Città']
+                sielte.provincia = record['Provincia']
+                sielte.data_di_ricezione = strp_datetime_TZ(record['Data di Ricezione']) if record['Data di Ricezione'] else None
+                sielte.aging = record['Aging']
+                # strp_datetime(record['Data Inizio/Appuntamento']) if record['Data Inizio/Appuntamento'] else None
+                sielte.data_scadenza = strp_datetime_sielte(record['Data Scadenza']) if record['Data Scadenza'] else None
+                sielte.data_appuntamento_a = strp_datetime_sielte(record['Data Appuntamento (Al)']) if record['Data Appuntamento (Al)'] else None
+                sielte.ora_fine_appuntamento = strp_time(record['Ora Fine Appuntamento']) if record['Ora Fine Appuntamento'] else None
+                sielte.inizio_lavorazione_prevista = strp_datetime_TZ(record['Inizio Lavorazione Prevista']) if record['Inizio Lavorazione Prevista'] else None
+                sielte.fine_lavorazione_prevista = strp_datetime_TZ(record['Fine Lavorazione Prevista']) if record['Fine Lavorazione Prevista'] else None
+                sielte.data_chiusura = strp_date(record['Data Chiusura']) if record['Data Chiusura'] else None
+                sielte.ora_chiusura = strp_time(record['Ora Chiusura']) if record['Ora Chiusura'] else None
+                sielte.telefono_cliente_1 = record['Telefono Cliente 1']
+                sielte.telefono_cliente_2 = record['Telefono Cliente 2']
+                sielte.riferimento_cliente = record['Riferimento Cliente']
+                sielte.nr_occorrenze = record['Nr. Occorrenze']
+                sielte.e_mail = record['E-mail']
+                sielte.identificativo_cliente = record['Identificativo Cliente']
+                sielte.nome_ubicazione = record['Nome Ubicazione']
+                sielte.pratica_chiusa = record['Pratica Chiusa']
+                sielte.pratica_interna = record['Pratica Interna']
+                sielte.pratica_nuova = record['Pratica Nuova']
+                sielte.tipo_cliente = record['Tipo Cliente']
+                sielte.tipo_telefono_1 = record['Tipo Telefono 1']
+                sielte.tipo_telefono_2 = record['Tipo Telefono 2']
+                sielte.status = 'OK'
 
 
-            # print(record['Tecnico Pratica'])
-            # qui mi tocca fare una cafonata perché nell'export a volte
-            # c'è scritto nome-cognome altre volte cognome-nome
-            if record['Tecnico Pratica']:
-                first_name = record['Tecnico Pratica'].split()[0]
-                last_name = record['Tecnico Pratica'].split()[1]
-                user = ''
-                try:
-                    user = User.objects.get(first_name=first_name, last_name=last_name)
-                except:
+                # print(record['Tecnico Pratica'])
+                # qui mi tocca fare una cafonata perché nell'export a volte
+                # c'è scritto nome-cognome altre volte cognome-nome
+                if record['Tecnico Pratica']:
+                    first_name = record['Tecnico Pratica'].split()[0]
+                    last_name = record['Tecnico Pratica'].split()[1]
+                    user = ''
                     try:
-                        user = User.objects.get(first_name=last_name, last_name=first_name)
+                        user = User.objects.get(first_name=first_name, last_name=last_name)
                     except:
-                        pass
-                if user:
-                    sielte.assigned_to = user
+                        try:
+                            user = User.objects.get(first_name=last_name, last_name=first_name)
+                        except:
+                            pass
+                    if user:
+                        sielte.assigned_to = user
 
-            sielte.status = 'DA LAVORARE'
+                sielte.status = 'DA LAVORARE'
 
-            repeat = SielteImport.objects.filter(cod_centrale=record['Cod. Centrale'], indirizzo=record['Indirizzo'])
-            sielte.occorrenze = len(repeat)+1
-            for r in repeat:
-                r.occorrenze = len(repeat)+1
-                r.save()
+                repeat = SielteImport.objects.filter(cod_centrale=record['Cod. Centrale'], indirizzo=record['Indirizzo'])
+                sielte.occorrenze = len(repeat)+1
+                for r in repeat:
+                    r.occorrenze = len(repeat)+1
+                    r.save()
 
-            sielte.save()
-            result[row] = '{} caricato correttamente'.format(record['Cod. WR Committente'])
-        except:
-            result[row] = '{} errore nel caricamento, controlla la riga {}'.format(record['Cod. WR Committente'], row)
-
+                sielte.save()
+                result[row] = '{} caricato correttamente'.format(record['Cod. WR Committente'])
+            except:
+                result[row] = '{} errore nel caricamento, controlla la riga {}'.format(record['Cod. WR Committente'], row)
+        else:
+            print("già presente")
     return result
 
 def pdf_splitter(path):
