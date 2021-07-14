@@ -166,11 +166,11 @@ def get_guadagno_sielte(tickets):
 
 
 def add_user(request):
-    if (request.user.role < 3):
+    if (request.user.role < 2):
         return render(request, 'adduser.html', {'title': 'Aggiungi utente', 'subtext': 'Gestione account',})
 
 def save_user(request):
-    if (request.user.role < 3):
+    if (request.user.role < 2):
         username = request.POST.get('username', '')
         name = request.POST.get('name', '')
         last_name = request.POST.get('last_name', '')
