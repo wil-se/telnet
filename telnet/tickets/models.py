@@ -395,10 +395,10 @@ class SielteImport(models.Model):
     def save(self, *args, **kwargs):
         gain = 0
         if self.attivita and self.attivita.guadagno:
-            gain += self.attivita.guadagno
+            gain += int(self.attivita.guadagno)
         
         if self.attivita_aggiuntiva and self.attivita_aggiuntiva.guadagno and self.numero_agg:
-            gain += self.attivita_aggiuntiva.guadagno * self.numero_agg
+            gain += int(self.attivita_aggiuntiva.guadagno) * int(self.numero_agg)
 
         self.tot_price = gain
 

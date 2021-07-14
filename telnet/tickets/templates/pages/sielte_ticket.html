@@ -156,19 +156,9 @@
 
 
 
-						{% if request.user.role < 3 %}
 						<b>ATTIVITÀ:</b>&nbsp; {{ form.attivita|addclass:'form-control' }}<br>
 						<b>ATTIVITÀ AGGIUNTIVA:</b>&nbsp; {{ form.attivita_aggiuntiva|addclass:'form-control' }}<br>
 						<div id="attivita-agg-dynamic-group"></div>
-
-
-						{% else %}
-						<b>ATTIVITÀ:</b>&nbsp; {{ sielte.attivita.servizio }}<br><br>
-						<b>ATTIVITÀ AGGIUNTIVA:</b>&nbsp; {{ sielte.attivita_aggiuntiva.servizio }}<br>
-						<div id="attivita-agg-dynamic-group"></div><br>
-
-						{% endif %}
-
 
 
 						{% if request.user.role < 3 %}
@@ -267,15 +257,12 @@
 		var data = $('#id_attivita_aggiuntiva').val();
 		console.log(data);
 		$("#attivita-agg-dynamic-group").empty();
-		{% if request.user.role < 3 %}
 		if (data == 'router' || data == 'telefoni IP' || data == 'ora ECO') {
 			$("#attivita-agg-dynamic-group").append("<b>NUMERO &nbsp;" + data + ": </b>");
 			$("#attivita-agg-dynamic-group").append(
 				"<input type=\"number\" name=\"number\" value=\"1\" class=\"form-control\" id=\"id_number\"><br>");
 			console.log('ecchelo')
-		} {% else %}
-		$("#attivita-agg-dynamic-group").append("<br><b>NUMERO &nbsp;" + "{{ sielte.attivita_aggiuntiva.servizio }}" +
-			":&nbsp; {{ sielte.numero_agg }}</b>"); {% endif %}
+		} 
 	}
 
 	$(function () {
