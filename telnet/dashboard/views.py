@@ -209,7 +209,7 @@ def save_user(request):
             newuser.role = 0
         if role == "Manager":
             newuser.role = 1
-        if role == "Backoffide":
+        if role == "Backoffice":
             newuser.role = 2
         if role == "Tecnico":
             newuser.role = 3
