@@ -539,7 +539,7 @@ def upload_sielte(request):
     with open('media/'+filename, 'rb+') as file:
         result = parse_sielte(file)
 
-    return render(request, 'import.html', {'title':'Import'})
+    return render(request, 'import_result.html', {'title':'Import', 'result':result})
 
 @login_required(login_url='/accounts/login/')
 def upload_mvm_pdf(request):
@@ -773,8 +773,8 @@ def parse_sielte(file):
     result = {}
     row = 0
     for record in records:
+        row += 1
         if len(SielteImport.objects.filter(cod_wr_committente=record['Cod. WR Committente'])) == 0:
-            row += 1
             try:
                 sielte = SielteImport()
                 sielte.cod_wr_committente = record['Cod. WR Committente']
@@ -852,7 +852,7 @@ def parse_sielte(file):
             except:
                 result[row] = '{} errore nel caricamento, controlla la riga {}'.format(record['Cod. WR Committente'], row)
         else:
-            print("già presente")
+            result[row] = '{} già presente'.format(record['Cod. WR Committente'])
     return result
 
 def pdf_splitter(path):
