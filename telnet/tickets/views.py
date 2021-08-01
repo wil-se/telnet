@@ -821,23 +821,19 @@ def parse_sielte(file):
                 sielte.tipo_cliente = record['Tipo Cliente']
                 sielte.tipo_telefono_1 = record['Tipo Telefono 1']
                 sielte.tipo_telefono_2 = record['Tipo Telefono 2']
-                sielte.status = 'OK'
 
 
                 # print(record['Tecnico Pratica'])
                 # qui mi tocca fare una cafonata perché nell'export a volte
                 # c'è scritto nome-cognome altre volte cognome-nome
                 if record['Tecnico Pratica']:
-                    first_name = record['Tecnico Pratica'].split()[0]
-                    last_name = record['Tecnico Pratica'].split()[1]
+                    # first_name = record['Tecnico Pratica'].split()[0]
+                    # last_name = record['Tecnico Pratica'].split()[1]
                     user = ''
                     try:
-                        user = User.objects.get(first_name=first_name, last_name=last_name)
+                        user = User.objects.get(username=record['Tecnico Pratica'])
                     except:
-                        try:
-                            user = User.objects.get(first_name=last_name, last_name=first_name)
-                        except:
-                            pass
+                        pass
                     if user:
                         sielte.assigned_to = user
 
