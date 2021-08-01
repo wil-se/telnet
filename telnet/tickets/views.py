@@ -831,11 +831,14 @@ def parse_sielte(file):
                     # last_name = record['Tecnico Pratica'].split()[1]
                     user = ''
                     try:
-                        user = User.objects.get(username=record['Tecnico Pratica'])
+                        user = User.objects.get(sieltename=record['Tecnico Pratica'])
                     except:
                         pass
                     if user:
                         sielte.assigned_to = user
+                
+                print("ASSIGNED TO: ")
+                print(user)
 
                 sielte.status = 'DA LAVORARE'
 

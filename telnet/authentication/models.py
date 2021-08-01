@@ -12,6 +12,7 @@ class User(AbstractUser):
     role = models.PositiveSmallIntegerField(choices=role_choices, default=3)
     matricola = models.CharField(max_length=32, blank=True, null=True)
     residenza = models.CharField(max_length=32, blank=True, null=True)
+    sieltename = models.CharField(max_length=32, blank=True, null=True)
 
     def __str__(self):
         if self.first_name and self.last_name:

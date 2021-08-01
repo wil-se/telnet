@@ -179,6 +179,8 @@ def save_user(request):
         email = request.POST.get('email', '')
         email_two = request.POST.get('email_two', '')
         role = request.POST.get('role', '')
+        sieltename = request.POST.get('sieltename', '')
+        
         
         if not username or not name or not last_name or not password_two or not password_two or not email or not email_two:
             print("check 0")

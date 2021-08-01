@@ -23,11 +23,24 @@
 										<span class="d-block text-muted">Sono richiesti tutti i campi</span>
 									</div>
 
-									<div class="form-group form-group-feedback form-group-feedback-right">
-										<input type="text" class="form-control" placeholder="Nome utente" name="username" id="username">
-										<div class="form-control-feedback">
-											<i class="icon-user-plus text-muted"></i>
+									<div class="row">
+										<div class="col-md-6">
+											<div class="form-group form-group-feedback form-group-feedback-right">
+												<input type="text" class="form-control" placeholder="Nome utente" name="username" id="username">
+												<div class="form-control-feedback">
+													<i class="icon-user-plus text-muted"></i>
+												</div>
+											</div>
 										</div>
+										<div class="col-md-6">
+											<div class="form-group form-group-feedback form-group-feedback-right">
+												<input type="text" class="form-control" placeholder="Nome sielte" name="sieltename" id="sieltename">
+												<div class="form-control-feedback">
+													<i class="icon-user-plus text-muted"></i>
+												</div>
+											</div>
+										</div>
+										
 									</div>
 
 									<div class="row">
@@ -128,6 +141,7 @@
 				'password_two': document.getElementById("password_two").value,
 				'email': document.getElementById("email").value,
 				'email_two': document.getElementById("email_two").value,
+				'sieltename': document.getElementById("sieltename").value,
 				'role': role.options[role.selectedIndex].text,
 			 },
             success: function(data){
