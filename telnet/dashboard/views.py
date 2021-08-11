@@ -19,8 +19,8 @@ def dash(request):
         start_date = datetime.datetime.strptime(date.split(' - ')[0], '%d/%m/%Y')
         end_date = datetime.datetime.strptime(date.split(' - ')[1], '%d/%m/%Y')
     else:
-        start_date = datetime.datetime.now() - datetime.timedelta(30)
-        end_date = datetime.datetime.now() + datetime.timedelta(30)
+        start_date = datetime.datetime.now()
+        end_date = datetime.datetime.now()
 
     
     if request.user.role < 3:
@@ -32,8 +32,8 @@ def dash(request):
         mvm_tickets = MvmImport.objects.filter(mvm_queryset).distinct()
 
         sielte_queryset = (
-        Q(inizio_lavorazione_prevista__gte=start_date)&
-        Q(inizio_lavorazione_prevista__lte=end_date)
+        Q(data_inizio_appuntamento__gte=start_date)&
+        Q(data_inizio_appuntamento__lte=end_date)
         )
         sielte_tickets = SielteImport.objects.filter(sielte_queryset).distinct()
 
@@ -72,8 +72,8 @@ def dash(request):
             )
 
             sielte_queryset = (
-            Q(inizio_lavorazione_prevista__gte=start_date)&
-            Q(inizio_lavorazione_prevista__lte=end_date)&
+            Q(data_inizio_appuntamento__gte=start_date)&
+            Q(data_inizio_appuntamento__lte=end_date)&
             Q(status='OK')&
             Q(assigned_to=user)
             )
@@ -110,8 +110,8 @@ def dash(request):
         mvm_tickets = MvmImport.objects.filter(mvm_queryset).distinct()
 
         sielte_queryset = (
-        Q(inizio_lavorazione_prevista__gte=start_date)&
-        Q(inizio_lavorazione_prevista__lte=end_date)&
+        Q(data_inizio_appuntamento__gte=start_date)&
+        Q(data_inizio_appuntamento__lte=end_date)&
         Q(assigned_to__pk=request.user.pk)
         )
         sielte_tickets = SielteImport.objects.filter(sielte_queryset).distinct()

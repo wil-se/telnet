@@ -482,10 +482,6 @@ def save_sielte_ticket(request):
 
 
 
-
-
-
-
 @login_required(login_url='/accounts/login/')
 def import_page(request):
     return render(request, 'import.html', {'title':'Import', 'subtext': 'Importa file di export',})
@@ -1139,7 +1135,7 @@ def export_tickets(request):
             sielte_status.append(sielte.status) if sielte.status else sielte_status.append('')
             
             if sielte.status == 'OK':
-                sielte_guadagno.append(sielte.tot_price) if sielte.tot_price else sielte_guadagno.append('')
+                sielte_guadagno.append(str(sielte.tot_price).replace('.', ',')) if sielte.tot_price else sielte_guadagno.append('')
             else:
                 sielte_guadagno.append('')
 
