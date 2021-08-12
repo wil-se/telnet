@@ -233,8 +233,8 @@ def ticket_list(request, page=1):
             Q(data_inizio_appuntamento__lte=end_date)
             )
         else:
-            start_date = datetime.datetime.now() - datetime.timedelta(60)
-            end_date = datetime.datetime.now() + datetime.timedelta(60)
+            start_date = datetime.datetime.now()
+            end_date = datetime.datetime.now()
 
         mvm_tickets = MvmImport.objects.filter(mvm_queryset).distinct()
         sielte_tickets = SielteImport.objects.filter(sielte_queryset).distinct()
