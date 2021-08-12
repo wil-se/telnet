@@ -782,8 +782,6 @@ def parse_sielte(file):
 
         try:
             sielte = SielteImport()
-            print("WR:")
-            print(record['Cod. WR Committente'])
             sielte.cod_wr_committente = record['Cod. WR Committente']
             sielte.impianto = record['Impianto']
             sielte.descrizione_centrale = record['Descrizione Centrale']
@@ -792,9 +790,6 @@ def parse_sielte(file):
             sielte.descrizione_tipologia_pratica = record['Descrizione Tipologia Pratica']
             sielte.nome_assistente = record['Nome Assistente']
             sielte.tecnico_pratica = record['Tecnico Pratica']
-            print("DATA INIZIO APPUNTAMENTO")
-            print(record['Data Inizio/Appuntamento'])
-            strp_datetime_sielte(record['Data Inizio/Appuntamento'])
             sielte.data_inizio_appuntamento = strp_datetime_sielte(record['Data Inizio/Appuntamento']) if record['Data Inizio/Appuntamento'] else None
             sielte.ora_inizio_appuntamento = strp_time(record['Ora Inizio Appuntamento']) if record['Ora Inizio Appuntamento'] else None
             sielte.descrizione_pratica = record['Descrizione Pratica']
