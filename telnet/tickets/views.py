@@ -777,8 +777,9 @@ def parse_sielte(file):
         same_wr = SielteImport.objects.filter(cod_wr_committente=record['Cod. WR Committente'])
         if len(same_wr) > 0:
             for wr in same_wr:
-                wr.delete()
-            message += 'WR {} già presente nel sistema, sovrascritto. '.format(record['Cod. WR Committente'])
+                if wr.status == 'DA LAVORARE':
+                    wr.delete()
+                    message += 'WR {} già presente nel sistema, sovrascritto. '.format(record['Cod. WR Committente'])
 
         try:
             sielte = SielteImport()
