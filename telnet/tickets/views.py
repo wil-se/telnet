@@ -498,7 +498,11 @@ def strp_datetime(date):
     return datetime.datetime.strptime(date, '%d-%b-%y %H:%M:%S')
 
 def strp_datetime_sielte(value):
-    return datetime.datetime.strptime(value, '%Y-%m-%d %H:%M:%S')
+    try:
+        dt = datetime.datetime.strptime(value, '%Y-%m-%d')
+    except:
+        dt = datetime.datetime.strptime(value, '%Y-%m-%d %H:%M:%S')
+    return dt
 
 def strp_datetime_TZ(value):
     return strp_datetime_sielte(value[:value.rfind('.')].replace('T', ' '))
