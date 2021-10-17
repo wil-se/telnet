@@ -7,7 +7,7 @@ from authentication.models import User
 class Command(BaseCommand):
 
     def add_arguments(self, parser):
-        parser.add_argument('path', type=str, help='import Mvm prices from file')
+        parser.add_argument('path', type=str, help='import Sielte prices from file')
 
     def handle(self, *args, **options):
         path = options['path']

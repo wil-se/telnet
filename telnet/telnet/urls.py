@@ -12,6 +12,11 @@ from tickets.urls import urlpatterns as tickets_urls
 from notes.urls import urlpatterns as notes
 
 
+admin.site.site_header = 'Telnet backend'                    # default: "Django Administration"
+admin.site.index_title = 'Backend'                 # default: "Site administration"
+admin.site.site_title = 'Telnet' # default: "Django site admin"
+
+
 urlpatterns = [
     path('', lambda req: redirect('/dashboard')),
 

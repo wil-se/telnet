@@ -156,11 +156,9 @@
 
 
             {% for item in tickets %}
-
-                {% if item|get_class == 'MvmImport' %}
-                  {% include 'ticket_dashboard_mvm.html' with ticket=item %}
-                {% endif %}
-
+                {% comment %} {% if item|get_class == '*Import' %}
+                  {% include 'ticket_dashboard_*.html' with ticket=item %}
+                {% endif %} {% endcomment %}
                 {% if item|get_class == 'SielteImport' %}
                   {% include 'ticket_dashboard_sielte.html' with ticket=item %}
                 {% endif %}

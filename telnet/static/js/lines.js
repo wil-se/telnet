@@ -66,13 +66,6 @@ var EchartsLinesPointValuesLight = function() {
                     containLabel: true
                 },
 
-                // Add legend
-                legend: {
-                    data: ['Mvm', 'Sielte'],
-                    itemHeight: 8,
-                    itemGap: 20
-                },
-
                 // Add tooltip
                 tooltip: {
                     trigger: 'axis',
@@ -131,24 +124,6 @@ var EchartsLinesPointValuesLight = function() {
 
                 // Add series
                 series: [
-                    {
-                        name: 'Mvm',
-                        color: '#68ACB4',
-                        type: 'line',
-                        data: [2000, 3700, 9000, 8200,],
-                        smooth: true,
-                        symbolSize: 7,
-                        label: {
-                            normal: {
-                                show: true
-                            }
-                        },
-                        itemStyle: {
-                            normal: {
-                                borderWidth: 2
-                            }
-                        }
-                    },
                     {
                         name: 'Sielte',
                         color: '#8DDA91',

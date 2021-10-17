@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand, CommandError
-from tickets.models import MvmImport, SielteImport, SielteActivity
+from tickets.models import SielteImport, SielteActivity
 import random
 from authentication.models import User
 from datetime import datetime
@@ -11,17 +11,7 @@ class Command(BaseCommand):
         pass
     
     def handle(self, *args, **options):
-        mvm_q = MvmImport.objects.all()
         sielte_q = SielteImport.objects.all()
-
-        for mvm in mvm_q:
-            mvm.status = random.choice(["OK", "KO", "SOSPESO", "ANNULLATO"])
-            emails = list(User.objects.all().values_list('email'))
-            mvm.assigned_to = User.objects.get(email=random.choice(emails)[0])
-            mvm.datainiz = datetime.now()
-            mvm.price = 100
-            mvm.save()
-        
 
         for sielte in sielte_q:
             sielte.status = random.choice(["OK", "KO", "SOSPESO", "ANNULLATO", "DA LAVORARE"])

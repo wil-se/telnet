@@ -241,11 +241,9 @@
 
 
             {% for item in tickets %}
-
-                {% if item|get_class == 'MvmImport' %}
-                  {% include 'ticket_dashboard_mvm.html' with ticket=item %}
-                {% endif %}
-
+                {% comment %} {% if item|get_class == '*Import' %}
+                  {% include 'ticket_dashboard_*.html' with ticket=item %}
+                {% endif %} {% endcomment %}
                 {% if item|get_class == 'SielteImport' %}
                   {% include 'ticket_dashboard_sielte.html' with ticket=item %}
                 {% endif %}
@@ -317,7 +315,7 @@ var EchartsColumnsStackedClusteredLight = function() {
                     type:'scroll',
                     
                     data: [
-                        'Mvm','Sielte','Totale',
+                        'Sielte','Totale',
                     ],
                     itemHeight: 2,
                     itemGap: 8,
@@ -396,26 +394,6 @@ var EchartsColumnsStackedClusteredLight = function() {
 
                 // Add series
                 series: [
-                    {
-                        name: 'Mvm',
-                        type: 'bar',
-                        z: 2,
-                        itemStyle: {
-                            normal: {
-                                color: '#F44336',
-                                label: {
-                                    show: true,
-                                    padding: 5,
-                                    position: 'top',
-                                    textStyle: {
-                                        color: '#fff',
-                                        fontSize: 12
-                                    }
-                                }
-                            }
-                        },
-                        data: {{ series_mvm|safe }},
-                    },
                     {
                         name: 'Sielte',
                         type: 'bar',
@@ -825,7 +803,7 @@ var Pie = function(options) {
             orient: 'vertical',
             top: 'center',
             left: 0,
-            data: ['Mvm', 'Sielte',],
+            data: ['Sielte',],
             itemHeight: 8,
             itemWidth: 8
         },
@@ -840,9 +818,8 @@ var Pie = function(options) {
                     borderColor: '#fff'
                 }
             },
-            data: [ {value: {{ tot_mvm}}, name: 'Mvm'}, 
-            {value: {{ tot_sielte }}, name: 'Sielte'} ],
-                    }]
+            data: [{value: {{ tot_sielte }}, name: 'Sielte'}, ],
+        }]
     }
 
     if (pie_basic_element) {

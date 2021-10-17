@@ -9,47 +9,16 @@
 
 
 {% block content %}
+	<div class="card">
 
-
-
-		<div class="card">
-
-			<div class="card-header header-elements-inline bg-dark">
-				<h6 class="card-title font-weight-semibold">Mvm</h6>
-				<div class="header-elements">
-					<div class="list-icons">
-						<a class="list-icons-item" data-action="collapse"></a>
-					</div>
+		<div class="card-header header-elements-inline bg-dark">
+			<h6 class="card-title font-weight-semibold">Sielte</h6>
+			<div class="header-elements">
+				<div class="list-icons">
+					<a class="list-icons-item" data-action="collapse"></a>
 				</div>
 			</div>
-
-      {% for mvm in mvm_exports %}
-      <ul class="media-list media-list-linked media-list-bordered">
-				<li class="media bg-light py-2">
-					<div style="text-align: left; margin: 10px 0px 0px 0px;" >	
-         			<a style="font-size: 16px;">{{ mvm.name }}</a>
-					</div>
-					<div style="text-align: right;" class="w-100 justify-content-xl-end">
-					<a class="btn btn-danger" href="/export-mvm-delete/{{mvm.pk}}" style="margin: 10px 0px 0px 10px"> Elimina </a>
-					<a href="media/{{ mvm.file }}" class="bg-teal-400 btn-primary btn" style="margin: 10px 0px 0px 10px"> Scarica </a>
-					</div>
-				</li>
-			</ul>
-      {% endfor %}
-
-    </div>
-
-
-		<div class="card">
-
-			<div class="card-header header-elements-inline bg-dark">
-				<h6 class="card-title font-weight-semibold">Sielte</h6>
-				<div class="header-elements">
-					<div class="list-icons">
-						<a class="list-icons-item" data-action="collapse"></a>
-					</div>
-				</div>
-			</div>
+		</div>
 
       {% for sielte in sielte_exports %}
       		<ul class="media-list media-list-linked media-list-bordered">

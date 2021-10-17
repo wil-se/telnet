@@ -48,9 +48,6 @@
 
                 {% for item in tickets %}
 
-                    {% if item|get_class == 'MvmImport' %}
-                      {% include 'ticket_dashboard_tecnico_mvm.html' with ticket=item %}
-                    {% endif %}
 
                     {% if item|get_class == 'SielteImport' %}
                       {% include 'ticket_dashboard_tecnico_sielte.html' with ticket=item %}

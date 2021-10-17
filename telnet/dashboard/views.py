@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from notes.forms import NoteForm
 import datetime
-from tickets.models import MvmImport, SielteImport 
+from tickets.models import SielteImport 
 from django.db.models import Q
 from itertools import chain
 from django.http import HttpResponseRedirect
@@ -25,19 +25,13 @@ def dash(request):
     
     if request.user.role < 3:
 
-        mvm_queryset = (
-        Q(datainiz__gte=start_date)&
-        Q(datainiz__lte=end_date)
-        )
-        mvm_tickets = MvmImport.objects.filter(mvm_queryset).distinct()
-
         sielte_queryset = (
         Q(data_inizio_appuntamento__gte=start_date)&
         Q(data_inizio_appuntamento__lte=end_date)
         )
         sielte_tickets = SielteImport.objects.filter(sielte_queryset).distinct()
 
-        tickets = list(chain(mvm_tickets, sielte_tickets))
+        tickets = list(chain([], sielte_tickets))
 
         ok = 0
         ko = 0
@@ -58,18 +52,11 @@ def dash(request):
         users = User.objects.all()
 
         xaxis_names = []
-        series_mvm = []
         series_sielte = []
         series_total = []
 
         for i, user in enumerate(users):
             xaxis_names.append("{}\n {}".format(user.first_name, user.last_name))
-            mvm_queryset = (
-            Q(datainiz__gte=start_date)&
-            Q(datainiz__lte=end_date)&
-            Q(status='OK')&
-            Q(assigned_to=user)
-            )
 
             sielte_queryset = (
             Q(data_inizio_appuntamento__gte=start_date)&
@@ -77,16 +64,14 @@ def dash(request):
             Q(status='OK')&
             Q(assigned_to=user)
             )
-            series_mvm.append(int(get_guadagno_mvm(MvmImport.objects.filter(mvm_queryset).distinct())))
             series_sielte.append(int(get_guadagno_sielte(SielteImport.objects.filter(sielte_queryset).distinct())))
-            series_total.append(int(series_mvm[i] + series_sielte[i]))
+            series_total.append(int(0 + series_sielte[i]))
 
         return render(request, 'dash_manager.html', {
             'title':'Dashboard', 
             'subtext': 'Panoramica',
             'start_date': start_date.strftime('%d/%m/%Y'),
             'end_date': end_date.strftime('%d/%m/%Y'),
-            'tot_mvm': get_guadagno_mvm(mvm_tickets),
             'tot_sielte': get_guadagno_sielte(sielte_tickets),
             'note_form': NoteForm(request.POST or None, request.FILES or None, initial={}),
             'tickets': tickets,
@@ -95,20 +80,12 @@ def dash(request):
             'sospesi': sospesi,
             'annullati': annullati,
             'names': xaxis_names,
-            'series_mvm': series_mvm,
             'series_sielte': series_sielte,
             'series_total': series_total,
             'bars_width': len(users)*175
             })
 
     else:
-        mvm_queryset = (
-        Q(datainiz__gte=start_date)&
-        Q(datainiz__lte=end_date)&
-        Q(assigned_to__pk=request.user.pk)
-        )
-        mvm_tickets = MvmImport.objects.filter(mvm_queryset).distinct()
-
         sielte_queryset = (
         Q(data_inizio_appuntamento__gte=start_date)&
         Q(data_inizio_appuntamento__lte=end_date)&
@@ -116,7 +93,7 @@ def dash(request):
         )
         sielte_tickets = SielteImport.objects.filter(sielte_queryset).distinct()
 
-        tickets = list(chain(mvm_tickets, sielte_tickets))
+        tickets = list(chain([], sielte_tickets))
 
         ok = 0
         ko = 0
@@ -146,13 +123,6 @@ def dash(request):
                 })
 
 
-
-def get_guadagno_mvm(tickets):
-    guadagno_mvm = 0
-    for mvmt in tickets:
-        if mvmt.price:
-            guadagno_mvm += mvmt.price
-    return guadagno_mvm
 
 def get_guadagno_sielte(tickets):
     guadagno_sielte = 0

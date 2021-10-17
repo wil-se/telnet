@@ -17,17 +17,6 @@
 
 <div class="card-body">
 
-  <form action="{% url 'upload mvm' %}" method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    <div class="form-group row">
-      <label class="col-lg-2 col-form-label font-weight-semibold">MVM:</label>
-      <div class="col-lg-10">
-        <input name="mvm-import" type="file" class="file-input" data-fouc>
-      </div>
-    </div>
-  </form>
-  <br><br><br><br>
-
   <form action="{% url 'upload sielte' %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
     <div class="form-group row">
@@ -38,16 +27,6 @@
     </div>
   </form>
   <br><br><br><br>
-
-  <form action="{% url 'upload mvm pdf' %}" method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    <div class="form-group row">
-      <label class="col-lg-2 col-form-label font-weight-semibold">MVM PDF:</label>
-      <div class="col-lg-10">
-        <input name="mvm-pdf" type="file" class="file-input" data-fouc>
-      </div>
-    </div>
-  </form>
 
 </div>
 

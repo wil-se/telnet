@@ -27,7 +27,7 @@
       <ul class="nav nav-sidebar" data-nav-type="accordion">
 
         <!-- Main -->
-        <li class="nav-item-header"><div class="text-uppercase font-size-xs line-height-xs">Menù</div> <i class="icon-menu" title="Main"></i></li>
+        <li class="nav-item-header"><div class="text-uppercase font-size-xs line-height-xs">Menu</div> <i class="icon-menu" title="Main"></i></li>
         <li class="nav-item">
           <a href="/dashboard" class="nav-link  {% if url_name == 'dashboard'  or url_name == 'get dashboard data' %}active{% endif %}">
             <i class="icon-home4"></i>
@@ -38,7 +38,7 @@
         </li>
 
         <li class="nav-item">
-          <a href="/lista-ticket" class="nav-link {% if url_name == 'lista ticket' or url_name == 'mvm ticket'  or url_name == 'sielte ticket' or url_name == 'search tickets' %}active{% endif %}">
+          <a href="/lista-ticket" class="nav-link {% if url_name == 'lista ticket'  or url_name == 'sielte ticket' or url_name == 'search tickets' %}active{% endif %}">
             <i class="icon-clipboard"></i>
             <span>
               Tickets
@@ -56,14 +56,14 @@
           </a>
         </li>
 
-        <li class="nav-item">
-          <a href="/import" class="nav-link {% if url_name == 'import' %}active{% endif %}">
-            <i class="icon-file-upload"></i>
-            <span>
-              Import
-            </span>
-          </a>
-        </li>
+        <li class="nav-item nav-item-submenu">
+							<a href="#" class="nav-link {% if url_name == 'import' %} active{% endif %}"><i class="icon-file-upload"></i> <span>Import</span></a>
+
+							<ul class="nav nav-group-sub" data-submenu-title="Layouts">
+								<li class="nav-item {% if url_name == 'import' %} active{% endif %}"><a href="/import" class="nav-link active">Carica</a></li>
+								<li class="nav-item"><a href="/admin/tickets/sielteimport/" class="nav-link">Sielte imports</a></li>
+							</ul>
+						</li>
 
         <li class="nav-item">
           <a href="/export" class="nav-link {% if url_name == 'export' %}active{% endif %}">

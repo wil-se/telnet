@@ -53,11 +53,6 @@
   						<!-- Task grid -->
               <div class="row">
               {% for item in tickets %}
-
-                  {% if item|get_class == 'MvmImport' %}
-                    {% include 'mvm_ticket_preview.html' with ticket=item %}
-                  {% endif %}
-
                   {% if item|get_class == 'SielteImport' %}
                     {% include 'sielte_ticket_preview.html' with ticket=item %}
                   {% endif %}

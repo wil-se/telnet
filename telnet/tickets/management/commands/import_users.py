@@ -1,6 +1,5 @@
 from django.core.management.base import BaseCommand, CommandError
 import pandas as pd
-from tickets.models import MvmImport
 import datetime
 from authentication.models import User
 
@@ -10,7 +9,7 @@ from authentication.models import User
 class Command(BaseCommand):
 
     def add_arguments(self, parser):
-        parser.add_argument('path', type=str, help='mvm xlsx export file path')
+        parser.add_argument('path', type=str, help='import users from file')
 
     def handle(self, *args, **options):
         path = options['path']

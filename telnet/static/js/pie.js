@@ -26,7 +26,7 @@ var _scatterPieBasicLightExample = function(options) {
             orient: 'vertical',
             top: 'center',
             left: 0,
-            data: ['Mvm', 'Sielte',],
+            data: ['Sielte',],
             itemHeight: 8,
             itemWidth: 8
         },
