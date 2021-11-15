@@ -14,7 +14,7 @@
 		</div>
 
 		<h5 class="font-weight-semibold mb-1" style="margin: 14px 0px 0px 14px;">
-		<a href="/sielte-ticket/{{ ticket.pk }}" class="text-default" style="margin: 0px 0px 0px 10px;">{{ ticket.attivita|default_if_none:"" }} {% if ticket.descrizione_tipologia_pratica|default_if_none:"" %} | {% endif %}  {{ ticket.descrizione_tipologia_pratica|default_if_none:""|default_if_none:"" }}</a>
+		<a href="/sielte-ticket/{{ ticket.pk }}" class="text-default" style="margin: 0px 0px 0px 10px;">{{ ticket.nr |default_if_none:"" }} | {{ ticket.descrizione_tipologia_pratica|default_if_none:"" }}</a>
 		</h5>
 
 		<div class="btn-group" style="position: absolute; right: 0px;">

@@ -60,7 +60,6 @@ def ticket_list(request, page=1):
         if text:
             print("TEXT: " +text)
             sielte_queryset &= (
-            Q(cod_wr_committente__icontains=text)|
             Q(nr__icontains=text)|
             Q(nome__icontains=text)|
             Q(indirizzo__icontains=text)
@@ -160,7 +159,7 @@ def ticket_list(request, page=1):
         if text:
             print("TEXT: " +text)
             sielte_queryset &= (
-            Q(cod_wr_committente__icontains=text)|
+            Q(nr__icontains=text)|
             Q(nr__icontains=text)|
             Q(nome__icontains=text)|
             Q(indirizzo__icontains=text)
@@ -375,13 +374,13 @@ def parse_sielte(file):
     for record in records:
         row += 1
         message = ""
-        same_wr = SielteImport.objects.filter(cod_wr_committente=record['Cod. WR Committente'])
+        same_nr = SielteImport.objects.filter(nr=record['Nr.'])
         ok_or_ko = 0
-        if len(same_wr) > 0:
-            for wr in same_wr:
-                if wr.status == 'DA LAVORARE':
-                    wr.delete()
-                    message += 'WR {} già presente nel sistema, sovrascritto. '.format(record['Cod. WR Committente'])
+        if len(same_nr) > 0:
+            for nr in same_nr:
+                if nr.status == 'DA LAVORARE':
+                    nr.delete()
+                    message += 'Codice {} già presente nel sistema, sovrascritto. '.format(record['Nr.'])
                 else:
                     ok_or_ko += 1
         if ok_or_ko == 0:
@@ -429,9 +428,6 @@ def parse_sielte(file):
                 sielte.tipo_cliente = record['Tipo Cliente']
                 sielte.tipo_telefono_1 = record['Tipo Telefono 1']
                 sielte.tipo_telefono_2 = record['Tipo Telefono 2']
-                # print(record['Tecnico Pratica'])
-                # qui mi tocca fare una cafonata perché nell'export a volte
-                # c'è scritto nome-cognome altre volte cognome-nome
                 if record['Tecnico Pratica']:
                     # first_name = record['Tecnico Pratica'].split()[0]
                     # last_name = record['Tecnico Pratica'].split()[1]
@@ -452,10 +448,10 @@ def parse_sielte(file):
                     r.occorrenze = len(repeat)+1
                     r.save()
                 sielte.save()
-                message += '{} caricato correttamente'.format(record['Cod. WR Committente'])
+                message += '{} caricato correttamente'.format(record['Nr.'])
                 result[row] = message
             except:
-                message += '{} errore nel caricamento, controlla la riga {}'.format(record['Cod. WR Committente'], row)
+                message += '{} errore nel caricamento, controlla la riga {}'.format(record['Nr.'], row)
                 result[row] = message
                 traceback.print_exc()
         
@@ -496,7 +492,6 @@ def export_tickets(request):
     if text:
         print("TEXT: " +text)
         sielte_queryset &= (
-        Q(cod_wr_committente__icontains=text)|
         Q(nr__icontains=text)|
         Q(nome__icontains=text)|
         Q(indirizzo__icontains=text)
@@ -532,7 +527,7 @@ def export_tickets(request):
         sielte_desc_tipo_pratica = []
         sielte_desc_pratica = []
         sielte_desccent = []
-        sielte_cod_wr = []
+        sielte_wr = []
         sielte_impianto = []
         sielte_nome = []
         sielte_indirizzo = []
@@ -541,13 +536,54 @@ def export_tickets(request):
         sielte_status = []
         sielte_compilazione = []
         sielte_guadagno = []
+        sielte_aging = []
+        sielte_citta = []
+        sielte_cod_centrale = []
+        sielte_cod_stato = []
+        sielte_cod_wr_committente = []
+        sielte_codice_progetto = []
+        sielte_data_appuntamento_a = []
+        sielte_data_chiusura = []
+        sielte_data_di_ricezione = []
+        sielte_data_inizio_appuntamento = []
+        sielte_data_scadenza = []
+        sielte_descrizione_pratica = []
+        sielte_descrizione_tipologia_pratica = []
+        sielte_email = []
+        sielte_fine_lavorazione_prevista = []
+        sielte_identificativo_cliente = []
+        sielte_impianto = []
+        sielte_indirizzo = []
+        sielte_inizio_lavorazione_prevista = []
+        sielte_nome = []
+        sielte_nome_assistente = []
+        sielte_nome_stato = []
+        sielte_nome_ubicazione = []
+        sielte_nr = []
+        sielte_nr_occorrenze = []
+        sielte_ora_chiusura = []
+        sielte_ora_fine_appuntamento = []
+        sielte_ora_inizio_appuntamento = []
+        sielte_pratica_chiusa = []
+        sielte_pratica_interna = []
+        sielte_pratica_nuova = []
+        sielte_provincia = []
+        sielte_riferimento_cliente = []
+        sielte_tecnico_pratica = []
+        sielte_telefono_cliente_uno = []
+        sielte_telefono_cliente_due = []
+        sielte_tempo_di_esecuzione = []
+        sielte_tipo_cliente = []
+        sielte_tipo_telefono_uno = []
+        sielte_tipo_telefono_due = []
+        
         
         for sielte in sielte_tickets:
             sielte_assigned_to.append(sielte.assigned_to) if sielte.assigned_to else sielte_assigned_to.append('')
             sielte_desc_tipo_pratica.append(sielte.descrizione_tipologia_pratica) if sielte.descrizione_tipologia_pratica else sielte_desc_tipo_pratica.append('')
             sielte_desc_pratica.append(sielte.descrizione_pratica) if sielte.descrizione_pratica else sielte_desc_pratica.append('')
             sielte_desccent.append(sielte.descrizione_centrale) if sielte.descrizione_centrale else sielte_desccent.append('')
-            sielte_cod_wr.append(sielte.cod_wr_committente) if sielte.cod_wr_committente else sielte_cod_wr.append('')
+            sielte_wr.append(sielte.cod_wr_committente) if sielte.cod_wr_committente else sielte_nr.append('')
             sielte_impianto.append(sielte.impianto) if sielte.impianto else sielte_impianto.append('')
             sielte_nome.append(sielte.nome) if sielte.nome else sielte_nome.append('')
             sielte_indirizzo.append(sielte.indirizzo) if sielte.indirizzo else sielte_indirizzo.append('')
@@ -576,12 +612,104 @@ def export_tickets(request):
             
             sielte_compilazione.append(compilazione)
 
+            sielte_aging.append(sielte.aging) if sielte.aging else sielte_aging.append('')
+            sielte_citta.append(sielte.citta) if sielte.citta else sielte_citta.append('')
+            sielte_cod_centrale.append(sielte.cod_centrale) if sielte.cod_centrale else sielte_cod_centrale.append('')
+            sielte_cod_stato.append(sielte.cod_stato) if sielte.cod_stato else sielte_cod_stato.append('')
+            sielte_cod_wr_committente.append(sielte.cod_wr_committente) if sielte.cod_wr_committente else sielte_cod_wr_committente.append('')
+            sielte_codice_progetto.append(sielte.codice_progetto) if sielte.codice_progetto else sielte_codice_progetto.append('')
+            sielte_data_appuntamento_a.append(sielte.data_appuntamento_a) if sielte.data_appuntamento_a else sielte_data_appuntamento_a.append('')
+            sielte_data_chiusura.append(sielte.data_chiusura) if sielte.data_chiusura else sielte_data_chiusura.append('')
+            sielte_data_di_ricezione.append(sielte.data_di_ricezione) if sielte.data_di_ricezione else sielte_data_di_ricezione.append('')
+            sielte_data_scadenza.append(sielte.data_scadenza) if sielte.data_scadenza else sielte_data_scadenza.append('')
+            sielte_descrizione_pratica.append(sielte.descrizione_pratica) if sielte.descrizione_pratica else sielte_descrizione_pratica.append('')
+            sielte_descrizione_tipologia_pratica.append(sielte.descrizione_tipologia_pratica) if sielte.descrizione_tipologia_pratica else sielte_descrizione_tipologia_pratica.append('')
+            sielte_email.append(sielte.mail) if sielte.mail else sielte_email.append('')
+            sielte_fine_lavorazione_prevista.append(sielte.fine_lavorazione_prevista) if sielte.fine_lavorazione_prevista else sielte_fine_lavorazione_prevista.append('')
+            sielte_identificativo_cliente.append(sielte.identificativo_cliente) if sielte.identificativo_cliente else sielte_identificativo_cliente.append('')
+            sielte_inizio_lavorazione_prevista.append(sielte.inizio_lavorazione_prevista) if sielte.inizio_lavorazione_prevista else sielte_inizio_lavorazione_prevista.append('')
+            sielte_nome_assistente.append(sielte.nome_assistente) if sielte.nome_assistente else sielte_nome_assistente.append('')
+            sielte_nome_stato.append(sielte.nome_stato) if sielte.nome_stato else sielte_nome_stato.append('')
+            sielte_nome_ubicazione.append(sielte.nome_ubicazione) if sielte.nome_ubicazione else sielte_nome_ubicazione.append('')
+            sielte_nr.append(sielte.nr) if sielte.nr else sielte_nr.append('')
+            sielte_nr_occorrenze.append(sielte.nr_occorrenze) if sielte.nr_occorrenze else sielte_nr_occorrenze.append('')
+            sielte_ora_chiusura.append(sielte.ora_chiusura) if sielte.ora_chiusura else sielte_ora_chiusura.append('')
+            sielte_ora_fine_appuntamento.append(sielte.ora_fine_appuntamento) if sielte.ora_fine_appuntamento else sielte_ora_fine_appuntamento.append('')
+            sielte_pratica_chiusa.append(sielte.pratica_chiusa) if sielte.pratica_chiusa else sielte_pratica_chiusa.append('')
+            sielte_pratica_interna.append(sielte.pratica_interna) if sielte.pratica_interna else sielte_pratica_interna.append('')
+            sielte_pratica_nuova.append(sielte.pratica_nuova) if sielte.pratica_nuova else sielte_pratica_nuova.append('')
+            sielte_provincia.append(sielte.provincia) if sielte.provincia else sielte_provincia.append('')
+            sielte_riferimento_cliente.append(sielte.riferimento_cliente) if sielte.riferimento_cliente else sielte_riferimento_cliente.append('')
+            sielte_tecnico_pratica.append(sielte.tecnico_pratica) if sielte.tecnico_pratica else sielte_tecnico_pratica.append('')
+            sielte_telefono_cliente_uno.append(sielte.telefono_cliente_1) if sielte.telefono_cliente_1 else sielte_telefono_cliente_uno.append('')
+            sielte_telefono_cliente_due.append(sielte.telefono_cliente_2) if sielte.telefono_cliente_2 else sielte_telefono_cliente_due.append('')
+            sielte_tempo_di_esecuzione.append(sielte.tempo_di_esecuzione) if sielte.tempo_di_esecuzione else sielte_tempo_di_esecuzione.append('')
+            sielte_tipo_cliente.append(sielte.tipo_cliente) if sielte.tipo_cliente else sielte_tipo_cliente.append('')
+            sielte_tipo_telefono_uno.append(sielte.tipo_telefono_1) if sielte.tipo_telefono_1 else sielte_tipo_telefono_uno.append('')
+            sielte_tipo_telefono_due.append(sielte.tipo_telefono_2) if sielte.tipo_telefono_2 else sielte_tipo_telefono_due.append('')
+
+
+        print(len(sielte_assigned_to))
+        print(len(sielte_desc_tipo_pratica))
+        print(len(sielte_desc_pratica))
+        print(len(sielte_desccent))
+        print(len(sielte_nr))
+        print(len(sielte_impianto))
+        print(len(sielte_nome))
+        print(len(sielte_indirizzo))
+        print(len(sielte_data_inizio))
+        print(len(sielte_ora_inizio))
+        print(len(sielte_status))
+        print(len(sielte_compilazione))
+        print(len(sielte_guadagno))
+        print(len(sielte_aging))
+        print(len(sielte_citta))
+        print(len(sielte_cod_centrale))
+        print(len(sielte_cod_stato))
+        print(len(sielte_cod_wr_committente))
+        print(len(sielte_codice_progetto))
+        print(len(sielte_data_appuntamento_a))
+        print(len(sielte_data_chiusura))
+        print(len(sielte_data_di_ricezione))
+        print(len(sielte_data_scadenza))
+        print(len(sielte_descrizione_pratica))
+        print(len(sielte_descrizione_tipologia_pratica))
+        print(len(sielte_email))
+        print(len(sielte_fine_lavorazione_prevista))
+        print(len(sielte_identificativo_cliente))
+        print(len(sielte_impianto))
+        print(len(sielte_indirizzo))
+        print(len(sielte_inizio_lavorazione_prevista))
+        print(len(sielte_nome))
+        print(len(sielte_nome_assistente))
+        print(len(sielte_nome_stato))
+        print(len(sielte_nome_ubicazione))
+        print(len(sielte_nr))
+        print(len(sielte_nr_occorrenze))
+        print(len(sielte_data_chiusura))
+        print(len(sielte_ora_chiusura))
+        print(len(sielte_ora_fine_appuntamento))
+        print(len(sielte_ora_inizio_appuntamento))
+        print(len(sielte_pratica_chiusa))
+        print(len(sielte_pratica_interna))
+        print(len(sielte_pratica_nuova))
+        print(len(sielte_provincia))
+        print(len(sielte_riferimento_cliente))
+        print(len(sielte_tecnico_pratica))
+        print(len(sielte_telefono_cliente_uno))
+        print(len(sielte_telefono_cliente_due))
+        print(len(sielte_tempo_di_esecuzione))
+        print(len(sielte_tipo_cliente))
+        print(len(sielte_tipo_telefono_uno))
+        print(len(sielte_tipo_telefono_due))
+        print("\n\n\n\n\n\n\n\n")
+
         sielte_df = pd.DataFrame({
             'assegnato a': sielte_assigned_to,
             'descrizione tipo pratica': sielte_desc_tipo_pratica,
             'descrizione pratica': sielte_desc_pratica,
             'descrizione centrale': sielte_desccent,
-            'wr': sielte_cod_wr,
+            'nr': sielte_nr,
             'impianto': sielte_impianto,
             'nome': sielte_nome,
             'indirizzo': sielte_indirizzo,
@@ -589,7 +717,43 @@ def export_tickets(request):
             'ora inizio': sielte_ora_inizio,
             'status': sielte_status,
             'compilazione': sielte_compilazione,
-            'prezzo': sielte_guadagno
+            'prezzo': sielte_guadagno,
+            'aging': sielte_aging,
+            'citta': sielte_citta,
+            'cod centrale': sielte_cod_centrale,
+            'cod stato': sielte_cod_stato,
+            'cod wr committente': sielte_cod_wr_committente,
+            'codice progetto': sielte_codice_progetto,
+            'data appuntamento al': sielte_data_appuntamento_a,
+            'data chiusura': sielte_data_chiusura,
+            'data di ricezione': sielte_data_di_ricezione,
+            'data scadenza': sielte_data_scadenza,
+            'descrizione pratica': sielte_descrizione_pratica,
+            'descrizione tipologia pratica': sielte_descrizione_tipologia_pratica,
+            'email': sielte_email,
+            'fine lavorazione prevista': sielte_fine_lavorazione_prevista,
+            'identificativo cliente': sielte_identificativo_cliente,
+            'impianto': sielte_impianto,
+            'inizio lavorazione prevista': sielte_inizio_lavorazione_prevista,
+            'nome assistente': sielte_nome_assistente,
+            'nome stato': sielte_nome_stato,
+            'nome ubicazione': sielte_nome_ubicazione,
+            'nr': sielte_nr,
+            'nr occorrenze': sielte_nr_occorrenze,
+            'data chiusura': sielte_data_chiusura,
+            'ora chiusura': sielte_ora_chiusura,
+            'pratica chiusa': sielte_pratica_chiusa,
+            'pratica interna': sielte_pratica_interna,
+            'pratica nuova': sielte_pratica_nuova,
+            'provincia': sielte_provincia,
+            'riferimento cliento': sielte_riferimento_cliente,
+            'tecnico pratica': sielte_tecnico_pratica,
+            'telefono cliente 1': sielte_telefono_cliente_uno,
+            'telefono cliente 2': sielte_telefono_cliente_due,
+            'tempo di esecuzione': sielte_tempo_di_esecuzione,
+            'tipo cliente': sielte_tipo_cliente,
+            'tipo telefono uno': sielte_tipo_telefono_uno,
+            'tipo teledono due': sielte_tipo_telefono_due,
         })
 
         sielte_filename = 'sielte-export-{}.xlsx'.format(datetime.datetime.now())

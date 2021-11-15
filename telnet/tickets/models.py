@@ -86,7 +86,7 @@ class SielteImport(models.Model):
     telefono_cliente_2 = models.CharField(max_length=256, blank=True, null=True, default="")
     riferimento_cliente = models.CharField(max_length=256, blank=True, null=True, default="")
     nr_occorrenze = models.IntegerField(blank=True, null=True)
-    e_mail = models.CharField(max_length=256, blank=True, null=True, default="")
+    mail = models.CharField(max_length=256, blank=True, null=True, default="")
     identificativo_cliente = models.CharField(max_length=256, blank=True, null=True, default="")
     nome_ubicazione = models.CharField(max_length=256, blank=True, null=True, default="")
     pratica_chiusa = models.BooleanField(default=False)
@@ -114,7 +114,7 @@ class SielteImport(models.Model):
 
 
     def __str__(self):
-        return 'SIELTE {} {} {}'.format(self.cod_wr_committente, self.cod_centrale, self.nome,)
+        return 'SIELTE {} {} {}'.format(self.nr, self.cod_centrale, self.nome,)
 
     class Meta:
         verbose_name = 'Sielte import'
